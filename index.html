@@ -581,6 +581,43 @@
       color: var(--green-t)
     }
 
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pbtn {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .pbtn:hover:not(:disabled) {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .pbtn.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .pbtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* ── MODAL ── */
     .overlay {
       display: none;
@@ -1091,13 +1128,11 @@
   <div id="app-screen">
     <nav class="nav">
       <div class="nav-brand">Min. André Mendonça<small>Assessoria</small></div>
-      <button class="ntab active" onclick="goSection('dash')">Painel</button>
-      <button class="ntab" onclick="goSection('entrevistas')">Entrevistas <span class="badge-count"
-          id="cnt-e">0</span></button>
-      <button class="ntab" onclick="goSection('agendas')">Agendas <span class="badge-count" id="cnt-a">0</span></button>
-      <button class="ntab" onclick="goSection('briefings')">Briefings <span class="badge-count"
-          id="cnt-b">0</span></button>
-      <button class="ntab" onclick="goSection('pauta')">Pauta <span class="badge-count" id="cnt-p">0</span></button>
+      <button class="ntab active" onclick="window.location.hash='#dash'">Painel</button>
+      <button class="ntab" onclick="window.location.hash='#entrevistas'">Entrevistas <span class="badge-count" id="cnt-e">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#agendas'">Agendas <span class="badge-count" id="cnt-a">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#briefings'">Briefings <span class="badge-count" id="cnt-b">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#pauta'">Pauta <span class="badge-count" id="cnt-p">0</span></button>
       <span class="nav-sync" id="nav-sync"></span>
 
     </nav>
@@ -1151,9 +1186,8 @@
 
       <section id="sec-entrevistas" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="e-busca" placeholder="Buscar veículo, jornalista, tema..."
-            oninput="renderE()" />
-          <select class="fi" id="e-fs" onchange="renderE()">
+          <input class="fi fi-busca" id="e-busca" placeholder="Buscar veículo, jornalista, tema..." oninput="pageE=1;renderE()" />
+          <select class="fi" id="e-fs" onchange="pageE=1;renderE()">
             <option value="">Todos os status</option>
             <option value="nova">Nova</option>
             <option value="analise">Em análise</option>
@@ -1161,7 +1195,7 @@
             <option value="realizada">Realizada</option>
             <option value="recusada">Recusada</option>
           </select>
-          <select class="fi" id="e-ff" onchange="renderE()">
+          <select class="fi" id="e-ff" onchange="pageE=1;renderE()">
             <option value="">Todos os formatos</option>
             <option value="ao_vivo">Ao vivo</option>
             <option value="gravada">Gravada</option>
@@ -1188,9 +1222,8 @@
             <button class="bsm" onclick="calToday()">Hoje</button>
           </div>
           <div id="lista-filters" style="display:flex;gap:8px;flex-wrap:wrap;flex:1">
-            <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..."
-              oninput="renderA()" />
-            <select class="fi" id="a-ft" onchange="renderA()">
+            <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..." oninput="pageA=1;renderA()" />
+            <select class="fi" id="a-ft" onchange="pageA=1;renderA()">
               <option value="">Todos os tipos</option>
               <option value="inst_reuniao">Reunião institucional</option>
               <option value="palestra_aula">Palestra / aula magna</option>
@@ -1201,7 +1234,7 @@
               <option value="agenda_pessoal">Agenda pessoal</option>
               <option value="agenda_pastoral">Agenda pastoral</option>
             </select>
-            <select class="fi" id="a-fs" onchange="renderA()">
+            <select class="fi" id="a-fs" onchange="pageA=1;renderA()">
               <option value="">Todos os status</option>
               <option value="nova">Nova</option>
               <option value="analise">Em análise</option>
@@ -1223,8 +1256,8 @@
 
       <section id="sec-briefings" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="b-busca" placeholder="Buscar título, evento, tema..." oninput="renderB()" />
-          <select class="fi" id="b-ft" onchange="renderB()">
+          <input class="fi fi-busca" id="b-busca" placeholder="Buscar título, evento, tema..." oninput="pageB=1;renderB()" />
+          <select class="fi" id="b-ft" onchange="pageB=1;renderB()">
             <option value="">Todos os tipos</option>
             <option value="entrevista">Entrevista</option>
             <option value="solenidade">Solenidade / conferência</option>
@@ -1239,9 +1272,9 @@
 
       <section id="sec-pauta" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="renderP()" />
-          <input class="fi" id="p-datafrom" type="date" onchange="renderP()" title="Data inicial" />
-          <input class="fi" id="p-datato" type="date" onchange="renderP()" title="Data final" />
+          <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="pageP=1;renderP()" />
+          <input class="fi" id="p-datafrom-p" type="date" onchange="pageP=1;renderP()" title="Data inicial" />
+          <input class="fi" id="p-datato-p" type="date" onchange="pageP=1;renderP()" title="Data final" />
           <button class="btn-new" onclick="openP()">＋ Nova pauta</button>
         </div>
         <div class="list" id="list-p"></div>
@@ -1544,10 +1577,13 @@
        NAVIGATION
     ════════════════════════════════════════ */
     const SECS = ['dash', 'entrevistas', 'agendas', 'briefings', 'pauta'];
-    function goSection(id) {
+    function handleHash() {
+      let id = window.location.hash.replace('#', '') || 'dash';
+      if (!SECS.includes(id)) id = 'dash';
+      
       SECS.forEach(s => {
         document.getElementById('sec-' + s).style.display = s === id ? '' : 'none';
-        document.querySelectorAll('.ntab').forEach((t, i) => t.classList.toggle('active', ['dash', 'entrevistas', 'agendas', 'briefings', 'pauta'][i] === id));
+        document.querySelectorAll('.ntab').forEach((t, i) => t.classList.toggle('active', SECS[i] === id));
       });
       if (id === 'dash') renderDash();
       if (id === 'entrevistas') renderE();
@@ -1555,6 +1591,7 @@
       if (id === 'briefings') renderB();
       if (id === 'pauta') renderP();
     }
+    window.addEventListener('hashchange', handleHash);
 
     /* ════════════════════════════════════════
        DASHBOARD
@@ -1584,6 +1621,33 @@
     }
 
     /* ════════════════════════════════════════
+       PAGINAÇÃO GLOBAL
+    ════════════════════════════════════════ */
+    let pageE = 1, pageA = 1, pageB = 1, pageP = 1;
+    const ITEMS_PER_PAGE = 10;
+    
+    function buildPagination(total, cur, prefix) {
+      const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+      if (totalPages <= 1) return '';
+      let html = '<div class="pagination">';
+      html += `<button class="pbtn" ${cur === 1 ? 'disabled' : ''} onclick="changePage('${prefix}', ${cur - 1})">Anterior</button>`;
+      for(let i=1; i<=totalPages; i++) {
+        html += `<button class="pbtn ${cur === i ? 'active' : ''}" onclick="changePage('${prefix}', ${i})">${i}</button>`;
+      }
+      html += `<button class="pbtn" ${cur === totalPages ? 'disabled' : ''} onclick="changePage('${prefix}', ${cur + 1})">Próxima</button>`;
+      html += '</div>';
+      return html;
+    }
+
+    function changePage(prefix, page) {
+      if (prefix === 'E') { pageE = page; renderE(); }
+      if (prefix === 'A') { pageA = page; renderA(); }
+      if (prefix === 'B') { pageB = page; renderB(); }
+      if (prefix === 'P') { pageP = page; renderP(); }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ════════════════════════════════════════
        ENTREVISTAS
     ════════════════════════════════════════ */
     let editingE = null;
@@ -1606,9 +1670,13 @@
       const groups = {};
       L.forEach(x => { const k = norm(x.jornalista) || x.id; if (!groups[k]) groups[k] = []; groups[k].push(x); });
       const sorted = Object.values(groups).map(g => { g.sort((a, b2) => new Date(b2.criado) - new Date(a.criado)); return g; }).sort((a, b2) => new Date(b2[0].criado) - new Date(a[0].criado));
+      
+      const start = (pageE - 1) * ITEMS_PER_PAGE;
+      const sliced = sorted.slice(start, start + ITEMS_PER_PAGE);
+
       const ABERTOS = ['nova', 'analise', 'aprovada'];
       const statusDot = s => { const c = { nova: '#2a6a2a', analise: '#7a4800', aprovada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a' }; return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${c[s] || '#aaa'};flex-shrink:0;margin-top:3px"></span>`; };
-      el.innerHTML = sorted.map(group => {
+      el.innerHTML = sliced.map(group => {
         const rep = group[0];
         const nome = rep.jornalista || '—', veiculo = rep.veiculo || '—';
         const total = group.length, abertos = group.filter(x => ABERTOS.includes(x.s)), realizadas = group.filter(x => x.s === 'realizada'), recusadas = group.filter(x => x.s === 'recusada');
@@ -1658,7 +1726,7 @@
         </div>
       </div>
     </div>`;
-      }).join('');
+      }).join('') + buildPagination(sorted.length, pageE, 'E');
     }
 
     function openE(id) {
@@ -1799,11 +1867,19 @@
         if (fs && x.s !== fs) return false;
         if (b && !norm(x.inst).includes(b) && !norm(x.nome).includes(b) && !norm(x.tema).includes(b)) return false;
         return true;
-      }).sort((a, b2) => (a.data || a.criado || '').localeCompare(b2.data || b2.criado || ''));
+      });
+      L.sort((a, b) => {
+        if (!a.data && !b.data) return new Date(b.criado) - new Date(a.criado);
+        if (!a.data) return 1; if (!b.data) return -1;
+        return new Date(b.data) - new Date(a.data);
+      });
       document.getElementById('cnt-a').textContent = DB.A.length;
       const el = document.getElementById('list-a');
       if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma agenda encontrada</div>'; return; }
-      el.innerHTML = L.map(x => `
+      
+      const start = (pageA - 1) * ITEMS_PER_PAGE;
+      const sliced = L.slice(start, start + ITEMS_PER_PAGE);
+      el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailA('${x.id}')">
       <div class="item-header">
         <div><div class="item-title">${x.tema || x.inst || '—'}</div></div>
@@ -1822,7 +1898,7 @@
         <button class="bsm" onclick="editA('${x.id}')">✏ Editar</button>
         <button class="bsm bdel" onclick="delA('${x.id}')">🗑</button>
       </div>
-    </div>`).join('');
+    </div>`).join('') + buildPagination(L.length, pageA, 'A');
     }
 
     function openA(id) {
@@ -1960,7 +2036,10 @@
       if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
       const el = document.getElementById('list-b');
       if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhum briefing encontrado</div>'; return; }
-      el.innerHTML = L.map(x => `
+      
+      const start = (pageB - 1) * ITEMS_PER_PAGE;
+      const sliced = L.slice(start, start + ITEMS_PER_PAGE);
+      el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailB('${x.id}')">
       <div class="item-header"><div><div class="item-title">${x.titulo || '—'}</div></div><span class="badge t-${x.tipo}">${TLB[x.tipo] || x.tipo}</span></div>
       <div class="item-meta">${x.evento ? x.evento + ' · ' : ''}${fd(x.data)}</div>
@@ -1969,7 +2048,7 @@
         <button class="bsm btn-export" style="background:var(--blue);color:#fff;border-color:var(--blue)" onclick="exportBriefingById('${x.id}')">↓ .rtf</button>
         <button class="bsm bdel" onclick="delB('${x.id}')">🗑</button>
       </div>
-    </div>`).join('');
+    </div>`).join('') + buildPagination(L.length, pageB, 'B');
     }
 
     async function delB(id) { if (!confirm('Excluir?')) return; const ok = await dbDelete('briefings', id); if (!ok) return; DB.B = DB.B.filter(b => b.id !== id); renderB(); renderDash(); toast('Excluído'); }
@@ -2206,7 +2285,10 @@
       document.getElementById('cnt-p').textContent = DB.P.length;
       const el = document.getElementById('list-p');
       if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma pauta encontrada</div>'; return; }
-      el.innerHTML = L.map(x => `
+      
+      const start = (pageP - 1) * ITEMS_PER_PAGE;
+      const sliced = L.slice(start, start + ITEMS_PER_PAGE);
+      el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailP('${x.id}')">
       <div class="item-header">
         <div><div class="item-title">${x.titulo || '(sem título)'}</div></div>
@@ -2218,7 +2300,7 @@
         <button class="bsm" onclick="event.stopPropagation();setTimeout(()=>openP('${x.id}'),10)">✏ Editar</button>
         <button class="bsm bdel" onclick="event.stopPropagation();delP('${x.id}')">🗑</button>
       </div>
-    </div>`).join('');
+    </div>`).join('') + buildPagination(L.length, pageP, 'P');
     }
 
     function openP(id) {
