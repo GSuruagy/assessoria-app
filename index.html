@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Assessoria · Min. André Mendonça</title>
+  <style>
+    /* ── SUPABASE CONFIG (preencha aqui) ── */
+    /* SUPABASE_URL e SUPABASE_KEY estão no JS abaixo */
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #f7f7f5;
+      --surface: #fff;
+      --border: #e4e4df;
+      --border2: #ccc;
+      --text: #1a1a1a;
+      --muted: #777;
+      --muted2: #aaa;
+      --blue: #1a5fa8;
+      --blue-bg: #dceefb;
+      --blue-t: #0a4070;
+      --green: #1a7a40;
+      --green-bg: #d8f5e8;
+      --green-t: #0a4a25;
+      --amber: #8a5a00;
+      --amber-bg: #fef3d0;
+      --amber-t: #6a4000;
+      --red: #a01a1a;
+      --red-bg: #fde8e8;
+      --red-t: #701010;
+      --purple: #4a35a0;
+      --purple-bg: #ede9fc;
+      --purple-t: #2a1a80;
+      --teal: #0a6a4a;
+      --teal-bg: #d5f0e8;
+      --teal-t: #054030;
+      --gray-bg: #eeecea;
+      --gray-t: #444;
+      --pink-bg: #fce8f0;
+      --pink-t: #6e1f48;
+      --r: 10px;
+      --r2: 8px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      display: none
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem;
+      width: min(400px, 92vw);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .07)
+    }
+
+    .login-box h1 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .login-box p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 1.5rem
+    }
+
+    .login-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px
+    }
+
+    .login-field label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted)
+    }
+
+    .login-field input {
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 9px 11px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text)
+    }
+
+    .login-field input:focus {
+      outline: none;
+      border-color: #888
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: var(--r2);
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px
+    }
+
+    .btn-login:hover {
+      background: #333
+    }
+
+    .login-error {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 8px;
+      text-align: center;
+      min-height: 18px
+    }
+
+    .login-loading {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px
+    }
+
+    /* ── NAV ── */
+    #app-screen {
+      display: block
+    }
+
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 50
+    }
+
+    .nav-brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      padding: 1rem 1rem 1rem 0;
+      margin-right: 1rem;
+      border-right: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    .nav-brand small {
+      font-weight: 400;
+      color: var(--muted);
+      display: block;
+      font-size: 11px
+    }
+
+    .ntab {
+      padding: 1rem 14px;
+      font-size: 13px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      margin-bottom: -1px;
+      font-family: inherit;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .ntab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+      font-weight: 600
+    }
+
+    .ntab:hover:not(.active) {
+      color: var(--text)
+    }
+
+    .ntab .badge-count {
+      font-size: 10px;
+      background: var(--border);
+      border-radius: 20px;
+      padding: 1px 6px;
+      font-weight: 600;
+      color: var(--muted)
+    }
+
+    .ntab.active .badge-count {
+      background: var(--text);
+      color: #fff
+    }
+
+    .nav-logout {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .nav-logout:hover {
+      background: var(--bg)
+    }
+
+    .nav-sync {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 8px
+    }
+
+    /* ── LAYOUT ── */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem
+    }
+
+    /* ── DASHBOARD ── */
+    .dash-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 1rem
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 1.5rem
+    }
+
+    .met {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: .875rem 1rem
+    }
+
+    .met-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .03em
+    }
+
+    .met-val {
+      font-size: 24px;
+      font-weight: 700
+    }
+
+    .met-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px
+    }
+
+    .dash-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1rem
+    }
+
+    .dash-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .mini-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 8px
+    }
+
+    .mini-item:last-child {
+      border-bottom: none
+    }
+
+    .mini-name {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .mini-date {
+      color: var(--muted);
+      font-size: 11px;
+      flex-shrink: 0
+    }
+
+    /* ── FILTERS ── */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .fi {
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 6px 10px;
+      font-size: 12px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .fi:focus {
+      outline: none;
+      border-color: #999
+    }
+
+    .fi-busca {
+      flex: 1;
+      min-width: 180px
+    }
+
+    .btn-new {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: var(--r2);
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: auto
+    }
+
+    .btn-new:hover {
+      background: #333
+    }
+
+    /* ── LIST ── */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: .875rem 1rem;
+      cursor: pointer;
+      transition: border-color .15s
+    }
+
+    .item:hover {
+      border-color: var(--border2)
+    }
+
+    .item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 2px
+    }
+
+    .item-title {
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    .item-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .item-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 8px
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border)
+    }
+
+    .bsm {
+      font-size: 11px;
+      padding: 4px 9px;
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: inherit
+    }
+
+    .bsm:hover {
+      background: var(--bg)
+    }
+
+    .bdel {
+      color: var(--red);
+      border-color: #f0959560
+    }
+
+    .bdel:hover {
+      background: var(--red-bg)
+    }
+
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted2);
+      font-size: 13px
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 5px;
+      white-space: nowrap
+    }
+
+    .t-inst_reuniao {
+      background: var(--blue-bg);
+      color: var(--blue-t)
+    }
+
+    .t-palestra_aula {
+      background: var(--purple-bg);
+      color: var(--purple-t)
+    }
+
+    .t-evento_solenidade {
+      background: #ede9fc;
+      color: #2a1a80
+    }
+
+    .t-reuniao {
+      background: #e8f0fb;
+      color: #1a3a70
+    }
+
+    .t-almoco {
+      background: var(--amber-bg);
+      color: var(--amber-t)
+    }
+
+    .t-jantar {
+      background: var(--pink-bg);
+      color: var(--pink-t)
+    }
+
+    .t-agenda_pessoal {
+      background: var(--gray-bg);
+      color: var(--gray-t)
+    }
+
+    .t-agenda_pastoral {
+      background: var(--green-bg);
+      color: var(--green-t)
+    }
+
+    .t-entrevista {
+      background: var(--amber-bg);
+      color: var(--amber-t)
+    }
+
+    .t-briefing {
+      background: var(--teal-bg);
+      color: var(--teal-t)
+    }
+
+    .s-nova {
+      background: var(--green-bg);
+      color: var(--green-t)
+    }
+
+    .s-analise {
+      background: var(--amber-bg);
+      color: var(--amber-t)
+    }
+
+    .s-aprovada,
+    .s-confirmada {
+      background: var(--blue-bg);
+      color: var(--blue-t)
+    }
+
+    .s-realizada {
+      background: var(--teal-bg);
+      color: var(--teal-t)
+    }
+
+    .s-recusada,
+    .s-cancelada {
+      background: var(--red-bg);
+      color: var(--red-t)
+    }
+
+    .p-alta {
+      background: var(--red-bg);
+      color: var(--red-t)
+    }
+
+    .p-media {
+      background: var(--amber-bg);
+      color: var(--amber-t)
+    }
+
+    .p-baixa {
+      background: var(--green-bg);
+      color: var(--green-t)
+    }
+
+    /* ── MODAL ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem
+    }
+
+    .overlay.open {
+      display: flex
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--r);
+      width: min(680px, 96vw);
+      max-height: 92vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column
+    }
+
+    .modal-head {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 5
+    }
+
+    .modal-head h2 {
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .modal-body {
+      padding: 1.25rem 1.5rem;
+      flex: 1
+    }
+
+    .modal-foot {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      background: var(--surface);
+      position: sticky;
+      bottom: 0
+    }
+
+    .btn-close {
+      background: none;
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .btn-close:hover {
+      background: var(--bg)
+    }
+
+    .btn-save {
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: var(--r2);
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .btn-save:hover {
+      background: #333
+    }
+
+    .btn-export {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--r2);
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .btn-export:hover {
+      opacity: .85
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      margin-bottom: 1.25rem
+    }
+
+    .form-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .fg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .ff {
+      grid-column: 1/-1
+    }
+
+    .fl {
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .fl label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .03em
+    }
+
+    .fl input,
+    .fl select,
+    .fl textarea {
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 7px 9px;
+      font-size: 13px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit
+    }
+
+    .fl input:focus,
+    .fl select:focus,
+    .fl textarea:focus {
+      outline: none;
+      border-color: #888
+    }
+
+    .fl textarea {
+      resize: vertical;
+      min-height: 80px
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .detail-row:last-child {
+      border-bottom: none
+    }
+
+    .dl {
+      color: var(--muted);
+      min-width: 130px;
+      flex-shrink: 0;
+      font-weight: 500
+    }
+
+    .dv {
+      color: var(--text);
+      white-space: pre-wrap;
+      flex: 1
+    }
+
+    /* ── BRIEFING ── */
+    .brief-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: .875rem;
+      margin-bottom: 10px
+    }
+
+    .brief-block-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .brief-block textarea {
+      width: 100%;
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 7px 9px;
+      font-size: 12px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      resize: vertical
+    }
+
+    /* ── CALENDAR ── */
+    .atog {
+      background: none;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: inherit
+    }
+
+    .atog.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .1)
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden
+    }
+
+    .cal-head {
+      background: var(--bg);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      padding: 8px 4px
+    }
+
+    .cal-cell {
+      background: var(--surface);
+      min-height: 100px;
+      padding: 6px 5px;
+      cursor: pointer
+    }
+
+    .cal-cell:hover {
+      background: #fafaf8
+    }
+
+    .cal-cell.today {
+      background: #fffbf0
+    }
+
+    .cal-cell.today .cal-day-num {
+      background: var(--text);
+      color: #fff;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .cal-cell.other-month .cal-day-num {
+      color: var(--muted2)
+    }
+
+    .cal-day-num {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .cal-event {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 5px;
+      border-radius: 3px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer
+    }
+
+    .cal-more {
+      font-size: 10px;
+      color: var(--muted);
+      padding: 1px 4px
+    }
+
+    .week-grid {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden
+    }
+
+    .week-head {
+      display: grid;
+      grid-template-columns: 50px repeat(7, 1fr);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .week-head-cell {
+      text-align: center;
+      padding: 8px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    .week-head-cell.today-col {
+      color: var(--text);
+      font-weight: 800
+    }
+
+    .week-body {
+      display: grid;
+      grid-template-columns: 50px repeat(7, 1fr)
+    }
+
+    .week-hour-label {
+      font-size: 10px;
+      color: var(--muted2);
+      padding: 4px 6px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      text-align: right;
+      height: 48px
+    }
+
+    .week-slot {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      height: 48px;
+      position: relative;
+      cursor: pointer
+    }
+
+    .week-slot:hover {
+      background: var(--bg)
+    }
+
+    .week-event {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 4px;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+      z-index: 2
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--text);
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: var(--r2);
+      font-size: 12px;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity .2s;
+      pointer-events: none
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+
+    .mtabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem
+    }
+
+    .mtab {
+      padding: 8px 14px;
+      font-size: 12px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      margin-bottom: -1px;
+      font-family: inherit;
+      font-weight: 500
+    }
+
+    .mtab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+      font-weight: 700
+    }
+
+    .mpanel {
+      display: none
+    }
+
+    .mpanel.active {
+      display: block
+    }
+
+    @media print {
+
+      .nav,
+      .toolbar,
+      #btn-print-cal,
+      .item-actions,
+      .atog,
+      .ntab,
+      .btn-new,
+      .bsm {
+        display: none !important
+      }
+
+      body {
+        background: #fff;
+        font-size: 11pt
+      }
+    }
+
+    @media(max-width:600px) {
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .dash-grid {
+        grid-template-columns: 1fr
+      }
+
+      .fg {
+        grid-template-columns: 1fr
+      }
+
+      .ff {
+        grid-column: 1
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <!-- ══ LOGIN ══ -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h1>📋 Assessoria</h1>
+      <p>André Mendonça</p>
+      <div class="login-field">
+        <label>E-mail</label>
+        <input id="l-email" type="email" placeholder="seu@email.com" autocomplete="email" />
+      </div>
+      <div class="login-field">
+        <label>Senha</label>
+        <input id="l-senha" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <button class="btn-login" onclick="doLogin()">Entrar</button>
+      <div class="login-error" id="l-error"></div>
+      <div class="login-loading" id="l-loading"></div>
+    </div>
+  </div>
+
+  <!-- ══ APP ══ -->
+  <div id="app-screen">
+    <nav class="nav">
+      <div class="nav-brand">Min. André Mendonça<small>Assessoria</small></div>
+      <button class="ntab active" onclick="goSection('dash')">Painel</button>
+      <button class="ntab" onclick="goSection('entrevistas')">Entrevistas <span class="badge-count"
+          id="cnt-e">0</span></button>
+      <button class="ntab" onclick="goSection('agendas')">Agendas <span class="badge-count" id="cnt-a">0</span></button>
+      <button class="ntab" onclick="goSection('briefings')">Briefings <span class="badge-count"
+          id="cnt-b">0</span></button>
+      <button class="ntab" onclick="goSection('pauta')">Pauta <span class="badge-count" id="cnt-p">0</span></button>
+      <span class="nav-sync" id="nav-sync"></span>
+
+    </nav>
+
+    <main class="main">
+
+      <section id="sec-dash" class="section">
+        <div class="dash-title">Painel geral</div>
+        <div class="metrics-row">
+          <div class="met">
+            <div class="met-label">Entrevistas</div>
+            <div class="met-val" id="dm-e">0</div>
+            <div class="met-sub" id="dm-e-sub">–</div>
+          </div>
+          <div class="met">
+            <div class="met-label">Agendas</div>
+            <div class="met-val" id="dm-a">0</div>
+            <div class="met-sub" id="dm-a-sub">–</div>
+          </div>
+          <div class="met">
+            <div class="met-label">Briefings</div>
+            <div class="met-val" id="dm-b">0</div>
+            <div class="met-sub" id="dm-b-sub">–</div>
+          </div>
+          <div class="met">
+            <div class="met-label">Pautas</div>
+            <div class="met-val" id="dm-pau">0</div>
+            <div class="met-sub" id="dm-pau-sub">redigidas</div>
+          </div>
+          <div class="met">
+            <div class="met-label">Pendências</div>
+            <div class="met-val" id="dm-p" style="color:var(--amber)">0</div>
+            <div class="met-sub">novas + em análise</div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <h3>📰 Últimos jornalistas</h3>
+            <div id="dash-e"></div>
+          </div>
+          <div class="dash-card">
+            <h3>📅 Últimas agendas</h3>
+            <div id="dash-a"></div>
+          </div>
+          <div class="dash-card">
+            <h3>📋 Últimos briefings</h3>
+            <div id="dash-b"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-entrevistas" class="section" style="display:none">
+        <div class="toolbar">
+          <input class="fi fi-busca" id="e-busca" placeholder="Buscar veículo, jornalista, tema..."
+            oninput="renderE()" />
+          <select class="fi" id="e-fs" onchange="renderE()">
+            <option value="">Todos os status</option>
+            <option value="nova">Nova</option>
+            <option value="analise">Em análise</option>
+            <option value="aprovada">Aprovada</option>
+            <option value="realizada">Realizada</option>
+            <option value="recusada">Recusada</option>
+          </select>
+          <select class="fi" id="e-ff" onchange="renderE()">
+            <option value="">Todos os formatos</option>
+            <option value="ao_vivo">Ao vivo</option>
+            <option value="gravada">Gravada</option>
+            <option value="escrita">Escrita / texto</option>
+          </select>
+          <button class="btn-new" onclick="openE()">＋ Nova entrevista</button>
+          <button class="bsm" onclick="printEntrevistas()">🖨 Imprimir</button>
+        </div>
+        <div class="list" id="list-e"></div>
+      </section>
+
+      <section id="sec-agendas" class="section" style="display:none">
+        <div class="toolbar" style="margin-bottom:.75rem">
+          <div
+            style="display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:3px">
+            <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')">☰ Lista</button>
+            <button id="atog-mes" class="atog" onclick="setAgendaView('mes')">▦ Mês</button>
+            <button id="atog-semana" class="atog" onclick="setAgendaView('semana')">▤ Semana</button>
+          </div>
+          <div id="cal-nav" style="display:none;align-items:center;gap:8px">
+            <button class="bsm" onclick="calNav(-1)">‹</button>
+            <span id="cal-title" style="font-size:13px;font-weight:600;min-width:160px;text-align:center"></span>
+            <button class="bsm" onclick="calNav(1)">›</button>
+            <button class="bsm" onclick="calToday()">Hoje</button>
+          </div>
+          <div id="lista-filters" style="display:flex;gap:8px;flex-wrap:wrap;flex:1">
+            <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..."
+              oninput="renderA()" />
+            <select class="fi" id="a-ft" onchange="renderA()">
+              <option value="">Todos os tipos</option>
+              <option value="inst_reuniao">Reunião institucional</option>
+              <option value="palestra_aula">Palestra / aula magna</option>
+              <option value="evento_solenidade">Evento / solenidade</option>
+              <option value="reuniao">Reunião</option>
+              <option value="almoco">Almoço</option>
+              <option value="jantar">Jantar</option>
+              <option value="agenda_pessoal">Agenda pessoal</option>
+              <option value="agenda_pastoral">Agenda pastoral</option>
+            </select>
+            <select class="fi" id="a-fs" onchange="renderA()">
+              <option value="">Todos os status</option>
+              <option value="nova">Nova</option>
+              <option value="analise">Em análise</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="realizada">Realizada</option>
+              <option value="recusada">Recusada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <button class="btn-new" onclick="openA()">＋ Nova agenda</button>
+          <button class="bsm" id="btn-print-lista" onclick="printAgendaLista()">🖨 Imprimir</button>
+          <button class="bsm" id="btn-print-cal" style="display:none" onclick="printAgenda()">🖨 Imprimir</button>
+        </div>
+        <div id="agenda-lista">
+          <div class="list" id="list-a"></div>
+        </div>
+        <div id="agenda-cal" style="display:none"></div>
+      </section>
+
+      <section id="sec-briefings" class="section" style="display:none">
+        <div class="toolbar">
+          <input class="fi fi-busca" id="b-busca" placeholder="Buscar título, evento, tema..." oninput="renderB()" />
+          <select class="fi" id="b-ft" onchange="renderB()">
+            <option value="">Todos os tipos</option>
+            <option value="entrevista">Entrevista</option>
+            <option value="solenidade">Solenidade / conferência</option>
+            <option value="reuniao">Reunião institucional</option>
+            <option value="visita">Visita / deslocamento</option>
+            <option value="pastoral">Pastoral / pessoal</option>
+          </select>
+          <button class="btn-new" onclick="openB()">＋ Novo briefing</button>
+        </div>
+        <div class="list" id="list-b"></div>
+      </section>
+
+      <section id="sec-pauta" class="section" style="display:none">
+        <div class="toolbar">
+          <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="renderP()" />
+          <input class="fi" id="p-datafrom" type="date" onchange="renderP()" title="Data inicial" />
+          <input class="fi" id="p-datato" type="date" onchange="renderP()" title="Data final" />
+          <button class="btn-new" onclick="openP()">＋ Nova pauta</button>
+        </div>
+        <div class="list" id="list-p"></div>
+      </section>
+
+    </main>
+  </div><!-- /app-screen -->
+
+  <!-- MODAIS (entrevista, agenda, briefing, detalhe) omitidos por brevidade — ver arquivo local -->
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ════════════════════════════════════════
+       SUPABASE CONFIG
+       Preencha as duas linhas abaixo com suas credenciais
+    ════════════════════════════════════════ */
+    const SUPABASE_URL = 'https://twrmejqbgzbwpkenjuye.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_mvcCzU0BN9FZEs2Yfhj85w_ZdQLKhDL';
+    const supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    /* ════════════════════════════════════════
+       AUTH
+    ════════════════════════════════════════ */
+    async function doLogin() {
+      const email = document.getElementById('l-email').value.trim();
+      const senha = document.getElementById('l-senha').value;
+      const errEl = document.getElementById('l-error');
+      const ldEl = document.getElementById('l-loading');
+      errEl.textContent = ''; ldEl.textContent = 'Entrando...';
+      try {
+        ldEl.textContent = 'Conectando ao Supabase...';
+        const { data, error } = await supa.auth.signInWithPassword({ email, password: senha });
+        ldEl.textContent = '';
+        if (error) {
+          errEl.textContent = '❌ Erro: ' + error.message + ' (' + error.status + ')';
+          return;
+        }
+        if (data && data.session) {
+          ldEl.textContent = '✓ Login OK — carregando...';
+          await showApp();
+        } else {
+          errEl.textContent = '❌ Sessão não criada. data: ' + JSON.stringify(data);
+        }
+      } catch (e) {
+        ldEl.textContent = '';
+        errEl.textContent = '❌ Exceção: ' + e.message;
+      }
+    }
+    async function doLogout() {
+      await supa.auth.signOut();
+      document.getElementById('app-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      DB = { E: [], A: [], B: [], P: [] };
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const senhaEl = document.getElementById('l-senha');
+      if (senhaEl) senhaEl.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+      // Tentar login automático se a sessão já existir
+      checkSession();
+    });
+
+    async function checkSession() {
+      try {
+        const { data, error } = await supa.auth.getSession();
+        if (data && data.session) await showApp();
+      } catch (e) { console.error('Session check error:', e); }
+    }
+
+    async function showApp() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-screen').style.display = '';
+      await loadAll();
+      renderDash();
+    }
+
+    /* ════════════════════════════════════════
+       DATA LAYER — SUPABASE
+    ════════════════════════════════════════ */
+    let DB = { E: [], A: [], B: [], P: [] };
+
+    function sync(msg) { }
+
+    async function loadAll() {
+      try {
+        const [resE, resA, resB, resP] = await Promise.all([
+          supa.from('entrevistas').select('*').order('criado', { ascending: false }),
+          supa.from('agendas').select('*').order('criado', { ascending: false }),
+          supa.from('briefings').select('*').order('criado', { ascending: false }),
+          supa.from('pautas').select('*').order('criado', { ascending: false })
+        ]);
+
+        DB.E = resE.data || [];
+        DB.A = resA.data || [];
+        DB.B = resB.data || [];
+        DB.P = resP.data || [];
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+        DB = { E: [], A: [], B: [], P: [] };
+      }
+    }
+
+    async function dbUpsert(table, rec) {
+      const key = { entrevistas: 'E', agendas: 'A', briefings: 'B', pautas: 'P' }[table];
+      if (!key) return false;
+
+      if (!rec.criado) rec.criado = new Date().toISOString();
+
+      try {
+        const { error } = await supa.from(table).upsert([rec]);
+        if (error) throw error;
+
+        const idx = DB[key].findIndex(x => x.id === rec.id);
+        if (idx >= 0) DB[key][idx] = { ...DB[key][idx], ...rec };
+        else DB[key].unshift(rec);
+
+        return true;
+      } catch (e) {
+        console.error(`Erro ao salvar na tabela ${table}:`, e);
+        toast('Erro ao salvar no banco!');
+        return false;
+      }
+    }
+
+    async function dbDelete(table, id) {
+      const key = { entrevistas: 'E', agendas: 'A', briefings: 'B', pautas: 'P' }[table];
+      if (!key) return false;
+
+      try {
+        const { error } = await supa.from(table).delete().eq('id', id);
+        if (error) throw error;
+
+        DB[key] = DB[key].filter(x => x.id !== id);
+        return true;
+      } catch (e) {
+        console.error(`Erro ao deletar da tabela ${table}:`, e);
+        toast('Erro ao deletar!');
+        return false;
+      }
+    }
+
+    function persist() { } // Mantido vazio para compatibilidade se algo ainda chamar
+
+    /* ════════════════════════════════════════
+       HELPERS
+    ════════════════════════════════════════ */
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+    function fd(s) { if (!s) return '—'; try { const p = s.includes('T') ? new Date(s) : new Date(s + 'T00:00:00'); return p.toLocaleDateString('pt-BR'); } catch (e) { return s; } }
+    function fdt(s) { if (!s) return '—'; try { return new Date(s).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return s; } }
+    function dateKey(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+    function fileIcon(n) { const e = (n.split('.').pop() || '').toLowerCase(); if (e === 'pdf') return '📄'; if (['doc', 'docx'].includes(e)) return '📝'; if (['ppt', 'pptx'].includes(e)) return '📊'; if (['xls', 'xlsx'].includes(e)) return '📈'; if (['jpg', 'jpeg', 'png'].includes(e)) return '🖼'; return '📎'; }
+
+    const TLE = { ao_vivo: 'Ao vivo', gravada: 'Gravada', escrita: 'Escrita' };
+    const TLA = { inst_reuniao: 'Reunião institucional', palestra_aula: 'Palestra / aula magna', evento_solenidade: 'Evento / solenidade', reuniao: 'Reunião', almoco: 'Almoço', jantar: 'Jantar', agenda_pessoal: 'Agenda pessoal', agenda_pastoral: 'Agenda pastoral' };
+    const TLB = { entrevista: 'Entrevista', solenidade: 'Solenidade', reuniao: 'Reunião institucional', visita: 'Visita', pastoral: 'Pastoral' };
+    const SLE = { nova: 'Nova', analise: 'Em análise', aprovada: 'Aprovada', realizada: 'Realizada', recusada: 'Recusada' };
+    const SLA = { nova: 'Nova', analise: 'Em análise', confirmada: 'Confirmada', realizada: 'Realizada', recusada: 'Recusada', cancelada: 'Cancelada' };
+    const PL = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
+    const TIPO_COLORS = { inst_reuniao: { bg: '#dceefb', color: '#0a4070' }, palestra_aula: { bg: '#ede9fc', color: '#2a1a80' }, evento_solenidade: { bg: '#ede9fc', color: '#3c2fa0' }, reuniao: { bg: '#e8f0fb', color: '#1a3a70' }, almoco: { bg: '#fef3d0', color: '#7a4800' }, jantar: { bg: '#fce8f0', color: '#6e1f48' }, agenda_pessoal: { bg: '#eeecea', color: '#444' }, agenda_pastoral: { bg: '#d8f5e8', color: '#0a5a3a' } };
+
+    /* ════════════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════════════ */
+    const SECS = ['dash', 'entrevistas', 'agendas', 'briefings', 'pauta'];
+    function goSection(id) {
+      SECS.forEach(s => {
+        document.getElementById('sec-' + s).style.display = s === id ? '' : 'none';
+        document.querySelectorAll('.ntab').forEach((t, i) => t.classList.toggle('active', ['dash', 'entrevistas', 'agendas', 'briefings', 'pauta'][i] === id));
+      });
+      if (id === 'dash') renderDash();
+      if (id === 'entrevistas') renderE();
+      if (id === 'agendas') renderA();
+      if (id === 'briefings') renderB();
+      if (id === 'pauta') renderP();
+    }
+
+    /* ════════════════════════════════════════
+       DASHBOARD
+    ════════════════════════════════════════ */
+    function renderDash() {
+      const ne = DB.E.filter(x => x.s === 'nova' || x.s === 'analise').length;
+      const na = DB.A.filter(x => x.s === 'nova' || x.s === 'analise').length;
+      document.getElementById('dm-e').textContent = DB.E.length;
+      document.getElementById('dm-e-sub').textContent = ne + ' pendentes';
+      document.getElementById('dm-a').textContent = DB.A.length;
+      document.getElementById('dm-a-sub').textContent = na + ' pendentes';
+      document.getElementById('dm-b').textContent = DB.B.length;
+      document.getElementById('dm-b-sub').textContent = 'redigidos';
+      document.getElementById('dm-p').textContent = ne + na;
+      document.getElementById('cnt-e').textContent = DB.E.length;
+      document.getElementById('cnt-a').textContent = DB.A.length;
+      document.getElementById('cnt-b').textContent = DB.B.length;
+      document.getElementById('cnt-p').textContent = DB.P.length;
+      if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
+      const mk = (arr, kn, kd) => {
+        if (!arr.length) return '<div style="font-size:12px;color:var(--muted2);padding:8px 0">Nenhum registro</div>';
+        return arr.slice(0, 5).map(x => `<div class="mini-item"><span class="mini-name">${x[kn] || '—'}</span><span class="mini-date">${fd(x[kd])}</span></div>`).join('');
+      };
+      document.getElementById('dash-e').innerHTML = mk([...DB.E].sort((a, b) => new Date(b.criado) - new Date(a.criado)), 'jornalista', 'criado');
+      document.getElementById('dash-a').innerHTML = mk([...DB.A].sort((a, b) => new Date(b.criado) - new Date(a.criado)), 'tema', 'data');
+      document.getElementById('dash-b').innerHTML = mk([...DB.B].sort((a, b) => new Date(b.criado) - new Date(a.criado)), 'titulo', 'data');
+    }
+
+    /* ════════════════════════════════════════
+       ENTREVISTAS
+    ════════════════════════════════════════ */
+    let editingE = null;
+    const _anexos = { a: [], b: [], e: [] };
+
+    function renderE() {
+      const b = (document.getElementById('e-busca') || { value: '' }).value.toLowerCase();
+      const fs = (document.getElementById('e-fs') || { value: '' }).value;
+      const ff = (document.getElementById('e-ff') || { value: '' }).value;
+      const norm = n => (n || '').toLowerCase().trim();
+      let L = [...DB.E].filter(x => {
+        if (fs && x.s !== fs) return false;
+        if (ff && x.formato !== ff) return false;
+        if (b && !norm(x.veiculo).includes(b) && !norm(x.jornalista).includes(b) && !norm(x.tema).includes(b)) return false;
+        return true;
+      });
+      document.getElementById('cnt-e').textContent = DB.E.length;
+      const el = document.getElementById('list-e');
+      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma entrevista encontrada</div>'; return; }
+      const groups = {};
+      L.forEach(x => { const k = norm(x.jornalista) || x.id; if (!groups[k]) groups[k] = []; groups[k].push(x); });
+      const sorted = Object.values(groups).map(g => { g.sort((a, b2) => new Date(b2.criado) - new Date(a.criado)); return g; }).sort((a, b2) => new Date(b2[0].criado) - new Date(a[0].criado));
+      const ABERTOS = ['nova', 'analise', 'aprovada'];
+      const statusDot = s => { const c = { nova: '#2a6a2a', analise: '#7a4800', aprovada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a' }; return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${c[s] || '#aaa'};flex-shrink:0;margin-top:3px"></span>`; };
+      el.innerHTML = sorted.map(group => {
+        const rep = group[0];
+        const nome = rep.jornalista || '—', veiculo = rep.veiculo || '—';
+        const total = group.length, abertos = group.filter(x => ABERTOS.includes(x.s)), realizadas = group.filter(x => x.s === 'realizada'), recusadas = group.filter(x => x.s === 'recusada');
+        const temAberto = abertos.length > 0, jaAtendido = realizadas.length > 0, recorrente = total > 1;
+        const initials = nome.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+        const sumBadges = `<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
+      ${temAberto && jaAtendido ? `<span class="badge" style="background:#fde8e8;color:#7a1a1a">⚠ ${abertos.length} em aberto · já atendido</span>` : ''}
+      ${temAberto && !jaAtendido && recorrente ? `<span class="badge" style="background:#fef3d0;color:#7a4800">↩ recorrente · ${abertos.length} em aberto</span>` : ''}
+      ${jaAtendido && !temAberto ? `<span class="badge" style="background:#d8f5e8;color:#0a5a3a">✓ ${realizadas.length} realizada${realizadas.length > 1 ? 's' : ''}</span>` : ''}
+      ${recusadas.length > 0 ? `<span class="badge" style="background:#eeecea;color:#555">${recusadas.length} recusada${recusadas.length > 1 ? 's' : ''}</span>` : ''}
+    </div>`;
+        const pedidosList = group.map(x => `
+      <div style="display:grid;grid-template-columns:8px 1fr auto;gap:8px;align-items:start;padding:7px 0;border-bottom:0.5px solid var(--border)" onclick="event.stopPropagation()">
+        ${statusDot(x.s)}
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text)">${x.veiculo || '—'} <span style="font-weight:400;color:var(--muted)">· ${TLE[x.formato] || x.formato}</span></div>
+          ${x.tema ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${x.tema}</div>` : ''}
+          <div style="font-size:11px;color:var(--muted2);margin-top:1px">${x.datasol ? fd(x.datasol) + ' · ' : ''}${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div>
+          ${x.obs ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${x.obs.slice(0, 80)}${x.obs.length > 80 ? '…' : ''}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+          <span class="badge s-${x.s}">${SLE[x.s] || x.s}</span>
+          <div style="display:flex;gap:4px">
+            <select class="bsm" style="font-size:10px;padding:2px 6px" onchange="updateStatusE('${x.id}',this.value);this.value=''">
+              <option value="">Status...</option>
+              <option value="nova">Nova</option><option value="analise">Em análise</option><option value="aprovada">Aprovada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option>
+            </select>
+            <button class="bsm" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();setTimeout(()=>detailE('${x.id}'),10)">👁</button>
+            <button class="bsm" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();setTimeout(()=>openE('${x.id}'),10)">✏</button>
+            <button class="bsm bdel" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();delE('${x.id}')">🗑</button>
+          </div>
+        </div>
+      </div>`).join('');
+        return `<div class="item" style="cursor:default">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="width:40px;height:40px;border-radius:50%;background:${jaAtendido ? '#d8f5e8' : '#dceefb'};color:${jaAtendido ? '#0a5a3a' : '#0a4070'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${initials}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <div><div class="item-title">${nome}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${veiculo}${rep.cargo ? ' · ' + rep.cargo : ''}</div></div>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+              <span style="font-size:11px;color:var(--muted)">${total} pedido${total > 1 ? 's' : ''}</span>
+              <button class="bsm" onclick="openEfromJornalista('${rep.id}')" style="font-size:11px">＋ Novo pedido</button>
+            </div>
+          </div>
+          ${sumBadges}
+          <div style="margin-top:10px">${pedidosList}</div>
+        </div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function openE(id) {
+      editingE = id || null;
+      const x = id ? DB.E.find(e => e.id === id) : {};
+      document.getElementById('e-modal-title').textContent = id ? 'Editar solicitação' : 'Nova solicitação de entrevista';
+      const f = (i, v) => { const el = document.getElementById(i); if (el) el.value = v || ''; };
+      f('e-datasol', x.datasol); f('e-veiculo', x.veiculo); f('e-jornalista', x.jornalista); f('e-cargo', x.cargo);
+      f('e-formato', x.formato || 'ao_vivo'); f('e-data', x.data); f('e-prazo', x.prazo);
+      f('e-origem', x.origem); f('e-prior', x.prior || 'media'); f('e-tema', x.tema);
+      f('e-pauta', x.pauta); f('e-obs', x.obs);
+      f('e-p-linha', x.p_linha); f('e-p-hist', x.p_hist); f('e-p-atencao', x.p_atencao);
+      f('e-p-social', x.p_social); f('e-p-contato', x.p_contato); f('e-p-link', x.p_link);
+      clearPerfilFile();
+      if (x.p_filename) { document.getElementById('e-p-file-name').textContent = x.p_filename; document.getElementById('e-p-file-info').style.display = ''; }
+      mTab('e', 'form');
+      document.getElementById('ov-e').classList.add('open');
+    }
+
+    function openEfromJornalista(refId) {
+      const ref = DB.E.find(e => e.id === refId); if (!ref) { openE(); return; }
+      editingE = null;
+      document.getElementById('e-modal-title').textContent = 'Novo pedido — ' + ref.jornalista;
+      const f = (i, v) => { const el = document.getElementById(i); if (el) el.value = v || ''; };
+      f('e-jornalista', ref.jornalista); f('e-veiculo', ref.veiculo); f('e-cargo', ref.cargo);
+      f('e-origem', ref.origem); f('e-prior', ref.prior || 'media'); f('e-formato', ref.formato || 'ao_vivo');
+      f('e-p-linha', ref.p_linha); f('e-p-hist', ref.p_hist); f('e-p-atencao', ref.p_atencao);
+      f('e-p-social', ref.p_social); f('e-p-contato', ref.p_contato); f('e-p-link', ref.p_link);
+      f('e-datasol', ''); f('e-data', ''); f('e-prazo', ''); f('e-tema', ''); f('e-pauta', ''); f('e-obs', '');
+      clearPerfilFile(); mTab('e', 'form');
+      document.getElementById('ov-e').classList.add('open');
+    }
+
+    async function saveE() {
+      const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
+      if (!g('e-veiculo') && !g('e-jornalista')) { toast('Informe ao menos o veículo ou jornalista'); return; }
+      const rec = {
+        id: editingE || uid(), datasol: g('e-datasol'), veiculo: g('e-veiculo'), jornalista: g('e-jornalista'),
+        cargo: g('e-cargo'), formato: g('e-formato'), data: g('e-data') || null, prazo: g('e-prazo') || null,
+        origem: g('e-origem'), prior: g('e-prior'), tema: g('e-tema'), pauta: g('e-pauta'), obs: g('e-obs'),
+        p_linha: g('e-p-linha'), p_hist: g('e-p-hist'), p_atencao: g('e-p-atencao'),
+        p_social: g('e-p-social'), p_contato: g('e-p-contato'), p_link: g('e-p-link'),
+        p_filename: document.getElementById('e-p-file-name').textContent || '',
+        s: editingE ? (DB.E.find(e => e.id === editingE) || {}).s || 'nova' : 'nova',
+      };
+      const ok = await dbUpsert('entrevistas', rec);
+      if (!ok) return;
+      closeModal('ov-e'); renderE(); renderDash(); toast('Entrevista salva');
+    }
+
+    async function updateStatusE(id, v) {
+      if (!v) return;
+      const ok = await dbUpsert('entrevistas', { id, s: v });
+      if (!ok) return;
+      const x = DB.E.find(e => e.id === id); if (x) x.s = v;
+      renderE(); renderDash(); toast('Status: ' + SLE[v]);
+    }
+
+    async function delE(id) {
+      if (!confirm('Excluir?')) return;
+      const ok = await dbDelete('entrevistas', id);
+      if (!ok) return;
+      DB.E = DB.E.filter(e => e.id !== id); renderE(); renderDash(); toast('Excluído');
+    }
+
+    function detailE(id) {
+      const x = DB.E.find(e => e.id === id); if (!x) return;
+      const norm = n => (n || '').toLowerCase().trim();
+      const hist = DB.E.filter(e => e.id !== id && norm(e.jornalista) && norm(e.jornalista) === norm(x.jornalista)).sort((a, b) => new Date(b.criado) - new Date(a.criado));
+      const histHtml = hist.length ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:8px">Histórico (${hist.length})</div>
+    ${hist.map(h => `<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:0.5px solid var(--border)">
+      <span class="badge s-${h.s}">${SLE[h.s] || h.s}</span>
+      <span style="flex:1">${h.veiculo || '—'}${h.tema ? ' · ' + h.tema : ''}</span>
+      <span style="color:var(--muted)">${fd(h.datasol || h.criado)}</span>
+      <button class="bsm" onclick="closeModal('ov-detail');detailE('${h.id}')">ver</button>
+    </div>`).join('')}</div>` : '';
+      document.getElementById('detail-title').textContent = x.veiculo + ' · ' + x.jornalista;
+      document.getElementById('detail-body').innerHTML = `
+    <div class="detail-row"><span class="dl">Veículo</span><span class="dv">${x.veiculo || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Jornalista</span><span class="dv">${x.jornalista || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Cargo</span><span class="dv">${x.cargo || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Formato</span><span class="dv">${TLE[x.formato] || x.formato || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Status</span><span class="dv"><span class="badge s-${x.s}">${SLE[x.s] || x.s}</span></span></div>
+    <div class="detail-row"><span class="dl">Data solicitação</span><span class="dv">${fd(x.datasol)}</span></div>
+    <div class="detail-row"><span class="dl">Data / hora</span><span class="dv">${fdt(x.data)}</span></div>
+    <div class="detail-row"><span class="dl">Prazo</span><span class="dv">${fd(x.prazo)}</span></div>
+    <div class="detail-row"><span class="dl">Prioridade</span><span class="dv"><span class="badge p-${x.prior}">${PL[x.prior] || x.prior}</span></span></div>
+    <div class="detail-row"><span class="dl">Tema</span><span class="dv">${x.tema || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Pauta / perguntas</span><span class="dv">${x.pauta || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Observações</span><span class="dv">${x.obs || '—'}</span></div>
+    ${x.p_linha ? `<div class="detail-row"><span class="dl">Linha editorial</span><span class="dv">${x.p_linha}</span></div>` : ''}
+    ${x.p_hist ? `<div class="detail-row"><span class="dl">Histórico cobertura</span><span class="dv">${x.p_hist}</span></div>` : ''}
+    ${x.p_atencao ? `<div class="detail-row"><span class="dl">Pontos de atenção</span><span class="dv">${x.p_atencao}</span></div>` : ''}
+    ${x.p_social ? `<div class="detail-row"><span class="dl">Rede social</span><span class="dv">${x.p_social}</span></div>` : ''}
+    ${x.p_contato ? `<div class="detail-row"><span class="dl">Contato</span><span class="dv">${x.p_contato}</span></div>` : ''}
+    ${x.p_link ? `<div class="detail-row"><span class="dl">Link perfil</span><span class="dv"><a href="${x.p_link}" target="_blank">${x.p_link}</a></span></div>` : ''}
+    ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv">📎 ${x.p_filename}</span></div>` : ''}
+  `+ histHtml;
+      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="openE('${id}');closeModal('ov-detail')">Editar</button>`;
+      document.getElementById('ov-detail').classList.add('open');
+    }
+
+    function handlePerfilFile(input) { if (!input.files || !input.files[0]) return; const name = input.files[0].name; document.getElementById('e-p-file-name').textContent = name; document.getElementById('e-p-file-info').style.display = ''; }
+    function clearPerfilFile() { const fi = document.getElementById('e-p-file'); if (fi) fi.value = ''; document.getElementById('e-p-file-name').textContent = ''; document.getElementById('e-p-file-info').style.display = 'none'; }
+
+    /* ════════════════════════════════════════
+       AGENDAS
+    ════════════════════════════════════════ */
+    let editingA = null;
+    function renderA() {
+      const b = (document.getElementById('a-busca') || { value: '' }).value.toLowerCase();
+      const ft = (document.getElementById('a-ft') || { value: '' }).value;
+      const fs = (document.getElementById('a-fs') || { value: '' }).value;
+      const norm = n => (n || '').toLowerCase().trim();
+      let L = [...DB.A].filter(x => {
+        if (ft && x.tipo !== ft) return false;
+        if (fs && x.s !== fs) return false;
+        if (b && !norm(x.inst).includes(b) && !norm(x.nome).includes(b) && !norm(x.tema).includes(b)) return false;
+        return true;
+      }).sort((a, b2) => (a.data || a.criado || '').localeCompare(b2.data || b2.criado || ''));
+      document.getElementById('cnt-a').textContent = DB.A.length;
+      const el = document.getElementById('list-a');
+      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma agenda encontrada</div>'; return; }
+      el.innerHTML = L.map(x => `
+    <div class="item" onclick="detailA('${x.id}')">
+      <div class="item-header">
+        <div><div class="item-title">${x.tema || x.inst || '—'}</div></div>
+        <span class="badge s-${x.s}">${SLA[x.s] || x.s}</span>
+      </div>
+      <div class="item-meta">${x.inst ? x.inst + ' · ' : ''}${x.nome ? x.nome + ' · ' : ''}${x.cidade ? x.cidade + ' · ' : ''}${fdt(x.data)}</div>
+      <div class="item-tags">
+        <span class="badge t-${x.tipo}">${TLA[x.tipo] || x.tipo}</span>
+        <span class="badge p-${x.prior}">${PL[x.prior] || x.prior}</span>
+      </div>
+      <div class="item-actions" onclick="event.stopPropagation()">
+        <select class="bsm" onchange="updateStatusA('${x.id}',this.value)">
+          <option value="">Alterar status...</option>
+          <option value="nova">Nova</option><option value="analise">Em análise</option><option value="confirmada">Confirmada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option><option value="cancelada">Cancelada</option>
+        </select>
+        <button class="bsm" onclick="editA('${x.id}')">✏ Editar</button>
+        <button class="bsm bdel" onclick="delA('${x.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+    }
+
+    function openA(id) {
+      editingA = id || null;
+      const x = id ? DB.A.find(a => a.id === id) : {};
+      document.getElementById('a-modal-title').textContent = id ? 'Editar agenda' : 'Nova solicitação de agenda';
+      const f = (i, v) => { const el = document.getElementById(i); if (el) el.value = v || ''; };
+      f('a-datped', x.datped); f('a-tipo', x.tipo || 'inst_reuniao'); f('a-inst', x.inst);
+      f('a-nome', x.nome); f('a-cargo', x.cargo); f('a-tipoinst', x.tipoinst);
+      f('a-cidade', x.cidade); f('a-formato', x.formato || 'presencial');
+      f('a-data', x.data); f('a-prazo', x.prazo); f('a-origem', x.origem);
+      f('a-prior', x.prior || 'media'); f('a-tema', x.tema);
+      f('a-local', x.local); f('a-staff', x.staff); f('a-desloc', x.desloc);
+      f('a-prot', x.prot); f('a-obs', x.obs); f('a-link', x.link);
+      loadAnexos('a', x.anexos);
+      document.getElementById('ov-a').classList.add('open');
+    }
+    function editA(id) { openA(id); }
+
+    async function saveA() {
+      const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
+      if (!g('a-inst') && !g('a-nome') && !g('a-tema')) { toast('Informe ao menos a instituição, interlocutor ou tema'); return; }
+      const rec = {
+        id: editingA || uid(), datped: g('a-datped'), tipo: g('a-tipo'), inst: g('a-inst'), nome: g('a-nome'),
+        cargo: g('a-cargo'), tipoinst: g('a-tipoinst'), cidade: g('a-cidade'), formato: g('a-formato'),
+        data: g('a-data') || null, prazo: g('a-prazo') || null, origem: g('a-origem'), prior: g('a-prior'), tema: g('a-tema'),
+        local: g('a-local'), staff: g('a-staff'), desloc: g('a-desloc'), prot: g('a-prot'), obs: g('a-obs'), link: g('a-link'),
+        anexos: [..._anexos.a],
+        s: editingA ? (DB.A.find(a => a.id === editingA) || {}).s || 'nova' : 'nova',
+      };
+      const ok = await dbUpsert('agendas', rec);
+      if (!ok) return;
+      closeModal('ov-a'); renderA(); renderDash(); toast('Agenda salva');
+    }
+
+    async function updateStatusA(id, v) {
+      if (!v) return;
+      const ok = await dbUpsert('agendas', { id, s: v });
+      if (!ok) return;
+      const x = DB.A.find(a => a.id === id); if (x) x.s = v;
+      renderA(); renderDash(); toast('Status: ' + SLA[v]);
+    }
+    async function delA(id) {
+      if (!confirm('Excluir?')) return;
+      const ok = await dbDelete('agendas', id);
+      if (!ok) return;
+      DB.A = DB.A.filter(a => a.id !== id); renderA(); renderDash(); toast('Excluído');
+    }
+    function detailA(id) {
+      const x = DB.A.find(a => a.id === id); if (!x) return;
+      document.getElementById('detail-title').textContent = x.tema || x.inst || '—';
+      document.getElementById('detail-body').innerHTML = [
+        ['Tipo', `<span class="badge t-${x.tipo}">${TLA[x.tipo] || x.tipo}</span>`],
+        ['Status', `<span class="badge s-${x.s}">${SLA[x.s] || x.s}</span>`],
+        ['Tema', x.tema], ['Instituição', x.inst], ['Interlocutor', x.nome], ['Cargo', x.cargo],
+        ['Tipo instituição', x.tipoinst], ['Cidade', x.cidade],
+        ['Data do pedido', fd(x.datped)], ['Data/hora', fdt(x.data)], ['Prazo', fd(x.prazo)],
+        ['Formato', x.formato], ['Prioridade', PL[x.prior] || x.prior],
+        ['Local', x.local], ['Staff', x.staff], ['Deslocamento', x.desloc], ['Protocolo', x.prot],
+        ['Origem', x.origem], ['Observações', x.obs],
+        ['Link convite', x.link ? `<a href="${x.link}" target="_blank">${x.link}</a>` : null],
+        ['Anexos', x.anexos && x.anexos.length ? x.anexos.map(n => `${fileIcon(n)} ${n}`).join('<br>') : null]
+      ].filter(r => r[1]).map(r => `<div class="detail-row"><span class="dl">${r[0]}</span><span class="dv">${r[1] || '—'}</span></div>`).join('');
+      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button>`;
+      document.getElementById('ov-detail').classList.add('open');
+    }
+
+    /* ════════════════════════════════════════
+       BRIEFINGS
+    ════════════════════════════════════════ */
+    let editingB = null;
+    const BTEMPLATES = {
+      entrevista: [{ id: 'contexto', label: 'Contexto do veículo / jornalista', ph: 'Breve perfil do veículo...', rows: 4 }, { id: 'perguntas', label: 'Perguntas previstas / pauta', ph: 'Liste as perguntas...', rows: 5 }, { id: 'orientacoes', label: 'Orientações gerais', ph: 'Tom recomendado, frases-chave...', rows: 4 }, { id: 'roteiro', label: 'Roteiro de fala', ph: 'P1 — [pergunta]\nOrientação: ...', rows: 12 }],
+      solenidade: [{ id: 'contexto', label: 'Contexto do evento', ph: 'Histórico, relevância...', rows: 3 }, { id: 'participantes', label: 'Mesa / participantes relevantes', ph: 'Nome · Cargo · Instituição', rows: 5 }, { id: 'papel', label: 'Papel do Ministro', ph: 'Formato da fala, tempo...', rows: 2 }, { id: 'roteiro', label: 'Roteiro de fala', ph: '▸ ABERTURA (~X min)\n\n– ...', rows: 15 }, { id: 'frases', label: 'Frases-chave', ph: '"..."', rows: 3 }],
+      reuniao: [{ id: 'contexto', label: 'Contexto institucional', ph: 'Quem convoca, relação com o ministro...', rows: 3 }, { id: 'participantes', label: 'Participantes esperados', ph: 'Nome · Cargo · Instituição', rows: 4 }, { id: 'pauta', label: 'Pauta da reunião', ph: '1. ...\n2. ...', rows: 4 }, { id: 'posicao', label: 'Posição recomendada', ph: 'Como o ministro deve se posicionar...', rows: 4 }, { id: 'atencao', label: 'Pontos sensíveis', ph: 'Temas a evitar, tensões...', rows: 3 }],
+      visita: [{ id: 'contexto', label: 'Contexto da visita', ph: 'Objetivo, quem convida...', rows: 3 }, { id: 'programa', label: 'Programa detalhado', ph: 'HH:MM — Atividade', rows: 5 }, { id: 'interlocutores', label: 'Interlocutores principais', ph: 'Nome · Cargo · Papel', rows: 3 }, { id: 'roteiro', label: 'Roteiro / notas de fala', ph: 'Pontos a destacar...', rows: 6 }],
+      pastoral: [{ id: 'contexto', label: 'Contexto e objetivo', ph: 'Natureza do compromisso...', rows: 3 }, { id: 'programa', label: 'Programação', ph: 'HH:MM — Atividade...', rows: 4 }, { id: 'notas', label: 'Notas e orientações', ph: 'Observações específicas...', rows: 4 }],
+    };
+
+    function renderBriefTemplate() {
+      const tipo = document.getElementById('b-tipo').value;
+      const x = editingB ? DB.B.find(b => b.id === editingB) || {} : {};
+      document.getElementById('brief-template-blocks').innerHTML = (BTEMPLATES[tipo] || []).map(bl => `
+    <div class="brief-block"><div class="brief-block-title">${bl.label}</div>
+    <textarea id="bt-${bl.id}" rows="${bl.rows}" placeholder="${bl.ph}">${(x.blocks && x.blocks[bl.id]) || ''}</textarea></div>`).join('');
+    }
+
+    function openB(id) {
+      editingB = id || null;
+      const x = id ? DB.B.find(b => b.id === id) : {};
+      document.getElementById('b-modal-title').textContent = id ? 'Editar briefing' : 'Novo briefing';
+      const f = (i, v) => { const el = document.getElementById(i); if (el) el.value = v || ''; };
+      f('b-titulo', x.titulo); f('b-tipo', x.tipo || 'entrevista'); f('b-data', x.data);
+      f('b-vinculo', x.vinculo); f('b-evento', x.evento); f('b-local', x.local);
+      f('b-hora', x.hora); f('b-real', x.real); f('b-papel', x.papel); f('b-tom', x.tom); f('b-atencao', x.atencao);
+      loadAnexos('b', x.anexos);
+      document.getElementById('btn-export-brief').style.display = id ? '' : 'none';
+      renderBriefTemplate();
+      document.getElementById('ov-b').classList.add('open');
+    }
+    function editB(id) { openB(id); }
+
+    async function saveB() {
+      const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
+      if (!g('b-titulo')) { toast('Informe o título do briefing'); return; }
+      const tipo = g('b-tipo');
+      const blocks = {};
+      (BTEMPLATES[tipo] || []).forEach(bl => { blocks[bl.id] = g('bt-' + bl.id); });
+      const rec = {
+        id: editingB || uid(), titulo: g('b-titulo'), tipo, data: g('b-data') || null, vinculo: g('b-vinculo'),
+        evento: g('b-evento'), local: g('b-local'), hora: g('b-hora'), real: g('b-real'),
+        papel: g('b-papel'), tom: g('b-tom'), atencao: g('b-atencao'),
+        blocks, anexos: [..._anexos.b], s: 'redigido',
+      };
+      const ok = await dbUpsert('briefings', rec);
+      if (!ok) return;
+      if (!editingB) { closeModal('ov-b'); } else { editingB = rec.id; document.getElementById('btn-export-brief').style.display = ''; }
+      renderB(); renderDash(); toast('Briefing salvo');
+    }
+
+    function renderB() {
+      const b = (document.getElementById('b-busca') || { value: '' }).value.toLowerCase();
+      const ft = (document.getElementById('b-ft') || { value: '' }).value;
+      let L = [...DB.B].filter(x => {
+        if (ft && x.tipo !== ft) return false;
+        if (b && !(x.titulo || '').toLowerCase().includes(b) && !(x.evento || '').toLowerCase().includes(b)) return false;
+        return true;
+      }).sort((a, b2) => new Date(b2.criado) - new Date(a.criado));
+      document.getElementById('cnt-b').textContent = DB.B.length;
+      document.getElementById('cnt-p').textContent = DB.P.length;
+      if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
+      const el = document.getElementById('list-b');
+      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhum briefing encontrado</div>'; return; }
+      el.innerHTML = L.map(x => `
+    <div class="item" onclick="detailB('${x.id}')">
+      <div class="item-header"><div><div class="item-title">${x.titulo || '—'}</div></div><span class="badge t-${x.tipo}">${TLB[x.tipo] || x.tipo}</span></div>
+      <div class="item-meta">${x.evento ? x.evento + ' · ' : ''}${fd(x.data)}</div>
+      <div class="item-actions" onclick="event.stopPropagation()">
+        <button class="bsm" onclick="editB('${x.id}')">✏ Editar</button>
+        <button class="bsm btn-export" style="background:var(--blue);color:#fff;border-color:var(--blue)" onclick="exportBriefingById('${x.id}')">↓ .rtf</button>
+        <button class="bsm bdel" onclick="delB('${x.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+    }
+
+    async function delB(id) { if (!confirm('Excluir?')) return; const ok = await dbDelete('briefings', id); if (!ok) return; DB.B = DB.B.filter(b => b.id !== id); renderB(); renderDash(); toast('Excluído'); }
+
+    function detailB(id) {
+      const x = DB.B.find(b => b.id === id); if (!x) return;
+      const blocks = x.blocks || {};
+      const blockHtml = Object.entries(blocks).filter(([k, v]) => v).map(([k, v]) => { const bl = (BTEMPLATES[x.tipo] || []).find(t => t.id === k); return `<div class="detail-row"><span class="dl">${bl ? bl.label : k}</span><span class="dv">${v}</span></div>`; }).join('');
+      document.getElementById('detail-title').textContent = x.titulo;
+      document.getElementById('detail-body').innerHTML = `
+    <div class="detail-row"><span class="dl">Tipo</span><span class="dv"><span class="badge t-${x.tipo}">${TLB[x.tipo]}</span></span></div>
+    <div class="detail-row"><span class="dl">Data</span><span class="dv">${fd(x.data)}</span></div>
+    <div class="detail-row"><span class="dl">Evento</span><span class="dv">${x.evento || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Local</span><span class="dv">${x.local || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Horário</span><span class="dv">${x.hora || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Realizador</span><span class="dv">${x.real || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Papel do Ministro</span><span class="dv">${x.papel || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Tom</span><span class="dv">${x.tom || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Atenção</span><span class="dv">${x.atencao || '—'}</span></div>
+    ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => `${fileIcon(n)} ${n}`).join('<br>')}</span></div>` : ''}
+    ${blockHtml}`;
+      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editB('${id}');closeModal('ov-detail')">Editar</button><button class="btn-export" onclick="exportBriefingById('${id}')">↓ Exportar .rtf</button>`;
+      document.getElementById('ov-detail').classList.add('open');
+    }
+
+    /* ════════════════════════════════════════
+       ANEXOS
+    ════════════════════════════════════════ */
+    function handleAnexos(prefix) {
+      const input = document.getElementById(prefix + '-files');
+      if (!input || !input.files) return;
+      Array.from(input.files).forEach(f => { if (!_anexos[prefix].includes(f.name)) _anexos[prefix].push(f.name); });
+      input.value = ''; renderAnexosList(prefix);
+    }
+    function renderAnexosList(prefix) {
+      const el = document.getElementById(prefix + '-files-list'); if (!el) return;
+      if (!_anexos[prefix].length) { el.innerHTML = ''; return; }
+      el.innerHTML = _anexos[prefix].map((name, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px">
+      <span>${fileIcon(name)} ${name}</span>
+      <button class="bsm bdel" style="font-size:10px;padding:1px 6px" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')">✕</button>
+    </div>`).join('');
+    }
+    function loadAnexos(prefix, list) { _anexos[prefix] = (list || []).slice(); renderAnexosList(prefix); }
+
+    /* ════════════════════════════════════════
+       EXPORT BRIEFING → RTF
+    ════════════════════════════════════════ */
+    function exportBriefingById(id) { const x = DB.B.find(b => b.id === id); if (!x) return; exportBriefingData(x); }
+    function exportBriefing() {
+      const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
+      const tipo = g('b-tipo'); const blocks = {};
+      (BTEMPLATES[tipo] || []).forEach(bl => { blocks[bl.id] = g('bt-' + bl.id); });
+      exportBriefingData({ titulo: g('b-titulo'), tipo, data: g('b-data'), evento: g('b-evento'), local: g('b-local'), hora: g('b-hora'), real: g('b-real'), papel: g('b-papel'), tom: g('b-tom'), atencao: g('b-atencao'), blocks });
+    }
+    function exportBriefingData(x) {
+      const esc = s => (s || '').replace(/\\/g, '\\\\').replace(/\{/g, '\\{').replace(/\}/g, '\\}');
+      const nl = '\\par\n'; const h2 = t => `{\\pard\\sb200\\sa80\\b\\fs24 ${esc(t)}\\b0\\par}\n`; const p = t => `{\\pard\\sa80\\fs22 ${esc(t)}\\par}\n`; const sep = `{\\pard\\sb120\\sa120\\brdrb\\brdrs\\brdrw10 \\par}\n`;
+      const TLB2 = { entrevista: 'ENTREVISTA', solenidade: 'SOLENIDADE', reuniao: 'REUNIÃO INSTITUCIONAL', visita: 'VISITA', pastoral: 'PASTORAL' };
+      let body = `{\\pard\\sa60\\b\\fs32 BRIEFING — ${esc((TLB2[x.tipo] || '').toUpperCase())}\\b0\\par}\n{\\pard\\sa40\\fs22 Ministro André Mendonça\\par}\n` + sep;
+      [['Evento', x.evento], ['Data', x.data ? fd(x.data) : ''], ['Horário', x.hora], ['Local', x.local], ['Realizador', x.real], ['Papel', x.papel], ['Tom', x.tom]].filter(r => r[1]).forEach(r => { body += `{\\pard\\sa40\\fs21 {\\b ${esc(r[0])}: }${esc(r[1])}\\par}\n`; });
+      if (x.atencao) { body += sep; body += h2('⚠ Ponto de atenção'); body += p(x.atencao); }
+      body += sep;
+      (BTEMPLATES[x.tipo] || []).forEach(bl => { const v = (x.blocks || {})[bl.id]; if (!v) return; body += h2(bl.label.toUpperCase()); v.split('\n').forEach(line => { body += p(line || ' '); }); body += nl; });
+      const rtf = `{\\rtf1\\ansi\\deff0\n{\\fonttbl{\\f0 Arial;}}\n\\f0\\fs22\n${body}}`;
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([rtf], { type: 'application/rtf' }));
+      a.download = (x.titulo || 'briefing').replace(/[^\w\s-]/g, '').replace(/\s+/g, '_') + '.rtf'; a.click();
+      toast('Exportado como .rtf — abre no Word');
+    }
+
+    /* ════════════════════════════════════════
+       CALENDAR
+    ════════════════════════════════════════ */
+    let calView = 'lista', calDate = new Date();
+    function setAgendaView(v) {
+      calView = v;
+      document.querySelectorAll('.atog').forEach(b => b.classList.remove('active'));
+      document.getElementById('atog-' + v).classList.add('active');
+      document.getElementById('lista-filters').style.display = v === 'lista' ? 'flex' : 'none';
+      document.getElementById('cal-nav').style.display = v === 'lista' ? 'none' : 'flex';
+      document.getElementById('agenda-lista').style.display = v === 'lista' ? '' : 'none';
+      document.getElementById('agenda-cal').style.display = v === 'lista' ? 'none' : '';
+      document.getElementById('btn-print-cal').style.display = v === 'lista' ? 'none' : '';
+      document.getElementById('btn-print-lista').style.display = v === 'lista' ? '' : 'none';
+      if (v === 'mes') renderMes(); if (v === 'semana') renderSemana();
+    }
+    function calNav(dir) { if (calView === 'mes') { calDate = new Date(calDate.getFullYear(), calDate.getMonth() + dir, 1); } else { calDate = new Date(calDate.getTime() + dir * 7 * 86400000); } if (calView === 'mes') renderMes(); else renderSemana(); }
+    function calToday() { calDate = new Date(); if (calView === 'mes') renderMes(); else renderSemana(); }
+    function agendaDateKey(a) { if (!a.data) return null; return a.data.slice(0, 10); }
+    function agendaHour(a) { if (!a.data || !a.data.includes('T')) return null; return parseInt(a.data.split('T')[1].split(':')[0]); }
+    function renderMes() {
+      const y = calDate.getFullYear(), m = calDate.getMonth();
+      const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      document.getElementById('cal-title').textContent = MESES[m] + ' ' + y;
+      const first = new Date(y, m, 1), last = new Date(y, m + 1, 0), startDow = first.getDay();
+      const today = dateKey(new Date()); const map = {};
+      DB.A.forEach(a => { const k = agendaDateKey(a); if (k) map[k] = (map[k] || []).concat(a); });
+      const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      let html = `<div class="cal-grid">${DIAS.map(d => `<div class="cal-head">${d}</div>`).join('')}`;
+      for (let i = 0; i < startDow; i++) { const d = new Date(y, m, 1 - startDow + i); const k = dateKey(d); html += `<div class="cal-cell other-month"><div class="cal-day-num">${d.getDate()}</div>${(map[k] || []).slice(0, 2).map(a => calPill(a)).join('')}</div>`; }
+      for (let d = 1; d <= last.getDate(); d++) { const k = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; const evs = map[k] || []; html += `<div class="cal-cell${k === today ? ' today' : ''}" onclick="calDayClick('${k}')"><div class="cal-day-num">${d}</div>${evs.slice(0, 3).map(a => calPill(a)).join('')}${evs.length > 3 ? `<div class="cal-more">+${evs.length - 3}</div>` : ''}</div>`; }
+      const trail = (7 - ((startDow + last.getDate()) % 7)) % 7;
+      for (let i = 1; i <= trail; i++) { const d = new Date(y, m + 1, i); const k = dateKey(d); html += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div>${(map[k] || []).slice(0, 2).map(a => calPill(a)).join('')}</div>`; }
+      document.getElementById('agenda-cal').innerHTML = html + '</div>';
+    }
+    function calPill(a) { const c = TIPO_COLORS[a.tipo] || { bg: '#eeecea', color: '#444' }; const hora = a.data && a.data.includes('T') ? a.data.split('T')[1].slice(0, 5) + ' ' : ''; return `<div class="cal-event" style="background:${c.bg};color:${c.color}" onclick="event.stopPropagation();detailA('${a.id}')">${hora}${a.tema || a.inst || '—'}</div>`; }
+    function calDayClick(k) { openA(); const dt = document.getElementById('a-data'); if (dt) dt.value = k + 'T09:00'; }
+    function renderSemana() {
+      const dow = calDate.getDay(); const weekStart = new Date(calDate.getTime() - dow * 86400000);
+      const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']; const today = dateKey(new Date());
+      const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(weekStart.getTime() + i * 86400000); return { d, k: dateKey(d), label: DIAS[i] + ' ' + d.getDate() + '/' + (d.getMonth() + 1) }; });
+      document.getElementById('cal-title').textContent = `${days[0].d.getDate()}/${days[0].d.getMonth() + 1} – ${days[6].d.getDate()}/${days[6].d.getMonth() + 1}/${days[6].d.getFullYear()}`;
+      const map = {}; DB.A.forEach(a => { const k = agendaDateKey(a); if (!k) return; const h = agendaHour(a) != null ? agendaHour(a) : 8; map[k + '_' + h] = (map[k + '_' + h] || []).concat(a); });
+      const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
+      let html = `<div class="week-grid"><div class="week-head"><div class="week-head-cell"></div>${days.map(d => `<div class="week-head-cell${d.k === today ? ' today-col' : ''}">${d.label}</div>`).join('')}</div><div class="week-body">`;
+      HOURS.forEach(h => { html += `<div class="week-hour-label">${String(h).padStart(2, '0')}h</div>`; days.forEach(d => { const evs = map[d.k + '_' + h] || []; html += `<div class="week-slot" onclick="calDayClick('${d.k}')">${evs.map(a => { const c = TIPO_COLORS[a.tipo] || { bg: '#eeecea', color: '#444' }; return `<div class="week-event" style="background:${c.bg};color:${c.color}" onclick="event.stopPropagation();detailA('${a.id}')">${a.tema || a.inst || '—'}</div>`; }).join('')}</div>`; }); });
+      document.getElementById('agenda-cal').innerHTML = html + '</div></div>';
+    }
+
+    /* ════════════════════════════════════════
+       PRINT
+    ════════════════════════════════════════ */
+    function printEntrevistas() {
+      const norm = n => (n || '').toLowerCase().trim();
+      const b = document.getElementById('e-busca').value.toLowerCase();
+      const fs = document.getElementById('e-fs').value, ff = document.getElementById('e-ff').value;
+      let L = [...DB.E].filter(x => { if (fs && x.s !== fs) return false; if (ff && x.formato !== ff) return false; if (b && !norm(x.veiculo).includes(b) && !norm(x.jornalista).includes(b)) return false; return true; });
+      const groups = {}; L.forEach(x => { const k = norm(x.jornalista) || x.id; if (!groups[k]) groups[k] = []; groups[k].push(x); });
+      const sorted = Object.values(groups).sort((a, b2) => new Date(b2[0].criado) - new Date(a[0].criado));
+      const SLE2 = { nova: 'Nova', analise: 'Em análise', aprovada: 'Aprovada', realizada: 'Realizada', recusada: 'Recusada' };
+      const TLE2 = { ao_vivo: 'Ao vivo', gravada: 'Gravada', escrita: 'Escrita' };
+      const scol = { nova: '#2a6a2a', analise: '#7a4800', aprovada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a' };
+      const win = window.open('', '_pe', 'width=900,height=700');
+      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda de Imprensa</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}.header h1{font-size:13pt;font-weight:700;text-transform:uppercase}.jcard{margin-bottom:1rem;border:1pt solid #ddd;border-radius:4pt;page-break-inside:avoid}.jcard-head{background:#f5f5f2;padding:.5rem .75rem;border-bottom:.5pt solid #ddd;display:flex;justify-content:space-between}.jcard-name{font-size:11pt;font-weight:700}.jcard-veiculo{font-size:9.5pt;color:#555}.pedido{display:flex;gap:.75rem;padding:.5rem .75rem;border-bottom:.5pt solid #eee;align-items:baseline}.pedido:last-child{border-bottom:none}.p-status{font-size:8.5pt;font-weight:700;min-width:80pt}.p-info{flex:1}.p-main{font-size:10pt}.p-sub{font-size:8.5pt;color:#666;margin-top:1pt}.p-datasol{font-size:8.5pt;color:#999;min-width:70pt;text-align:right}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
+  <div class="header"><div><h1>Agenda de Imprensa</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Gerado em ${new Date().toLocaleString('pt-BR')}</div></div>
+  ${sorted.map(group => { const rep = group[0]; return `<div class="jcard"><div class="jcard-head"><div><span class="jcard-name">${rep.jornalista || '—'}</span><span class="jcard-veiculo"> · ${rep.veiculo || '—'}${rep.cargo ? ' · ' + rep.cargo : ''}</span></div><span style="font-size:9pt;color:#888">${group.length} pedido${group.length > 1 ? 's' : ''}</span></div>${group.map(x => `<div class="pedido"><div class="p-status" style="color:${scol[x.s] || '#444'}">${SLE2[x.s] || x.s}</div><div class="p-info"><div class="p-main">${x.tema || x.veiculo || '—'} · ${TLE2[x.formato] || x.formato}</div><div class="p-sub">${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div></div><div class="p-datasol">${x.datasol ? fd(x.datasol) : ''}</div></div>`).join('')}</div>`; }).join('')}
+  <div class="footer"><span>Assessoria · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
+      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+    }
+
+    function printAgendaLista() {
+      const b = document.getElementById('a-busca').value.toLowerCase();
+      const ft = document.getElementById('a-ft').value, fs = document.getElementById('a-fs').value;
+      const norm = n => (n || '').toLowerCase().trim();
+      const TLA2 = TLA; const SLA2 = SLA;
+      const scol = { nova: '#2a6a2a', analise: '#7a4800', confirmada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a', cancelada: '#555' };
+      let L = [...DB.A].filter(x => { if (ft && x.tipo !== ft) return false; if (fs && x.s !== fs) return false; if (b && !norm(x.inst).includes(b) && !norm(x.nome).includes(b) && !norm(x.tema).includes(b)) return false; return true; }).sort((a, b2) => (a.data || '').localeCompare(b2.data || ''));
+      const win = window.open('', '_pa', 'width=900,height=700');
+      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Solicitações de Agenda</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}h1{font-size:13pt;font-weight:700;text-transform:uppercase}table{width:100%;border-collapse:collapse;margin-top:.5rem}th{font-size:8.5pt;font-weight:700;text-transform:uppercase;color:#666;padding:6pt 8pt;border-bottom:1.5pt solid #111;text-align:left}td{font-size:9.5pt;padding:6pt 8pt;border-bottom:.5pt solid #e0e0db;vertical-align:top}.sub{font-size:8.5pt;color:#777;margin-top:1pt}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
+  <div class="header"><div><h1>Solicitações de Agenda</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">${new Date().toLocaleDateString('pt-BR')}</div></div>
+  <table><thead><tr><th>Status</th><th>Evento / Tema</th><th>Instituição</th><th>Tipo</th><th>Data</th><th>Cidade</th></tr></thead><tbody>
+  ${L.map(x => `<tr><td style="font-weight:700;color:${scol[x.s] || '#444'}">${SLA2[x.s] || x.s}</td><td>${x.tema || '—'}</td><td>${x.inst || '—'}<div class="sub">${x.nome ? x.nome + (x.cargo ? ' · ' + x.cargo : '') : ''}</div></td><td style="font-size:8.5pt">${TLA2[x.tipo] || x.tipo}</td><td>${x.data ? fdt(x.data) : '—'}<div class="sub">${x.prazo ? 'Prazo: ' + fd(x.prazo) : ''}</div></td><td>${x.cidade || '—'}</td></tr>`).join('')}
+  </tbody></table>
+  <div class="footer"><span>Assessoria · ${L.length} registros</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
+      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+    }
+
+    function printAgenda() {
+      const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      let title, agendas;
+      if (calView === 'mes') { const y = calDate.getFullYear(), m = calDate.getMonth(); title = MESES[m] + ' ' + y; agendas = DB.A.filter(a => { const k = agendaDateKey(a); return k && k.startsWith(`${y}-${String(m + 1).padStart(2, '0')}`); }); }
+      else { const dow = calDate.getDay(); const ws = new Date(calDate.getTime() - dow * 86400000); const we = new Date(ws.getTime() + 6 * 86400000); title = `Semana ${ws.getDate()}/${ws.getMonth() + 1} – ${we.getDate()}/${we.getMonth() + 1}/${we.getFullYear()}`; agendas = DB.A.filter(a => { const k = agendaDateKey(a); if (!k) return false; const d = new Date(k + 'T00:00:00'); return d >= ws && d <= we; }); }
+      agendas.sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+      const printY = calDate.getFullYear(), printM = calDate.getMonth();
+      const printFirst = new Date(printY, printM, 1), printLast = new Date(printY, printM + 1, 0), startDow2 = printFirst.getDay();
+      const printMap = {}; DB.A.forEach(a => { const k = agendaDateKey(a); if (k) printMap[k] = (printMap[k] || []).concat(a); });
+      const DIAS_P = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']; let cells = [];
+      for (let i = 0; i < startDow2; i++) { const d = new Date(printY, printM, 1 - startDow2 + i); cells.push({ d, cur: false, k: dateKey(d) }); }
+      for (let d = 1; d <= printLast.getDate(); d++) { const dt = new Date(printY, printM, d); cells.push({ d: dt, cur: true, k: dateKey(dt) }); }
+      const trail2 = (7 - (cells.length % 7)) % 7; for (let i = 1; i <= trail2; i++) { const d = new Date(printY, printM + 1, i); cells.push({ d, cur: false, k: dateKey(d) }); }
+      const today2 = dateKey(new Date());
+      const cellsHtml = cells.map(c => { const evs = printMap[c.k] || []; const isToday = c.k === today2; return `<td class="p-cell${!c.cur ? ' other' : ''}${isToday ? ' tod' : ''}"><div class="p-num">${c.d.getDate()}</div>${evs.map(a => { const hora = a.data && a.data.includes('T') ? new Date(a.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' : ''; return `<div class="p-ev">${hora}${a.tema || a.inst || '—'}</div>`; }).join('')}</td>`; });
+      const weeks = []; for (let i = 0; i < cellsHtml.length; i += 7)weeks.push(cellsHtml.slice(i, i + 7));
+      const win = window.open('', '_pc', 'width=1000,height=750');
+      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda ${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:9pt;color:#111;padding:1.5cm 2cm}.p-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2pt solid #111}.p-header h1{font-size:14pt;font-weight:700;text-transform:uppercase}.p-header p{font-size:10pt;color:#444}table{width:100%;border-collapse:collapse;table-layout:fixed}.p-dow{text-align:center;font-size:8pt;font-weight:700;text-transform:uppercase;color:#666;padding:5pt 3pt;border:1pt solid #ddd;background:#f5f5f2}.p-cell{vertical-align:top;border:1pt solid #ddd;padding:4pt 5pt;height:90pt}.p-cell.other{background:#fafaf8}.p-cell.other .p-num{color:#bbb}.p-cell.tod{background:#fffbf0}.p-num{font-size:9pt;font-weight:700;margin-bottom:3pt;width:16pt;height:16pt;display:flex;align-items:center;justify-content:center}.p-ev{font-size:7.5pt;line-height:1.3;padding:1.5pt 3pt;margin-bottom:2pt;border-radius:2pt;background:#e8f0fb;color:#0a3a70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{margin-top:1rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
+  <div class="p-header"><div><h1>Agenda · ${title}</h1><p>Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Proposta de agenda<br>Assessoria de Imprensa</div></div>
+  <table><thead><tr>${DIAS_P.map(d => `<th class="p-dow">${d}</th>`).join('')}</tr></thead><tbody>${weeks.map(w => `<tr>${w.join('')}</tr>`).join('')}</tbody></table>
+  <div class="footer"><span>Assessoria de Imprensa · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
+      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+    }
+
+    /* ════════════════════════════════════════
+       MODAL HELPERS
+    ════════════════════════════════════════ */
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+    });
+    function mTab(module, id) {
+      const pfx = module + '-mpanel-';
+      document.querySelectorAll(`[id^="${pfx}"]`).forEach(p => p.classList.remove('active'));
+      document.getElementById(pfx + id).classList.add('active');
+      const mtabs = document.querySelectorAll(`#ov-${module} .mtab`);
+      mtabs.forEach((t, i) => t.classList.toggle('active', ['form', 'perfil'][i] === id));
+    }
+
+    /* ════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════ */
+
+    /* ════════════════════════════════════════
+       PAUTAS
+    ════════════════════════════════════════ */
+    let editingP = null;
+    _anexos.p = [];
+
+    function renderP() {
+      const b = (document.getElementById('p-busca') || { value: '' }).value.toLowerCase();
+      const df = (document.getElementById('p-datafrom') || { value: '' }).value;
+      const dt = (document.getElementById('p-datato') || { value: '' }).value;
+      let L = [...DB.P].filter(x => {
+        if (df && x.data && x.data < df) return false;
+        if (dt && x.data && x.data > dt) return false;
+        if (b && !(x.titulo || '').toLowerCase().includes(b) && !(x.conteudo || '').toLowerCase().includes(b)) return false;
+        return true;
+      }).sort((a, b2) => (b2.data || b2.criado || '').localeCompare(a.data || a.criado || ''));
+      document.getElementById('cnt-p').textContent = DB.P.length;
+      const el = document.getElementById('list-p');
+      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma pauta encontrada</div>'; return; }
+      el.innerHTML = L.map(x => `
+    <div class="item" onclick="detailP('${x.id}')">
+      <div class="item-header">
+        <div><div class="item-title">${x.titulo || '(sem título)'}</div></div>
+        <span class="badge p-${x.prior || 'media'}">${PL[x.prior || 'media']}</span>
+      </div>
+      <div class="item-meta">${fd(x.data)}${x.anexos && x.anexos.length ? ' · 📎 ' + x.anexos.length + ' anexo' + (x.anexos.length > 1 ? 's' : '') : ''}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${(x.conteudo || '').slice(0, 200)}</div>
+      <div class="item-actions" onclick="event.stopPropagation()">
+        <button class="bsm" onclick="event.stopPropagation();setTimeout(()=>openP('${x.id}'),10)">✏ Editar</button>
+        <button class="bsm bdel" onclick="event.stopPropagation();delP('${x.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+    }
+
+    function openP(id) {
+      editingP = id || null;
+      const x = id ? DB.P.find(p => p.id === id) : {};
+      document.getElementById('p-modal-title').textContent = id ? 'Editar pauta' : 'Nova pauta';
+      const f = (i, v) => { const el = document.getElementById(i); if (el) el.value = v || ''; };
+      f('p-titulo', x.titulo); f('p-data', x.data); f('p-prior', x.prior || 'media'); f('p-conteudo', x.conteudo);
+      loadAnexos('p', x.anexos);
+      document.getElementById('ov-p').classList.add('open');
+    }
+
+    async function saveP() {
+      const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
+      if (!g('p-titulo') && !g('p-conteudo')) { toast('Informe ao menos o título ou conteúdo'); return; }
+      const rec = {
+        id: editingP || uid(),
+        titulo: g('p-titulo'), data: g('p-data') || null, prior: g('p-prior'),
+        conteudo: g('p-conteudo'), anexos: [..._anexos.p],
+      };
+      const ok = await dbUpsert('pautas', rec);
+      if (!ok) return;
+      closeModal('ov-p'); renderP(); renderDash(); toast('Pauta salva');
+    }
+
+    async function delP(id) {
+      if (!confirm('Excluir esta pauta?')) return;
+      const ok = await dbDelete('pautas', id);
+      if (!ok) return;
+      renderP(); renderDash(); toast('Excluído');
+    }
+
+    function detailP(id) {
+      const x = DB.P.find(p => p.id === id); if (!x) return;
+      document.getElementById('detail-title').textContent = x.titulo || '(sem título)';
+      document.getElementById('detail-body').innerHTML = `
+    <div class="detail-row"><span class="dl">Data</span><span class="dv">${fd(x.data)}</span></div>
+    <div class="detail-row"><span class="dl">Prioridade</span><span class="dv"><span class="badge p-${x.prior || 'media'}">${PL[x.prior || 'media']}</span></span></div>
+    ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => fileIcon(n) + ' ' + n).join('<br>')}</span></div>` : ''}
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:13px;line-height:1.7;white-space:pre-wrap">${x.conteudo || '—'}</div>
+  `;
+      document.getElementById('detail-foot').innerHTML = `
+    <button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button>
+    <button class="btn-save" onclick="openP('${id}');closeModal('ov-detail')">Editar</button>
+  `;
+      document.getElementById('ov-detail').classList.add('open');
+    }
+
+    loadAll().then(() => { renderDash(); });
+  </script>
+
+  <!-- ══ MODAL ENTREVISTA ══ -->
+  <div class="overlay" id="ov-e">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="e-modal-title">Nova solicitação de entrevista</h2><button class="btn-close"
+          onclick="closeModal('ov-e')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="mtabs"><button class="mtab active" onclick="mTab('e','form')">Dados</button><button class="mtab"
+            onclick="mTab('e','perfil')">Perfil do jornalista</button></div>
+        <div id="e-mpanel-form" class="mpanel active">
+          <div class="form-section-title"
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+            Solicitação</div>
+          <div class="fg">
+            <div class="fl"><label>Data da solicitação</label><input id="e-datasol" type="date" /></div>
+            <div class="fl"><label>Prioridade</label><select id="e-prior">
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+                <option value="baixa">Baixa</option>
+              </select></div>
+            <div class="fl"><label>Veículo</label><input id="e-veiculo" type="text"
+                placeholder="Jornal, portal, emissora..." /></div>
+            <div class="fl"><label>Jornalista</label><input id="e-jornalista" type="text" placeholder="Nome completo" />
+            </div>
+            <div class="fl"><label>Cargo</label><input id="e-cargo" type="text" placeholder="Repórter, editor..." />
+            </div>
+            <div class="fl"><label>Formato</label><select id="e-formato">
+                <option value="ao_vivo">Ao vivo</option>
+                <option value="gravada">Gravada</option>
+                <option value="escrita">Escrita / texto</option>
+              </select></div>
+            <div class="fl"><label>Data / hora sugerida</label><input id="e-data" type="datetime-local" /></div>
+            <div class="fl"><label>Prazo de resposta</label><input id="e-prazo" type="date" /></div>
+            <div class="fl"><label>Origem do contato</label><input id="e-origem" type="text"
+                placeholder="WhatsApp, e-mail..." /></div>
+            <div class="fl ff"><label>Tema</label><input id="e-tema" type="text"
+                placeholder="Assunto principal da entrevista" /></div>
+            <div class="fl ff"><label>Pauta / perguntas enviadas</label><textarea id="e-pauta" rows="4"
+                placeholder="Cole aqui as perguntas ou pauta enviada pelo veículo..."></textarea></div>
+            <div class="fl ff"><label>Observações</label><textarea id="e-obs" rows="2"
+                placeholder="Contexto adicional, link WhatsApp, etc."></textarea></div>
+          </div>
+        </div>
+        <div id="e-mpanel-perfil" class="mpanel">
+          <div class="form-section-title"
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+            Perfil do jornalista</div>
+          <div class="fg">
+            <div class="fl ff" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
+              <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
+              <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt"
+                  style="display:none" onchange="handlePerfilFile(this)" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer">📎 Anexar
+                  perfil</span></label>
+            </div>
+            <div class="fl ff" id="e-p-file-info" style="display:none">
+              <div
+                style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between">
+                <span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px"
+                  onclick="clearPerfilFile()">✕</button></div>
+            </div>
+            <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text"
+                placeholder="Link do Google Drive, etc." /></div>
+            <div class="fl ff"><label>Linha editorial / cobertura habitual</label><textarea id="e-p-linha" rows="3"
+                placeholder="Como cobre o STF, o ministro..."></textarea></div>
+            <div class="fl ff"><label>Histórico de cobertura sobre o ministro</label><textarea id="e-p-hist" rows="3"
+                placeholder="Matérias anteriores relevantes..."></textarea></div>
+            <div class="fl ff"><label>Pontos de atenção</label><textarea id="e-p-atencao" rows="3"
+                placeholder="Pautas sensíveis, perguntas prováveis..."></textarea></div>
+            <div class="fl"><label>Rede social</label><input id="e-p-social" type="text"
+                placeholder="@usuario no X/Instagram..." /></div>
+            <div class="fl"><label>Contato direto</label><input id="e-p-contato" type="text"
+                placeholder="WhatsApp, e-mail..." /></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-e')">Cancelar</button><button
+          class="btn-save" onclick="saveE()">Salvar</button></div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL AGENDA ══ -->
+  <div class="overlay" id="ov-a">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="a-modal-title">Nova solicitação de agenda</h2><button class="btn-close"
+          onclick="closeModal('ov-a')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Solicitação</div>
+        <div class="fg">
+          <div class="fl"><label>Data do pedido</label><input id="a-datped" type="date" /></div>
+          <div class="fl"><label>Tipo de agenda</label><select id="a-tipo">
+              <option value="inst_reuniao">Reunião institucional</option>
+              <option value="palestra_aula">Palestra / aula magna</option>
+              <option value="evento_solenidade">Evento / solenidade</option>
+              <option value="reuniao">Reunião</option>
+              <option value="almoco">Almoço</option>
+              <option value="jantar">Jantar</option>
+              <option value="agenda_pessoal">Agenda pessoal</option>
+              <option value="agenda_pastoral">Agenda pastoral</option>
+            </select></div>
+          <div class="fl"><label>Instituição</label><input id="a-inst" type="text" placeholder="Nome da instituição" />
+          </div>
+          <div class="fl"><label>Interlocutor</label><input id="a-nome" type="text" placeholder="Quem fez o pedido" />
+          </div>
+          <div class="fl"><label>Cargo</label><input id="a-cargo" type="text" placeholder="Cargo / função" /></div>
+          <div class="fl"><label>Tipo de instituição</label><input id="a-tipoinst" type="text"
+              placeholder="Pública, privada, religiosa..." /></div>
+          <div class="fl"><label>Cidade</label><input id="a-cidade" type="text"
+              placeholder="Brasília, Rio de Janeiro..." /></div>
+          <div class="fl"><label>Formato</label><select id="a-formato">
+              <option value="presencial">Presencial</option>
+              <option value="online">Online</option>
+              <option value="hibrido">Híbrido</option>
+            </select></div>
+          <div class="fl"><label>Data / hora sugerida</label><input id="a-data" type="datetime-local" /></div>
+          <div class="fl"><label>Prazo de resposta</label><input id="a-prazo" type="date" /></div>
+          <div class="fl"><label>Origem do contato</label><input id="a-origem" type="text"
+              placeholder="WhatsApp, ofício, e-mail..." /></div>
+          <div class="fl"><label>Prioridade</label><select id="a-prior">
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+              <option value="baixa">Baixa</option>
+            </select></div>
+          <div class="fl ff"><label>Tema / assunto</label><input id="a-tema" type="text"
+              placeholder="Pauta ou objetivo do encontro" /></div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Detalhes operacionais</div>
+        <div class="fg">
+          <div class="fl"><label>Local</label><input id="a-local" type="text" placeholder="Endereço completo" /></div>
+          <div class="fl"><label>Staff que acompanha</label><input id="a-staff" type="text"
+              placeholder="Nomes da equipe" /></div>
+          <div class="fl"><label>Tempo de deslocamento</label><input id="a-desloc" type="text"
+              placeholder="Ex: 45 min de carro" /></div>
+          <div class="fl"><label>Protocolo / dress code</label><input id="a-prot" type="text"
+              placeholder="Traje, formal, meia-gala..." /></div>
+          <div class="fl ff"><label>Observações</label><textarea id="a-obs" rows="2"
+              placeholder="Notas adicionais..."></textarea></div>
+          <div class="fl ff"><label>Link para convite</label><input id="a-link" type="text" placeholder="https://..." />
+          </div>
+          <div class="fl ff">
+            <label>Anexos</label>
+            <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
+                  id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
+                  onchange="handleAnexos('a')" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
+                imagens...</span></div>
+            <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-a')">Cancelar</button><button
+          class="btn-save" onclick="saveA()">Salvar</button></div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL BRIEFING ══ -->
+  <div class="overlay" id="ov-b">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="b-modal-title">Novo briefing</h2><button class="btn-close" onclick="closeModal('ov-b')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Identificação</div>
+        <div class="fg">
+          <div class="fl ff"><label>Título do briefing</label><input id="b-titulo" type="text"
+              placeholder="Ex: Briefing — Entrevista CNN Brasil · 22/06/2026" /></div>
+          <div class="fl"><label>Tipo de compromisso</label><select id="b-tipo" onchange="renderBriefTemplate()">
+              <option value="entrevista">Entrevista</option>
+              <option value="solenidade">Solenidade / conferência</option>
+              <option value="reuniao">Reunião institucional</option>
+              <option value="visita">Visita / deslocamento</option>
+              <option value="pastoral">Pastoral / pessoal</option>
+            </select></div>
+          <div class="fl"><label>Data do compromisso</label><input id="b-data" type="date" /></div>
+          <div class="fl ff"><label>Vinculado a</label><input id="b-vinculo" type="text"
+              placeholder="Nome da agenda ou entrevista (opcional)" /></div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Dados gerais</div>
+        <div class="fg">
+          <div class="fl ff"><label>Evento / encontro</label><input id="b-evento" type="text"
+              placeholder="Nome completo do evento ou reunião" /></div>
+          <div class="fl"><label>Local</label><input id="b-local" type="text"
+              placeholder="Endereço, sala, auditório..." /></div>
+          <div class="fl"><label>Horário</label><input id="b-hora" type="text" placeholder="Ex: 10h00 às 11h00" /></div>
+          <div class="fl"><label>Realizador / anfitrião</label><input id="b-real" type="text"
+              placeholder="Instituição ou pessoa" /></div>
+          <div class="fl"><label>Papel do Ministro</label><input id="b-papel" type="text"
+              placeholder="Conferencista, entrevistado, homenageado..." /></div>
+          <div class="fl"><label>Tom / abordagem</label><input id="b-tom" type="text"
+              placeholder="Reflexivo, técnico, institucional..." /></div>
+          <div class="fl ff"><label>Ponto de atenção</label><textarea id="b-atencao" rows="2"
+              placeholder="Riscos, alertas, sensibilidades..."></textarea></div>
+          <div class="fl ff">
+            <label>Anexos</label>
+            <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
+                  id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
+                  onchange="handleAnexos('b')" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
+                imagens...</span></div>
+            <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Roteiro / conteúdo</div>
+        <div id="brief-template-blocks"></div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-b')">Cancelar</button><button
+          class="btn-export" onclick="exportBriefing()" id="btn-export-brief" style="display:none">↓ Exportar
+          .rtf</button><button class="btn-save" onclick="saveB()">Salvar</button></div>
+    </div>
+  </div>
+
+
+  <!-- ══ MODAL PAUTA ══ -->
+  <div class="overlay" id="ov-p">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="p-modal-title">Nova pauta</h2><button class="btn-close" onclick="closeModal('ov-p')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="fg">
+          <div class="fl ff"><label>Título</label><input id="p-titulo" type="text" placeholder="Título da pauta" />
+          </div>
+          <div class="fl"><label>Data</label><input id="p-data" type="date" /></div>
+          <div class="fl"><label>Prioridade</label><select id="p-prior">
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+              <option value="baixa">Baixa</option>
+            </select></div>
+          <div class="fl ff"><label>Conteúdo</label><textarea id="p-conteudo" rows="14"
+              placeholder="Digite o conteúdo da pauta aqui..."
+              style="min-height:280px;font-size:13px;line-height:1.6"></textarea></div>
+          <div class="fl ff">
+            <label>Anexos</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <label style="cursor:pointer"><input type="file" id="p-files" multiple
+                  accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
+                  onchange="handleAnexos('p')" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  arquivos</span></label>
+              <span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span>
+            </div>
+            <div id="p-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-p')">Cancelar</button><button
+          class="btn-save" onclick="saveP()">Salvar</button></div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL DETALHE ══ -->
+  <div class="overlay" id="ov-detail">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="detail-title">Detalhe</h2><button class="btn-close" onclick="closeModal('ov-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-foot" id="detail-foot"><button class="btn-close"
+          onclick="closeModal('ov-detail')">Fechar</button></div>
+    </div>
+  </div>
+
+</body>
+
+</html>
