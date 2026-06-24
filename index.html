@@ -61,7 +61,11 @@
 
     /* ── LOGIN ── */
     #login-screen {
-      display: flex
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
     }
 
     .login-box {
@@ -1246,7 +1250,129 @@
     </main>
   </div><!-- /app-screen -->
 
-  <!-- MODAIS (entrevista, agenda, briefing, detalhe) omitidos por brevidade — ver arquivo local -->
+  <!-- ══ MODAL ENTREVISTA ══ -->
+<div class="overlay" id="ov-e">
+<div class="modal">
+  <div class="modal-head"><h2 id="e-modal-title">Nova solicitação de entrevista</h2><button class="btn-close" onclick="closeModal('ov-e')">✕</button></div>
+  <div class="modal-body">
+    <div class="mtabs"><button class="mtab active" onclick="mTab('e','form')">Dados</button><button class="mtab" onclick="mTab('e','perfil')">Perfil do jornalista</button></div>
+    <div id="e-mpanel-form" class="mpanel active">
+      <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Solicitação</div>
+      <div class="fg">
+        <div class="fl"><label>Data da solicitação</label><input id="e-datasol" type="date"/></div>
+        <div class="fl"><label>Prioridade</label><select id="e-prior"><option value="media">Média</option><option value="alta">Alta</option><option value="baixa">Baixa</option></select></div>
+        <div class="fl"><label>Veículo</label><input id="e-veiculo" type="text" placeholder="Jornal, portal, emissora..."/></div>
+        <div class="fl"><label>Jornalista</label><input id="e-jornalista" type="text" placeholder="Nome completo"/></div>
+        <div class="fl"><label>Cargo</label><input id="e-cargo" type="text" placeholder="Repórter, editor..."/></div>
+        <div class="fl"><label>Formato</label><select id="e-formato"><option value="ao_vivo">Ao vivo</option><option value="gravada">Gravada</option><option value="escrita">Escrita / texto</option></select></div>
+        <div class="fl"><label>Data / hora sugerida</label><input id="e-data" type="datetime-local"/></div>
+        <div class="fl"><label>Prazo de resposta</label><input id="e-prazo" type="date"/></div>
+        <div class="fl"><label>Origem do contato</label><input id="e-origem" type="text" placeholder="WhatsApp, e-mail..."/></div>
+        <div class="fl ff"><label>Tema</label><input id="e-tema" type="text" placeholder="Assunto principal da entrevista"/></div>
+        <div class="fl ff"><label>Pauta / perguntas enviadas</label><textarea id="e-pauta" rows="4" placeholder="Cole aqui as perguntas ou pauta enviada pelo veículo..."></textarea></div>
+        <div class="fl ff"><label>Observações</label><textarea id="e-p-obs" rows="2" placeholder="Contexto adicional, link WhatsApp, etc."></textarea></div>
+      </div>
+    </div>
+    <div id="e-mpanel-perfil" class="mpanel">
+      <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Perfil do jornalista</div>
+      <div class="fg">
+        <div class="fl ff" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
+          <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
+          <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt,.jpg,.png" style="display:none" onchange="handlePerfilFile(this)"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer">📎 Anexar perfil</span></label>
+        </div>
+        <div class="fl ff" id="e-p-file-info" style="display:none"><div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between"><span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px" onclick="clearPerfilFile()">✕</button></div></div>
+        <input type="hidden" id="e-p-file-url"/>
+        <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text" placeholder="Link do Google Drive, etc."/></div>
+        <div class="fl ff"><label>Linha editorial / cobertura habitual</label><textarea id="e-p-linha" rows="3" placeholder="Como cobre o STF, o ministro..."></textarea></div>
+        <div class="fl ff"><label>Histórico de cobertura sobre o ministro</label><textarea id="e-p-hist" rows="3" placeholder="Matérias anteriores relevantes..."></textarea></div>
+        <div class="fl ff"><label>Pontos de atenção</label><textarea id="e-p-atencao" rows="3" placeholder="Pautas sensíveis, perguntas prováveis..."></textarea></div>
+        <div class="fl"><label>Rede social</label><input id="e-p-social" type="text" placeholder="@usuario no X/Instagram..."/></div>
+        <div class="fl"><label>Contato direto</label><input id="e-p-contato" type="text" placeholder="WhatsApp, e-mail..."/></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-e')">Cancelar</button><button class="btn-save" onclick="saveE()">Salvar</button></div>
+</div></div>
+
+<!-- ══ MODAL AGENDA ══ -->
+<div class="overlay" id="ov-a">
+<div class="modal">
+  <div class="modal-head"><h2 id="a-modal-title">Nova solicitação de agenda</h2><button class="btn-close" onclick="closeModal('ov-a')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Solicitação</div>
+    <div class="fg">
+      <div class="fl"><label>Data do pedido</label><input id="a-datped" type="date"/></div>
+      <div class="fl"><label>Tipo de agenda</label><select id="a-tipo"><option value="inst_reuniao">Reunião institucional</option><option value="palestra_aula">Palestra / aula magna</option><option value="evento_solenidade">Evento / solenidade</option><option value="reuniao">Reunião</option><option value="almoco">Almoço</option><option value="jantar">Jantar</option><option value="agenda_pessoal">Agenda pessoal</option><option value="agenda_pastoral">Agenda pastoral</option></select></div>
+      <div class="fl"><label>Instituição</label><input id="a-inst" type="text" placeholder="Nome da instituição"/></div>
+      <div class="fl"><label>Interlocutor</label><input id="a-nome" type="text" placeholder="Quem fez o pedido"/></div>
+      <div class="fl"><label>Cargo</label><input id="a-cargo" type="text" placeholder="Cargo / função"/></div>
+      <div class="fl"><label>Tipo de instituição</label><input id="a-tipoinst" type="text" placeholder="Pública, privada, religiosa..."/></div>
+      <div class="fl"><label>Cidade</label><input id="a-cidade" type="text" placeholder="Brasília, Rio de Janeiro..."/></div>
+      <div class="fl"><label>Formato</label><select id="a-formato"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option></select></div>
+      <div class="fl"><label>Data / hora sugerida</label><input id="a-data" type="datetime-local"/></div>
+      <div class="fl"><label>Prazo de resposta</label><input id="a-prazo" type="date"/></div>
+      <div class="fl"><label>Origem do contato</label><input id="a-origem" type="text" placeholder="WhatsApp, ofício, e-mail..."/></div>
+      <div class="fl"><label>Prioridade</label><select id="a-prior"><option value="media">Média</option><option value="alta">Alta</option><option value="baixa">Baixa</option></select></div>
+      <div class="fl ff"><label>Tema / assunto</label><input id="a-tema" type="text" placeholder="Pauta ou objetivo do encontro"/></div>
+    </div>
+    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Detalhes operacionais</div>
+    <div class="fg">
+      <div class="fl"><label>Local</label><input id="a-local" type="text" placeholder="Endereço completo"/></div>
+      <div class="fl"><label>Staff que acompanha</label><input id="a-staff" type="text" placeholder="Nomes da equipe"/></div>
+      <div class="fl"><label>Tempo de deslocamento</label><input id="a-desloc" type="text" placeholder="Ex: 45 min de carro"/></div>
+      <div class="fl"><label>Protocolo / dress code</label><input id="a-prot" type="text" placeholder="Traje, formal, meia-gala..."/></div>
+      <div class="fl ff"><label>Observações</label><textarea id="a-obs" rows="2" placeholder="Notas adicionais..."></textarea></div>
+      <div class="fl ff"><label>Link para convite</label><input id="a-link" type="text" placeholder="https://..."/></div>
+      <div class="fl ff">
+        <label>Anexos</label>
+        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('a')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+        <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-a')">Cancelar</button><button class="btn-save" onclick="saveA()">Salvar</button></div>
+</div></div>
+
+<!-- ══ MODAL BRIEFING ══ -->
+<div class="overlay" id="ov-b">
+<div class="modal">
+  <div class="modal-head"><h2 id="b-modal-title">Novo briefing</h2><button class="btn-close" onclick="closeModal('ov-b')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Identificação</div>
+    <div class="fg">
+      <div class="fl ff"><label>Título do briefing</label><input id="b-titulo" type="text" placeholder="Ex: Briefing — Entrevista CNN Brasil · 22/06/2026"/></div>
+      <div class="fl"><label>Tipo de compromisso</label><select id="b-tipo" onchange="renderBriefTemplate()"><option value="entrevista">Entrevista</option><option value="solenidade">Solenidade / conferência</option><option value="reuniao">Reunião institucional</option><option value="visita">Visita / deslocamento</option><option value="pastoral">Pastoral / pessoal</option></select></div>
+      <div class="fl"><label>Data do compromisso</label><input id="b-data" type="date"/></div>
+      <div class="fl ff"><label>Vinculado a</label><input id="b-vinculo" type="text" placeholder="Nome da agenda ou entrevista (opcional)"/></div>
+    </div>
+    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados gerais</div>
+    <div class="fg">
+      <div class="fl ff"><label>Evento / encontro</label><input id="b-evento" type="text" placeholder="Nome completo do evento ou reunião"/></div>
+      <div class="fl"><label>Local</label><input id="b-local" type="text" placeholder="Endereço, sala, auditório..."/></div>
+      <div class="fl"><label>Horário</label><input id="b-hora" type="text" placeholder="Ex: 10h00 às 11h00"/></div>
+      <div class="fl"><label>Realizador / anfitrião</label><input id="b-real" type="text" placeholder="Instituição ou pessoa"/></div>
+      <div class="fl"><label>Papel do Ministro</label><input id="b-papel" type="text" placeholder="Conferencista, entrevistado, homenageado..."/></div>
+      <div class="fl"><label>Tom / abordagem</label><input id="b-tom" type="text" placeholder="Reflexivo, técnico, institucional..."/></div>
+      <div class="fl ff"><label>Ponto de atenção</label><textarea id="b-atencao" rows="2" placeholder="Riscos, alertas, sensibilidades..."></textarea></div>
+      <div class="fl ff">
+        <label>Anexos</label>
+        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('b')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+        <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+    </div>
+    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Roteiro / conteúdo</div>
+    <div id="brief-template-blocks"></div>
+  </div>
+  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-b')">Cancelar</button><button class="btn-export" onclick="exportBriefing()" id="btn-export-brief" style="display:none">↓ Exportar .rtf</button><button class="btn-save" onclick="saveB()">Salvar</button></div>
+</div></div>
+
+<!-- ══ MODAL DETALHE ══ -->
+<div class="overlay" id="ov-detail">
+<div class="modal">
+  <div class="modal-head"><h2 id="detail-title">Detalhe</h2><button class="btn-close" onclick="closeModal('ov-detail')">✕</button></div>
+  <div class="modal-body" id="detail-body"></div>
+  <div class="modal-foot" id="detail-foot"><button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button></div>
+</div></div>
 
   <div class="toast" id="toast"></div>
 
@@ -1347,8 +1473,13 @@
 
       if (!rec.criado) rec.criado = new Date().toISOString();
 
+      // Limpar strings vazias para não quebrar colunas de data/hora no banco
+      for (let k of Object.keys(rec)) {
+        if (rec[k] === '') rec[k] = null;
+      }
+
       try {
-        const { error } = await supa.from(table).upsert([rec]);
+        const { error } = await supa.from(table).upsert(rec);
         if (error) throw error;
 
         const idx = DB[key].findIndex(x => x.id === rec.id);
@@ -1385,6 +1516,15 @@
     /* ════════════════════════════════════════
        HELPERS
     ════════════════════════════════════════ */
+    async function uploadToSupabase(file) {
+      const ext = file.name.split('.').pop();
+      const filename = `${Date.now()}_${Math.random().toString(36).substring(2,8)}.${ext}`;
+      const { data, error } = await supa.storage.from('anexos').upload(filename, file);
+      if (error) { console.error('Upload error:', error); throw error; }
+      const pub = supa.storage.from('anexos').getPublicUrl(filename);
+      return { name: file.name, url: pub.data.publicUrl };
+    }
+
     function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
     function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
     function fd(s) { if (!s) return '—'; try { const p = s.includes('T') ? new Date(s) : new Date(s + 'T00:00:00'); return p.toLocaleDateString('pt-BR'); } catch (e) { return s; } }
@@ -1533,7 +1673,11 @@
       f('e-p-linha', x.p_linha); f('e-p-hist', x.p_hist); f('e-p-atencao', x.p_atencao);
       f('e-p-social', x.p_social); f('e-p-contato', x.p_contato); f('e-p-link', x.p_link);
       clearPerfilFile();
-      if (x.p_filename) { document.getElementById('e-p-file-name').textContent = x.p_filename; document.getElementById('e-p-file-info').style.display = ''; }
+      if (x.p_filename) { 
+        document.getElementById('e-p-file-name').textContent = typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename; 
+        document.getElementById('e-p-file-url').value = typeof x.p_filename === 'object' ? x.p_filename.url : '';
+        document.getElementById('e-p-file-info').style.display = ''; 
+      }
       mTab('e', 'form');
       document.getElementById('ov-e').classList.add('open');
     }
@@ -1561,7 +1705,7 @@
         origem: g('e-origem'), prior: g('e-prior'), tema: g('e-tema'), pauta: g('e-pauta'), obs: g('e-obs'),
         p_linha: g('e-p-linha'), p_hist: g('e-p-hist'), p_atencao: g('e-p-atencao'),
         p_social: g('e-p-social'), p_contato: g('e-p-contato'), p_link: g('e-p-link'),
-        p_filename: document.getElementById('e-p-file-name').textContent || '',
+        p_filename: document.getElementById('e-p-file-url').value ? { name: document.getElementById('e-p-file-name').textContent, url: document.getElementById('e-p-file-url').value } : (document.getElementById('e-p-file-name').textContent || ''),
         s: editingE ? (DB.E.find(e => e.id === editingE) || {}).s || 'nova' : 'nova',
       };
       const ok = await dbUpsert('entrevistas', rec);
@@ -1616,14 +1760,30 @@
     ${x.p_social ? `<div class="detail-row"><span class="dl">Rede social</span><span class="dv">${x.p_social}</span></div>` : ''}
     ${x.p_contato ? `<div class="detail-row"><span class="dl">Contato</span><span class="dv">${x.p_contato}</span></div>` : ''}
     ${x.p_link ? `<div class="detail-row"><span class="dl">Link perfil</span><span class="dv"><a href="${x.p_link}" target="_blank">${x.p_link}</a></span></div>` : ''}
-    ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv">📎 ${x.p_filename}</span></div>` : ''}
+    ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv">📎 ${typeof x.p_filename === 'object' && x.p_filename.url ? `<a href="${x.p_filename.url}" target="_blank" style="color:var(--text)">${x.p_filename.name}</a>` : (typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename)}</span></div>` : ''}
   `+ histHtml;
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="openE('${id}');closeModal('ov-detail')">Editar</button>`;
       document.getElementById('ov-detail').classList.add('open');
     }
 
-    function handlePerfilFile(input) { if (!input.files || !input.files[0]) return; const name = input.files[0].name; document.getElementById('e-p-file-name').textContent = name; document.getElementById('e-p-file-info').style.display = ''; }
-    function clearPerfilFile() { const fi = document.getElementById('e-p-file'); if (fi) fi.value = ''; document.getElementById('e-p-file-name').textContent = ''; document.getElementById('e-p-file-info').style.display = 'none'; }
+    async function handlePerfilFile(input) { 
+      if (!input.files || !input.files[0]) return; 
+      toast('Enviando perfil...');
+      try {
+        const res = await uploadToSupabase(input.files[0]);
+        document.getElementById('e-p-file-name').textContent = res.name;
+        const hUrl = document.getElementById('e-p-file-url');
+        if (hUrl) hUrl.value = res.url;
+        document.getElementById('e-p-file-info').style.display = '';
+        toast('Perfil enviado!');
+      } catch(e) { toast('Erro no envio do perfil'); }
+    }
+    function clearPerfilFile() { 
+      const fi = document.getElementById('e-p-file'); if (fi) fi.value = ''; 
+      document.getElementById('e-p-file-name').textContent = ''; 
+      const hUrl = document.getElementById('e-p-file-url'); if (hUrl) hUrl.value = '';
+      document.getElementById('e-p-file-info').style.display = 'none'; 
+    }
 
     /* ════════════════════════════════════════
        AGENDAS
@@ -1724,7 +1884,11 @@
         ['Local', x.local], ['Staff', x.staff], ['Deslocamento', x.desloc], ['Protocolo', x.prot],
         ['Origem', x.origem], ['Observações', x.obs],
         ['Link convite', x.link ? `<a href="${x.link}" target="_blank">${x.link}</a>` : null],
-        ['Anexos', x.anexos && x.anexos.length ? x.anexos.map(n => `${fileIcon(n)} ${n}`).join('<br>') : null]
+        ['Anexos', x.anexos && x.anexos.length ? x.anexos.map(n => {
+          const name = typeof n === 'string' ? n : n.name;
+          const url = typeof n === 'string' ? null : n.url;
+          return `${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text)">${name}</a>` : name}`;
+        }).join('<br>') : null]
       ].filter(r => r[1]).map(r => `<div class="detail-row"><span class="dl">${r[0]}</span><span class="dv">${r[1] || '—'}</span></div>`).join('');
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button>`;
       document.getElementById('ov-detail').classList.add('open');
@@ -1825,7 +1989,11 @@
     <div class="detail-row"><span class="dl">Papel do Ministro</span><span class="dv">${x.papel || '—'}</span></div>
     <div class="detail-row"><span class="dl">Tom</span><span class="dv">${x.tom || '—'}</span></div>
     <div class="detail-row"><span class="dl">Atenção</span><span class="dv">${x.atencao || '—'}</span></div>
-    ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => `${fileIcon(n)} ${n}`).join('<br>')}</span></div>` : ''}
+    ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => {
+      const name = typeof n === 'string' ? n : n.name;
+      const url = typeof n === 'string' ? null : n.url;
+      return `${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text)">${name}</a>` : name}`;
+    }).join('<br>')}</span></div>` : ''}
     ${blockHtml}`;
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editB('${id}');closeModal('ov-detail')">Editar</button><button class="btn-export" onclick="exportBriefingById('${id}')">↓ Exportar .rtf</button>`;
       document.getElementById('ov-detail').classList.add('open');
@@ -1834,20 +2002,33 @@
     /* ════════════════════════════════════════
        ANEXOS
     ════════════════════════════════════════ */
-    function handleAnexos(prefix) {
+    async function handleAnexos(prefix) {
       const input = document.getElementById(prefix + '-files');
-      if (!input || !input.files) return;
-      Array.from(input.files).forEach(f => { if (!_anexos[prefix].includes(f.name)) _anexos[prefix].push(f.name); });
+      if (!input || !input.files || !input.files.length) return;
+      toast('Fazendo upload...');
+      for (let f of Array.from(input.files)) {
+        try {
+          const res = await uploadToSupabase(f);
+          _anexos[prefix].push(res);
+        } catch(e) {
+          toast('Erro no upload: ' + f.name);
+        }
+      }
       input.value = ''; renderAnexosList(prefix);
+      toast('Upload concluído!');
     }
     function renderAnexosList(prefix) {
       const el = document.getElementById(prefix + '-files-list'); if (!el) return;
       if (!_anexos[prefix].length) { el.innerHTML = ''; return; }
-      el.innerHTML = _anexos[prefix].map((name, i) => `
+      el.innerHTML = _anexos[prefix].map((item, i) => {
+        const name = typeof item === 'string' ? item : item.name;
+        const url = typeof item === 'string' ? null : item.url;
+        return `
     <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px">
-      <span>${fileIcon(name)} ${name}</span>
+      <span>${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${name}</a>` : name}</span>
       <button class="bsm bdel" style="font-size:10px;padding:1px 6px" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')">✕</button>
-    </div>`).join('');
+    </div>`;
+      }).join('');
     }
     function loadAnexos(prefix, list) { _anexos[prefix] = (list || []).slice(); renderAnexosList(prefix); }
 
