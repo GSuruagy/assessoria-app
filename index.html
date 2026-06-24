@@ -1469,9 +1469,10 @@
 
     async function showApp() {
       document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app-screen').style.display = '';
+      document.getElementById('app-screen').style.display = 'block';
       await loadAll();
-      renderDash();
+      if (!window.location.hash) window.location.hash = '#dash';
+      else handleHash();
     }
 
     /* ════════════════════════════════════════
@@ -1583,8 +1584,11 @@
       
       SECS.forEach(s => {
         document.getElementById('sec-' + s).style.display = s === id ? '' : 'none';
-        document.querySelectorAll('.ntab').forEach((t, i) => t.classList.toggle('active', SECS[i] === id));
       });
+      document.querySelectorAll('.ntab').forEach((t, i) => {
+        if (i < SECS.length) t.classList.toggle('active', SECS[i] === id);
+      });
+      
       if (id === 'dash') renderDash();
       if (id === 'entrevistas') renderE();
       if (id === 'agendas') renderA();
