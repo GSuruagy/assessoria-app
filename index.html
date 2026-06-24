@@ -348,21 +348,28 @@
     /* ── FILTERS ── */
     .toolbar {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       margin-bottom: 1rem;
       flex-wrap: wrap;
-      align-items: center
+      align-items: center;
     }
 
     .fi {
+      height: 36px;
+      padding: 0 12px;
       border: 1px solid var(--border2);
-      border-radius: var(--r2);
-      padding: 6px 10px;
-      font-size: 12px;
+      border-radius: var(--r1);
+      font-size: 13px;
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      font-family: inherit
+      font-family: inherit;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .fi:focus {
+      border-color: var(--text);
     }
 
     .fi:focus {
@@ -1101,6 +1108,7 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
 <body>
@@ -1108,7 +1116,7 @@
   <!-- ══ LOGIN ══ -->
   <div id="login-screen">
     <div class="login-box">
-      <h1>📋 Assessoria</h1>
+      <h1><i class="ph ph-list"></i> Assessoria</h1>
       <p>André Mendonça</p>
       <div class="login-field">
         <label>E-mail</label>
@@ -1174,11 +1182,11 @@
             <div id="dash-e"></div>
           </div>
           <div class="dash-card">
-            <h3>📅 Últimas agendas</h3>
+            <h3><i class="ph ph-calendar"></i> Últimas agendas</h3>
             <div id="dash-a"></div>
           </div>
           <div class="dash-card">
-            <h3>📋 Últimos briefings</h3>
+            <h3><i class="ph ph-list"></i> Últimos briefings</h3>
             <div id="dash-b"></div>
           </div>
         </div>
@@ -1201,8 +1209,8 @@
             <option value="gravada">Gravada</option>
             <option value="escrita">Escrita / texto</option>
           </select>
-          <button class="btn-new" onclick="openE()">＋ Nova entrevista</button>
-          <button class="bsm" onclick="printEntrevistas()">🖨 Imprimir</button>
+          <button class="btn-new" onclick="openE()"><i class="ph ph-plus"></i> Nova entrevista</button>
+          <button class="bsm" onclick="printEntrevistas()"><i class="ph ph-printer"></i> Imprimir</button>
         </div>
         <div class="list" id="list-e"></div>
       </section>
@@ -1211,9 +1219,9 @@
         <div class="toolbar" style="margin-bottom:.75rem">
           <div
             style="display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:3px">
-            <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')">☰ Lista</button>
-            <button id="atog-mes" class="atog" onclick="setAgendaView('mes')">▦ Mês</button>
-            <button id="atog-semana" class="atog" onclick="setAgendaView('semana')">▤ Semana</button>
+            <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i> Lista</button>
+            <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i> Mês</button>
+            <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i class="ph ph-calendar-blank"></i> Semana</button>
           </div>
           <div id="cal-nav" style="display:none;align-items:center;gap:8px">
             <button class="bsm" onclick="calNav(-1)">‹</button>
@@ -1244,9 +1252,9 @@
               <option value="cancelada">Cancelada</option>
             </select>
           </div>
-          <button class="btn-new" onclick="openA()">＋ Nova agenda</button>
-          <button class="bsm" id="btn-print-lista" onclick="printAgendaLista()">🖨 Imprimir</button>
-          <button class="bsm" id="btn-print-cal" style="display:none" onclick="printAgenda()">🖨 Imprimir</button>
+          <button class="btn-new" onclick="openA()"><i class="ph ph-plus"></i> Nova agenda</button>
+          <button class="bsm" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
+          <button class="bsm" id="btn-print-cal" style="display:none" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
         </div>
         <div id="agenda-lista">
           <div class="list" id="list-a"></div>
@@ -1265,7 +1273,7 @@
             <option value="visita">Visita / deslocamento</option>
             <option value="pastoral">Pastoral / pessoal</option>
           </select>
-          <button class="btn-new" onclick="openB()">＋ Novo briefing</button>
+          <button class="btn-new" onclick="openB()"><i class="ph ph-plus"></i> Novo briefing</button>
         </div>
         <div class="list" id="list-b"></div>
       </section>
@@ -1275,7 +1283,7 @@
           <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="pageP=1;renderP()" />
           <input class="fi" id="p-datafrom-p" type="date" onchange="pageP=1;renderP()" title="Data inicial" />
           <input class="fi" id="p-datato-p" type="date" onchange="pageP=1;renderP()" title="Data final" />
-          <button class="btn-new" onclick="openP()">＋ Nova pauta</button>
+          <button class="btn-new" onclick="openP()"><i class="ph ph-plus"></i> Nova pauta</button>
         </div>
         <div class="list" id="list-p"></div>
       </section>
@@ -1311,9 +1319,9 @@
       <div class="fg">
         <div class="fl ff" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
           <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
-          <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt,.jpg,.png" style="display:none" onchange="handlePerfilFile(this)"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer">📎 Anexar perfil</span></label>
+          <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt,.jpg,.png" style="display:none" onchange="handlePerfilFile(this)"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar perfil</span></label>
         </div>
-        <div class="fl ff" id="e-p-file-info" style="display:none"><div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between"><span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px" onclick="clearPerfilFile()">✕</button></div></div>
+        <div class="fl ff" id="e-p-file-info" style="display:none"><div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between"><span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px" onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button></div></div>
         <input type="hidden" id="e-p-file-url"/>
         <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text" placeholder="Link do Google Drive, etc."/></div>
         <div class="fl ff"><label>Linha editorial / cobertura habitual</label><textarea id="e-p-linha" rows="3" placeholder="Como cobre o STF, o ministro..."></textarea></div>
@@ -1358,7 +1366,7 @@
       <div class="fl ff"><label>Link para convite</label><input id="a-link" type="text" placeholder="https://..."/></div>
       <div class="fl ff">
         <label>Anexos</label>
-        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('a')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('a')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
         <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
       </div>
     </div>
@@ -1389,7 +1397,7 @@
       <div class="fl ff"><label>Ponto de atenção</label><textarea id="b-atencao" rows="2" placeholder="Riscos, alertas, sensibilidades..."></textarea></div>
       <div class="fl ff">
         <label>Anexos</label>
-        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('b')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('b')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
         <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
       </div>
     </div>
@@ -1564,7 +1572,7 @@
     function fd(s) { if (!s) return '—'; try { const p = s.includes('T') ? new Date(s) : new Date(s + 'T00:00:00'); return p.toLocaleDateString('pt-BR'); } catch (e) { return s; } }
     function fdt(s) { if (!s) return '—'; try { return new Date(s).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return s; } }
     function dateKey(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
-    function fileIcon(n) { const e = (n.split('.').pop() || '').toLowerCase(); if (e === 'pdf') return '📄'; if (['doc', 'docx'].includes(e)) return '📝'; if (['ppt', 'pptx'].includes(e)) return '📊'; if (['xls', 'xlsx'].includes(e)) return '📈'; if (['jpg', 'jpeg', 'png'].includes(e)) return '🖼'; return '📎'; }
+    function fileIcon(n) { const e = (n.split('.').pop() || '').toLowerCase(); if (e === 'pdf') return '<i class="ph ph-file-text"></i>'; if (['doc', 'docx'].includes(e)) return '📝'; if (['ppt', 'pptx'].includes(e)) return '📊'; if (['xls', 'xlsx'].includes(e)) return '📈'; if (['jpg', 'jpeg', 'png'].includes(e)) return '🖼'; return '<i class="ph ph-paperclip"></i>'; }
 
     const TLE = { ao_vivo: 'Ao vivo', gravada: 'Gravada', escrita: 'Escrita' };
     const TLA = { inst_reuniao: 'Reunião institucional', palestra_aula: 'Palestra / aula magna', evento_solenidade: 'Evento / solenidade', reuniao: 'Reunião', almoco: 'Almoço', jantar: 'Jantar', agenda_pessoal: 'Agenda pessoal', agenda_pastoral: 'Agenda pastoral' };
@@ -1670,7 +1678,7 @@
       });
       document.getElementById('cnt-e').textContent = DB.E.length;
       const el = document.getElementById('list-e');
-      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma entrevista encontrada</div>'; return; }
+      if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-users"></i> Nenhuma entrevista encontrada</div>'; return; }
       const groups = {};
       L.forEach(x => { const k = norm(x.jornalista) || x.id; if (!groups[k]) groups[k] = []; groups[k].push(x); });
       const sorted = Object.values(groups).map(g => { g.sort((a, b2) => new Date(b2.criado) - new Date(a.criado)); return g; }).sort((a, b2) => new Date(b2[0].criado) - new Date(a[0].criado));
@@ -1708,9 +1716,9 @@
               <option value="">Status...</option>
               <option value="nova">Nova</option><option value="analise">Em análise</option><option value="aprovada">Aprovada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option>
             </select>
-            <button class="bsm" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();setTimeout(()=>detailE('${x.id}'),10)">👁</button>
-            <button class="bsm" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();setTimeout(()=>openE('${x.id}'),10)">✏</button>
-            <button class="bsm bdel" style="font-size:10px;padding:2px 8px" onclick="event.stopPropagation();delE('${x.id}')">🗑</button>
+            <button class="bsm" onclick="event.stopPropagation();setTimeout(()=>detailE('${x.id}'),10)"><i class="ph ph-eye"></i> Ver</button>
+            <button class="bsm" onclick="event.stopPropagation();setTimeout(()=>openE('${x.id}'),10)"><i class="ph ph-pencil-simple"></i> Editar</button>
+            <button class="bsm bdel" onclick="event.stopPropagation();delE('${x.id}')"><i class="ph ph-trash"></i></button>
           </div>
         </div>
       </div>`).join('');
@@ -1722,7 +1730,7 @@
             <div><div class="item-title">${nome}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${veiculo}${rep.cargo ? ' · ' + rep.cargo : ''}</div></div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
               <span style="font-size:11px;color:var(--muted)">${total} pedido${total > 1 ? 's' : ''}</span>
-              <button class="bsm" onclick="openEfromJornalista('${rep.id}')" style="font-size:11px">＋ Novo pedido</button>
+              <button class="bsm" onclick="openEfromJornalista('${rep.id}')" style="font-size:11px"><i class="ph ph-plus"></i> Novo pedido</button>
             </div>
           </div>
           ${sumBadges}
@@ -1810,7 +1818,7 @@
       <span class="badge s-${h.s}">${SLE[h.s] || h.s}</span>
       <span style="flex:1">${h.veiculo || '—'}${h.tema ? ' · ' + h.tema : ''}</span>
       <span style="color:var(--muted)">${fd(h.datasol || h.criado)}</span>
-      <button class="bsm" onclick="closeModal('ov-detail');detailE('${h.id}')">ver</button>
+      <button class="bsm" onclick="closeModal('ov-detail');detailE('${h.id}')"><i class="ph ph-eye"></i> Ver</button>
     </div>`).join('')}</div>` : '';
       document.getElementById('detail-title').textContent = x.veiculo + ' · ' + x.jornalista;
       document.getElementById('detail-body').innerHTML = `
@@ -1832,7 +1840,7 @@
     ${x.p_social ? `<div class="detail-row"><span class="dl">Rede social</span><span class="dv">${x.p_social}</span></div>` : ''}
     ${x.p_contato ? `<div class="detail-row"><span class="dl">Contato</span><span class="dv">${x.p_contato}</span></div>` : ''}
     ${x.p_link ? `<div class="detail-row"><span class="dl">Link perfil</span><span class="dv"><a href="${x.p_link}" target="_blank">${x.p_link}</a></span></div>` : ''}
-    ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv">📎 ${typeof x.p_filename === 'object' && x.p_filename.url ? `<a href="${x.p_filename.url}" target="_blank" style="color:var(--text)">${x.p_filename.name}</a>` : (typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename)}</span></div>` : ''}
+    ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv"><i class="ph ph-paperclip"></i> ${typeof x.p_filename === 'object' && x.p_filename.url ? `<a href="${x.p_filename.url}" target="_blank" style="color:var(--text)">${x.p_filename.name}</a>` : (typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename)}</span></div>` : ''}
   `+ histHtml;
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="openE('${id}');closeModal('ov-detail')">Editar</button>`;
       document.getElementById('ov-detail').classList.add('open');
@@ -1879,7 +1887,7 @@
       });
       document.getElementById('cnt-a').textContent = DB.A.length;
       const el = document.getElementById('list-a');
-      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma agenda encontrada</div>'; return; }
+      if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-calendar-check"></i> Nenhuma agenda encontrada</div>'; return; }
       
       const start = (pageA - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
@@ -1899,8 +1907,8 @@
           <option value="">Alterar status...</option>
           <option value="nova">Nova</option><option value="analise">Em análise</option><option value="confirmada">Confirmada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option><option value="cancelada">Cancelada</option>
         </select>
-        <button class="bsm" onclick="editA('${x.id}')">✏ Editar</button>
-        <button class="bsm bdel" onclick="delA('${x.id}')">🗑</button>
+        <button class="bsm" onclick="editA('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
+        <button class="bsm bdel" onclick="delA('${x.id}')"><i class="ph ph-trash"></i></button>
       </div>
     </div>`).join('') + buildPagination(L.length, pageA, 'A');
     }
@@ -2039,7 +2047,7 @@
       document.getElementById('cnt-p').textContent = DB.P.length;
       if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
       const el = document.getElementById('list-b');
-      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhum briefing encontrado</div>'; return; }
+      if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-file-doc"></i> Nenhum briefing encontrado</div>'; return; }
       
       const start = (pageB - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
@@ -2048,9 +2056,9 @@
       <div class="item-header"><div><div class="item-title">${x.titulo || '—'}</div></div><span class="badge t-${x.tipo}">${TLB[x.tipo] || x.tipo}</span></div>
       <div class="item-meta">${x.evento ? x.evento + ' · ' : ''}${fd(x.data)}</div>
       <div class="item-actions" onclick="event.stopPropagation()">
-        <button class="bsm" onclick="editB('${x.id}')">✏ Editar</button>
-        <button class="bsm btn-export" style="background:var(--blue);color:#fff;border-color:var(--blue)" onclick="exportBriefingById('${x.id}')">↓ .rtf</button>
-        <button class="bsm bdel" onclick="delB('${x.id}')">🗑</button>
+        <button class="bsm" onclick="editB('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
+        <button class="bsm btn-export"  onclick="exportBriefingById('${x.id}')">↓ .rtf</button>
+        <button class="bsm bdel" onclick="delB('${x.id}')"><i class="ph ph-trash"></i></button>
       </div>
     </div>`).join('') + buildPagination(L.length, pageB, 'B');
     }
@@ -2109,7 +2117,7 @@
         return `
     <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px">
       <span>${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${name}</a>` : name}</span>
-      <button class="bsm bdel" style="font-size:10px;padding:1px 6px" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')">✕</button>
+      <button class="bsm bdel" style="font-size:10px;padding:1px 6px" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')"><i class="ph ph-trash"></i></button>
     </div>`;
       }).join('');
     }
@@ -2288,7 +2296,7 @@
       }).sort((a, b2) => (b2.data || b2.criado || '').localeCompare(a.data || a.criado || ''));
       document.getElementById('cnt-p').textContent = DB.P.length;
       const el = document.getElementById('list-p');
-      if (!L.length) { el.innerHTML = '<div class="empty">📭 Nenhuma pauta encontrada</div>'; return; }
+      if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-folder-open"></i> Nenhuma pauta encontrada</div>'; return; }
       
       const start = (pageP - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
@@ -2298,11 +2306,11 @@
         <div><div class="item-title">${x.titulo || '(sem título)'}</div></div>
         <span class="badge p-${x.prior || 'media'}">${PL[x.prior || 'media']}</span>
       </div>
-      <div class="item-meta">${fd(x.data)}${x.anexos && x.anexos.length ? ' · 📎 ' + x.anexos.length + ' anexo' + (x.anexos.length > 1 ? 's' : '') : ''}</div>
+      <div class="item-meta">${fd(x.data)}${x.anexos && x.anexos.length ? ' · <i class="ph ph-paperclip"></i> ' + x.anexos.length + ' anexo' + (x.anexos.length > 1 ? 's' : '') : ''}</div>
       <div style="font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${(x.conteudo || '').slice(0, 200)}</div>
       <div class="item-actions" onclick="event.stopPropagation()">
-        <button class="bsm" onclick="event.stopPropagation();setTimeout(()=>openP('${x.id}'),10)">✏ Editar</button>
-        <button class="bsm bdel" onclick="event.stopPropagation();delP('${x.id}')">🗑</button>
+        <button class="bsm" onclick="event.stopPropagation();setTimeout(()=><i class="ph ph-pencil-simple"></i> Editar</button>
+        <button class="bsm bdel" onclick="event.stopPropagation();delP('${x.id}')"><i class="ph ph-trash"></i></button>
       </div>
     </div>`).join('') + buildPagination(L.length, pageP, 'P');
     }
@@ -2409,14 +2417,14 @@
               <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
               <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt"
                   style="display:none" onchange="handlePerfilFile(this)" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer">📎 Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
                   perfil</span></label>
             </div>
             <div class="fl ff" id="e-p-file-info" style="display:none">
               <div
                 style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between">
                 <span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px"
-                  onclick="clearPerfilFile()">✕</button></div>
+                  onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button></div>
             </div>
             <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text"
                 placeholder="Link do Google Drive, etc." /></div>
@@ -2507,7 +2515,7 @@
             <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
                   id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('a')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
                 imagens...</span></div>
             <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
@@ -2565,7 +2573,7 @@
             <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
                   id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('b')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
                 imagens...</span></div>
             <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
@@ -2608,7 +2616,7 @@
               <label style="cursor:pointer"><input type="file" id="p-files" multiple
                   accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('p')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer">📎 Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label>
               <span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span>
             </div>
