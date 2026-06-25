@@ -537,6 +537,28 @@
       border-top: 1px solid var(--border)
     }
 
+    .pedido-row {
+      display: grid;
+      grid-template-columns: 8px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      padding: 7px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .pedido-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .pedido-actions-btns {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
     .bsm {
       font-size: 11px;
       padding: 4px 9px;
@@ -1225,7 +1247,7 @@
         display: none;
       }
       .nav-brand {
-        display: flex; /* Mantém a estrutura interna do brand */
+        display: block; /* Mantém a estrutura interna do brand para não espremer o small */
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
@@ -1311,6 +1333,22 @@
         align-items: flex-start;
         gap: 4px;
         margin-bottom: 8px;
+      }
+
+      /* 7. Pedidos (Entrevistas) com quebra de linha elegante */
+      .pedido-row {
+        grid-template-columns: 8px 1fr;
+      }
+      .pedido-actions {
+        grid-column: 1 / -1;
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 4px;
+      }
+      .pedido-actions-btns {
+        flex: 1;
+        justify-content: flex-end;
       }
     }
   </style>
@@ -1917,17 +1955,17 @@
       ${recusadas.length > 0 ? `<span class="badge" style="background:#eeecea;color:#555">${recusadas.length} recusada${recusadas.length > 1 ? 's' : ''}</span>` : ''}
     </div>`;
         const pedidosList = group.map(x => `
-      <div style="display:grid;grid-template-columns:8px 1fr auto;gap:8px;align-items:start;padding:7px 0;border-bottom:0.5px solid var(--border)" onclick="event.stopPropagation()">
+      <div class="pedido-row" onclick="event.stopPropagation()">
         ${statusDot(x.s)}
-        <div>
+        <div class="pedido-info">
           <div style="font-size:12px;font-weight:600;color:var(--text)">${esc(x.veiculo) || '—'} <span style="font-weight:400;color:var(--muted)">· ${TLE[x.formato] || x.formato}</span></div>
           ${esc(x.tema) ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.tema)}</div>` : ''}
           <div style="font-size:11px;color:var(--muted2);margin-top:1px">${x.datasol ? fd(x.datasol) + ' · ' : ''}${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div>
           ${esc(x.obs) ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${esc(x.obs).slice(0, 80)}${esc(x.obs).length > 80 ? '…' : ''}</div>` : ''}
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <div class="pedido-actions">
           <span class="badge s-${x.s}">${SLE[x.s] || x.s}</span>
-          <div style="display:flex;gap:4px">
+          <div class="pedido-actions-btns">
             <select class="bsm" style="font-size:10px;padding:2px 6px" onchange="updateStatusE('${x.id}',this.value);this.value=''">
               <option value="">Status...</option>
               <option value="nova">Nova</option><option value="analise">Em análise</option><option value="aprovada">Aprovada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option>
@@ -2136,7 +2174,27 @@
       
       const start = (pageA - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
-      el.innerHTML = sliced.map(x => `
+      
+      el.innerHTML = sliced.map(x => {
+        let anexosHtml = '';
+        if (x.anexos && x.anexos.length) {
+          const thumbs = x.anexos.map(n => {
+            let pData = n;
+            if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch(e) {} }
+            const name = typeof pData === 'string' ? pData : (pData.name || '');
+            const url = typeof pData === 'string' ? null : pData.url;
+            const ext = name.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext) && url) {
+              return `<img src="${url}" style="width:36px;height:36px;border-radius:6px;object-fit:cover;border:1px solid var(--border);" title="${esc(name)}">`;
+            }
+            return '';
+          }).filter(Boolean).join('');
+          if (thumbs) {
+            anexosHtml = `<div style="display:flex;flex-wrap:wrap;margin-top:8px;gap:6px">${thumbs}</div>`;
+          }
+        }
+
+        return `
     <div class="item" onclick="detailA('${x.id}')">
       <div class="item-header">
         <div><div class="item-title">${esc(x.tema) || esc(x.inst) || '—'}</div></div>
@@ -2147,6 +2205,7 @@
         <span class="badge t-${x.tipo}">${TLA[x.tipo] || x.tipo}</span>
         <span class="badge p-${x.prior}">${PL[x.prior] || x.prior}</span>
       </div>
+      ${anexosHtml}
       <div class="item-actions" onclick="event.stopPropagation()">
         <select class="bsm" onchange="updateStatusA('${x.id}',this.value)">
           <option value="">Alterar status...</option>
@@ -2155,7 +2214,8 @@
         <button class="bsm" onclick="editA('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
         <button class="bsm bdel" onclick="delA('${x.id}')"><i class="ph ph-trash"></i></button>
       </div>
-    </div>`).join('') + buildPagination(L.length, pageA, 'A');
+    </div>`;
+      }).join('') + buildPagination(L.length, pageA, 'A');
     }
 
     function openA(id) {
@@ -2217,11 +2277,19 @@
         ['Local', x.local], ['Staff', x.staff], ['Deslocamento', x.desloc], ['Protocolo', x.prot],
         ['Origem', x.origem], ['Observações', x.obs],
         ['Link convite', x.link ? `<a href="${esc(x.link)}" target="_blank">${esc(x.link)}</a>` : null],
-        ['Anexos', x.anexos && x.anexos.length ? x.anexos.map(n => {
-          const name = typeof n === 'string' ? n : n.name;
-          const url = typeof n === 'string' ? null : n.url;
-          return `${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text)">${name}</a>` : name}`;
-        }).join('<br>') : null]
+        ['Anexos', x.anexos && x.anexos.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">` + x.anexos.map(n => {
+          let pData = n;
+          if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch(e) {} }
+          const name = typeof pData === 'string' ? pData : (pData.name || '');
+          const url = typeof pData === 'string' ? null : pData.url;
+          const ext = name.split('.').pop().toLowerCase();
+          const isImg = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+          
+          if (isImg && url) {
+            return `<a href="${url}" target="_blank" style="display:inline-block;border-radius:8px;overflow:hidden;border:1px solid var(--border);width:80px;height:80px;flex-shrink:0;" title="${esc(name)}"><img src="${url}" style="width:100%;height:100%;object-fit:cover;display:block;"></a>`;
+          }
+          return `<div style="width:100%;display:flex;align-items:center;"><span style="margin-right:6px;font-size:16px">${fileIcon(name)}</span>${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${esc(name)}</a>` : esc(name)}</div>`;
+        }).join('') + `</div>` : null]
       ].filter(r => r[1]).map(r => `<div class="detail-row"><span class="dl">${r[0]}</span><span class="dv">${r[1] || '—'}</span></div>`).join('');
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button>`;
       document.getElementById('ov-detail').classList.add('open');
