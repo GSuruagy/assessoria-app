@@ -1211,22 +1211,36 @@
 
     /* ── MOBILE FIRST / APP NATIVO ── */
     @media (max-width: 768px) {
-      /* 1. Navegação Superior rolável e sem scrollbar */
+      /* 1. Navegação Superior: Brand no topo, abas roláveis embaixo */
       .nav {
+        display: block; /* Sai do flex para permitir o wrap estruturado */
         overflow-x: auto;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
+        padding: 0; /* Remove padding lateral container para o brand ocupar 100% */
       }
       .nav::-webkit-scrollbar {
         display: none;
       }
-      .nav-brand, .ntab, .nav-logout, .nav-sync {
-        flex-shrink: 0;
+      .nav-brand {
+        display: flex; /* Mantém a estrutura interna do brand */
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 1.5rem;
+        margin: 0;
+      }
+      .ntab {
+        display: inline-flex; /* Abas inline para rolagem horizontal */
+      }
+      .nav-logout, .nav-sync {
+        display: inline-flex;
+        margin-right: 1.5rem;
       }
 
-      /* 2. Toolbars e Filtros empilhados */
+      /* 2. Toolbars e Filtros empilhados com gap reduzido */
       .toolbar, 
       .toolbar-left, 
       .toolbar-right, 
@@ -1234,6 +1248,7 @@
         flex-direction: column;
         align-items: stretch;
         width: 100%;
+        gap: 8px; /* Reduzido de 10px/12px para compactar */
       }
       .toolbar .fi, 
       .toolbar .btn-new,
@@ -1253,9 +1268,15 @@
       .toolbar-cal-nav {
         width: 100%;
         justify-content: space-between;
+        flex-direction: row; /* Mantém as setas lado a lado */
       }
 
-      /* 3. Modais otimizados para toque */
+      /* 3. Dashboard Metrics (Garante que cards ímpares não fiquem quebrados sozinhos pequenos) */
+      .metrics-row > .met:last-child:nth-child(odd) {
+        grid-column: span 2;
+      }
+
+      /* 4. Modais otimizados para toque */
       .modal {
         width: 95vw;
         max-height: 95vh;
@@ -1263,7 +1284,7 @@
         border-radius: 12px;
       }
 
-      /* 4. Calendário com rolagem horizontal */
+      /* 5. Calendário com rolagem horizontal */
       #agenda-cal,
       .cal-wrapper {
         overflow-x: auto;
@@ -1275,7 +1296,7 @@
         min-width: 600px; /* Impede que o calendário quebre */
       }
 
-      /* 5. Listas, Cards e Detalhes */
+      /* 6. Listas, Cards e Detalhes */
       .item {
         padding: 1rem;
       }
@@ -1710,12 +1731,13 @@
       }
 
       try {
-        const { error } = await supa.from(table).upsert(rec);
+        const { data, error } = await supa.from(table).upsert(rec).select().single();
         if (error) throw error;
 
-        const idx = DB[key].findIndex(x => x.id === rec.id);
-        if (idx >= 0) DB[key][idx] = { ...DB[key][idx], ...rec };
-        else DB[key].unshift(rec);
+        const returnedRec = data || rec;
+        const idx = DB[key].findIndex(x => x.id === returnedRec.id);
+        if (idx >= 0) DB[key][idx] = { ...DB[key][idx], ...returnedRec };
+        else DB[key].unshift(returnedRec);
 
         return true;
       } catch (e) {
