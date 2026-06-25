@@ -1938,9 +1938,24 @@
           </div>
         </div>
       </div>`).join('');
+
+        let avatarHtml = `<div style="width:40px;height:40px;border-radius:50%;background:${jaAtendido ? '#d8f5e8' : '#dceefb'};color:${jaAtendido ? '#0a5a3a' : '#0a4070'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${esc(initials)}</div>`;
+        if (rep.p_filename) {
+          let pData = rep.p_filename;
+          if (typeof pData === 'string') {
+            try { pData = JSON.parse(pData); } catch(e) {}
+          }
+          if (pData && pData.url) {
+            const ext = (pData.name || '').split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+              avatarHtml = `<div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;overflow:hidden;background:var(--border)"><img src="${pData.url}" style="width:100%;height:100%;object-fit:cover;"></div>`;
+            }
+          }
+        }
+
         return `<div class="item" style="cursor:default">
       <div style="display:flex;align-items:flex-start;gap:12px">
-        <div style="width:40px;height:40px;border-radius:50%;background:${jaAtendido ? '#d8f5e8' : '#dceefb'};color:${jaAtendido ? '#0a5a3a' : '#0a4070'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${esc(initials)}</div>
+        ${avatarHtml}
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
             <div><div class="item-title">${esc(nome)}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(veiculo)}${esc(rep.cargo) ? ' · ' + esc(rep.cargo) : ''}</div></div>
@@ -1969,9 +1984,23 @@
       f('e-p-linha', x.p_linha); f('e-p-hist', x.p_hist); f('e-p-atencao', x.p_atencao);
       f('e-p-social', x.p_social); f('e-p-contato', x.p_contato); f('e-p-link', x.p_link);
       clearPerfilFile();
-      if (x.p_filename) { 
-        document.getElementById('e-p-file-name').textContent = typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename; 
-        document.getElementById('e-p-file-url').value = typeof x.p_filename === 'object' ? x.p_filename.url : '';
+      if (x.p_filename) {
+        let pData = x.p_filename;
+        if (typeof pData === 'string') {
+          try { pData = JSON.parse(pData); } catch (e) {}
+        }
+        const name = typeof pData === 'object' && pData !== null ? pData.name : pData;
+        const url = typeof pData === 'object' && pData !== null ? pData.url : '';
+        
+        const nameEl = document.getElementById('e-p-file-name');
+        if (url) {
+          nameEl.innerHTML = `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${esc(name)}</a>`;
+        } else {
+          nameEl.textContent = name;
+        }
+        const urlEl = document.getElementById('e-p-file-url');
+        if (urlEl) urlEl.value = url;
+        
         document.getElementById('e-p-file-info').style.display = ''; 
       }
       mTab('e', 'form');
@@ -2313,27 +2342,65 @@
       const input = document.getElementById(prefix + '-files');
       if (!input || !input.files || !input.files.length) return;
       toast('Fazendo upload...');
-      for (let f of Array.from(input.files)) {
+      
+      const files = Array.from(input.files);
+      const tempItems = files.map(f => ({
+        name: f.name,
+        localUrl: URL.createObjectURL(f),
+        file: f,
+        uploading: true
+      }));
+      
+      _anexos[prefix].push(...tempItems);
+      renderAnexosList(prefix);
+
+      for (let item of tempItems) {
         try {
-          const res = await uploadToSupabase(f);
-          _anexos[prefix].push(res);
+          const res = await uploadToSupabase(item.file);
+          const idx = _anexos[prefix].indexOf(item);
+          if (idx !== -1) {
+            _anexos[prefix][idx] = { name: res.name, url: res.url };
+          }
         } catch(e) {
-          toast('Erro no upload: ' + f.name);
+          toast('Erro no upload: ' + item.name);
+          const idx = _anexos[prefix].indexOf(item);
+          if (idx !== -1) _anexos[prefix].splice(idx, 1);
         }
+        renderAnexosList(prefix);
       }
-      input.value = ''; renderAnexosList(prefix);
+      input.value = ''; 
       toast('Upload concluído!');
     }
+    
     function renderAnexosList(prefix) {
       const el = document.getElementById(prefix + '-files-list'); if (!el) return;
       if (!_anexos[prefix].length) { el.innerHTML = ''; return; }
       el.innerHTML = _anexos[prefix].map((item, i) => {
         const name = typeof item === 'string' ? item : item.name;
-        const url = typeof item === 'string' ? null : item.url;
+        const url = typeof item === 'string' ? null : (item.localUrl || item.url);
+        const isUploading = item.uploading ? ' <span style="color:var(--muted);font-size:10px">(Enviando...)</span>' : '';
+        
+        const ext = name.split('.').pop().toLowerCase();
+        const isImg = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+        
+        let mediaHtml = `<span style="margin-right:8px;font-size:16px">${fileIcon(name)}</span>`;
+        if (isImg && url) {
+          mediaHtml = `<img src="${url}" style="width: 32px; height: 32px; object-fit: cover; border-radius: 4px; margin-right: 8px; flex-shrink: 0;" />`;
+        }
+        
+        const contentHtml = `
+          ${mediaHtml}
+          <span style="word-break:break-all;font-weight:500;">${esc(name)}${isUploading}</span>
+        `;
+        
+        const leftContent = url 
+          ? `<a href="${url}" target="_blank" style="display:flex;align-items:center;color:var(--text);text-decoration:none;flex:1;min-width:0;">${contentHtml}</a>` 
+          : `<div style="display:flex;align-items:center;color:var(--text);flex:1;min-width:0;">${contentHtml}</div>`;
+
         return `
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px">
-      <span>${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${name}</a>` : name}</span>
-      <button class="bsm bdel" style="font-size:10px;padding:1px 6px" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')"><i class="ph ph-trash"></i></button>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:6px 10px;font-size:13px;margin-bottom:6px;">
+      ${leftContent}
+      <button class="bsm bdel" style="font-size:12px;padding:4px 8px;margin-left:12px;flex-shrink:0" onclick="_anexos['${prefix}'].splice(${i},1);renderAnexosList('${prefix}')"><i class="ph ph-trash"></i></button>
     </div>`;
       }).join('');
     }
