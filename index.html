@@ -1604,6 +1604,11 @@
       return { name: file.name, url: pub.data.publicUrl };
     }
 
+    function esc(str) {
+      if (str == null) return '';
+      if (typeof str !== 'string') return String(str);
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
     function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
     function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
     function fd(s) { if (!s) return '—'; try { const p = s.includes('T') ? new Date(s) : new Date(s + 'T00:00:00'); return p.toLocaleDateString('pt-BR'); } catch (e) { return s; } }
@@ -1662,7 +1667,7 @@
       if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
       const mk = (arr, kn, kd) => {
         if (!arr.length) return '<div style="font-size:12px;color:var(--muted2);padding:8px 0">Nenhum registro</div>';
-        return arr.slice(0, 5).map(x => `<div class="mini-item"><span class="mini-name">${x[kn] || '—'}</span><span class="mini-date">${fd(x[kd])}</span></div>`).join('');
+        return arr.slice(0, 5).map(x => `<div class="mini-item"><span class="mini-name">${esc(x[kn]) || '—'}</span><span class="mini-date">${fd(x[kd])}</span></div>`).join('');
       };
       document.getElementById('dash-e').innerHTML = mk([...DB.E].sort((a, b) => new Date(b.criado) - new Date(a.criado)), 'jornalista', 'criado');
       document.getElementById('dash-a').innerHTML = mk([...DB.A].sort((a, b) => new Date(b.criado) - new Date(a.criado)), 'tema', 'data');
@@ -1741,10 +1746,10 @@
       <div style="display:grid;grid-template-columns:8px 1fr auto;gap:8px;align-items:start;padding:7px 0;border-bottom:0.5px solid var(--border)" onclick="event.stopPropagation()">
         ${statusDot(x.s)}
         <div>
-          <div style="font-size:12px;font-weight:600;color:var(--text)">${x.veiculo || '—'} <span style="font-weight:400;color:var(--muted)">· ${TLE[x.formato] || x.formato}</span></div>
-          ${x.tema ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${x.tema}</div>` : ''}
+          <div style="font-size:12px;font-weight:600;color:var(--text)">${esc(x.veiculo) || '—'} <span style="font-weight:400;color:var(--muted)">· ${TLE[x.formato] || x.formato}</span></div>
+          ${esc(x.tema) ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.tema)}</div>` : ''}
           <div style="font-size:11px;color:var(--muted2);margin-top:1px">${x.datasol ? fd(x.datasol) + ' · ' : ''}${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div>
-          ${x.obs ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${x.obs.slice(0, 80)}${x.obs.length > 80 ? '…' : ''}</div>` : ''}
+          ${esc(x.obs) ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${esc(x.obs).slice(0, 80)}${esc(x.obs).length > 80 ? '…' : ''}</div>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
           <span class="badge s-${x.s}">${SLE[x.s] || x.s}</span>
@@ -1761,10 +1766,10 @@
       </div>`).join('');
         return `<div class="item" style="cursor:default">
       <div style="display:flex;align-items:flex-start;gap:12px">
-        <div style="width:40px;height:40px;border-radius:50%;background:${jaAtendido ? '#d8f5e8' : '#dceefb'};color:${jaAtendido ? '#0a5a3a' : '#0a4070'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${initials}</div>
+        <div style="width:40px;height:40px;border-radius:50%;background:${jaAtendido ? '#d8f5e8' : '#dceefb'};color:${jaAtendido ? '#0a5a3a' : '#0a4070'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${esc(initials)}</div>
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <div><div class="item-title">${nome}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${veiculo}${rep.cargo ? ' · ' + rep.cargo : ''}</div></div>
+            <div><div class="item-title">${esc(nome)}</div><div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(veiculo)}${esc(rep.cargo) ? ' · ' + esc(rep.cargo) : ''}</div></div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
               <span style="font-size:11px;color:var(--muted)">${total} pedido${total > 1 ? 's' : ''}</span>
               <button class="bsm" onclick="openEfromJornalista('${rep.id}')" style="font-size:11px"><i class="ph ph-plus"></i> Novo pedido</button>
@@ -1853,30 +1858,30 @@
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:8px">Histórico (${hist.length})</div>
     ${hist.map(h => `<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:0.5px solid var(--border)">
       <span class="badge s-${h.s}">${SLE[h.s] || h.s}</span>
-      <span style="flex:1">${h.veiculo || '—'}${h.tema ? ' · ' + h.tema : ''}</span>
+      <span style="flex:1">${esc(h.esc(veiculo)) || '—'}${esc(h.tema) ? ' · ' + esc(h.tema) : ''}</span>
       <span style="color:var(--muted)">${fd(h.datasol || h.criado)}</span>
       <button class="bsm" onclick="closeModal('ov-detail');detailE('${h.id}')"><i class="ph ph-eye"></i> Ver</button>
     </div>`).join('')}</div>` : '';
       document.getElementById('detail-title').textContent = x.veiculo + ' · ' + x.jornalista;
       document.getElementById('detail-body').innerHTML = `
-    <div class="detail-row"><span class="dl">Veículo</span><span class="dv">${x.veiculo || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Jornalista</span><span class="dv">${x.jornalista || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Cargo</span><span class="dv">${x.cargo || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Veículo</span><span class="dv">${esc(x.veiculo) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Jornalista</span><span class="dv">${esc(x.jornalista) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Cargo</span><span class="dv">${esc(x.cargo) || '—'}</span></div>
     <div class="detail-row"><span class="dl">Formato</span><span class="dv">${TLE[x.formato] || x.formato || '—'}</span></div>
     <div class="detail-row"><span class="dl">Status</span><span class="dv"><span class="badge s-${x.s}">${SLE[x.s] || x.s}</span></span></div>
     <div class="detail-row"><span class="dl">Data solicitação</span><span class="dv">${fd(x.datasol)}</span></div>
     <div class="detail-row"><span class="dl">Data / hora</span><span class="dv">${fdt(x.data)}</span></div>
     <div class="detail-row"><span class="dl">Prazo</span><span class="dv">${fd(x.prazo)}</span></div>
     <div class="detail-row"><span class="dl">Prioridade</span><span class="dv"><span class="badge p-${x.prior}">${PL[x.prior] || x.prior}</span></span></div>
-    <div class="detail-row"><span class="dl">Tema</span><span class="dv">${x.tema || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Pauta / perguntas</span><span class="dv">${x.pauta || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Observações</span><span class="dv">${x.obs || '—'}</span></div>
-    ${x.p_linha ? `<div class="detail-row"><span class="dl">Linha editorial</span><span class="dv">${x.p_linha}</span></div>` : ''}
-    ${x.p_hist ? `<div class="detail-row"><span class="dl">Histórico cobertura</span><span class="dv">${x.p_hist}</span></div>` : ''}
-    ${x.p_atencao ? `<div class="detail-row"><span class="dl">Pontos de atenção</span><span class="dv">${x.p_atencao}</span></div>` : ''}
-    ${x.p_social ? `<div class="detail-row"><span class="dl">Rede social</span><span class="dv">${x.p_social}</span></div>` : ''}
-    ${x.p_contato ? `<div class="detail-row"><span class="dl">Contato</span><span class="dv">${x.p_contato}</span></div>` : ''}
-    ${x.p_link ? `<div class="detail-row"><span class="dl">Link perfil</span><span class="dv"><a href="${x.p_link}" target="_blank">${x.p_link}</a></span></div>` : ''}
+    <div class="detail-row"><span class="dl">Tema</span><span class="dv">${esc(x.tema) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Pauta / perguntas</span><span class="dv">${esc(x.pauta) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Observações</span><span class="dv">${esc(x.obs) || '—'}</span></div>
+    ${esc(x.p_linha) ? `<div class="detail-row"><span class="dl">Linha editorial</span><span class="dv">${esc(x.p_linha)}</span></div>` : ''}
+    ${esc(x.p_hist) ? `<div class="detail-row"><span class="dl">Histórico cobertura</span><span class="dv">${esc(x.p_hist)}</span></div>` : ''}
+    ${esc(x.p_atencao) ? `<div class="detail-row"><span class="dl">Pontos de atenção</span><span class="dv">${esc(x.p_atencao)}</span></div>` : ''}
+    ${esc(x.p_social) ? `<div class="detail-row"><span class="dl">Rede social</span><span class="dv">${esc(x.p_social)}</span></div>` : ''}
+    ${esc(x.p_contato) ? `<div class="detail-row"><span class="dl">Contato</span><span class="dv">${esc(x.p_contato)}</span></div>` : ''}
+    ${esc(x.p_link) ? `<div class="detail-row"><span class="dl">Link perfil</span><span class="dv"><a href="${esc(x.p_link)}" target="_blank">${esc(x.p_link)}</a></span></div>` : ''}
     ${x.p_filename ? `<div class="detail-row"><span class="dl">Arquivo</span><span class="dv"><i class="ph ph-paperclip"></i> ${typeof x.p_filename === 'object' && x.p_filename.url ? `<a href="${x.p_filename.url}" target="_blank" style="color:var(--text)">${x.p_filename.name}</a>` : (typeof x.p_filename === 'object' ? x.p_filename.name : x.p_filename)}</span></div>` : ''}
   `+ histHtml;
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="openE('${id}');closeModal('ov-detail')">Editar</button>`;
@@ -1931,10 +1936,10 @@
       el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailA('${x.id}')">
       <div class="item-header">
-        <div><div class="item-title">${x.tema || x.inst || '—'}</div></div>
+        <div><div class="item-title">${esc(x.tema) || esc(x.inst) || '—'}</div></div>
         <span class="badge s-${x.s}">${SLA[x.s] || x.s}</span>
       </div>
-      <div class="item-meta">${x.inst ? x.inst + ' · ' : ''}${x.nome ? x.nome + ' · ' : ''}${x.cidade ? x.cidade + ' · ' : ''}${fdt(x.data)}</div>
+      <div class="item-meta">${esc(x.inst) ? esc(x.inst) + ' · ' : ''}${esc(x.nome) ? esc(x.nome) + ' · ' : ''}${esc(x.cidade) ? esc(x.cidade) + ' · ' : ''}${fdt(x.data)}</div>
       <div class="item-tags">
         <span class="badge t-${x.tipo}">${TLA[x.tipo] || x.tipo}</span>
         <span class="badge p-${x.prior}">${PL[x.prior] || x.prior}</span>
@@ -2008,7 +2013,7 @@
         ['Formato', x.formato], ['Prioridade', PL[x.prior] || x.prior],
         ['Local', x.local], ['Staff', x.staff], ['Deslocamento', x.desloc], ['Protocolo', x.prot],
         ['Origem', x.origem], ['Observações', x.obs],
-        ['Link convite', x.link ? `<a href="${x.link}" target="_blank">${x.link}</a>` : null],
+        ['Link convite', x.link ? `<a href="${esc(x.link)}" target="_blank">${esc(x.link)}</a>` : null],
         ['Anexos', x.anexos && x.anexos.length ? x.anexos.map(n => {
           const name = typeof n === 'string' ? n : n.name;
           const url = typeof n === 'string' ? null : n.url;
@@ -2090,8 +2095,8 @@
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
       el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailB('${x.id}')">
-      <div class="item-header"><div><div class="item-title">${x.titulo || '—'}</div></div><span class="badge t-${x.tipo}">${TLB[x.tipo] || x.tipo}</span></div>
-      <div class="item-meta">${x.evento ? x.evento + ' · ' : ''}${fd(x.data)}</div>
+      <div class="item-header"><div><div class="item-title">${esc(x.titulo) || '—'}</div></div><span class="badge t-${x.tipo}">${TLB[x.tipo] || x.tipo}</span></div>
+      <div class="item-meta">${esc(x.evento) ? esc(x.evento) + ' · ' : ''}${fd(x.data)}</div>
       <div class="item-actions" onclick="event.stopPropagation()">
         <button class="bsm" onclick="editB('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
         <button class="bsm btn-export"  onclick="exportBriefingById('${x.id}')">↓ .rtf</button>
@@ -2110,13 +2115,13 @@
       document.getElementById('detail-body').innerHTML = `
     <div class="detail-row"><span class="dl">Tipo</span><span class="dv"><span class="badge t-${x.tipo}">${TLB[x.tipo]}</span></span></div>
     <div class="detail-row"><span class="dl">Data</span><span class="dv">${fd(x.data)}</span></div>
-    <div class="detail-row"><span class="dl">Evento</span><span class="dv">${x.evento || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Local</span><span class="dv">${x.local || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Horário</span><span class="dv">${x.hora || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Realizador</span><span class="dv">${x.real || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Papel do Ministro</span><span class="dv">${x.papel || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Tom</span><span class="dv">${x.tom || '—'}</span></div>
-    <div class="detail-row"><span class="dl">Atenção</span><span class="dv">${x.atencao || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Evento</span><span class="dv">${esc(x.evento) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Local</span><span class="dv">${esc(x.local) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Horário</span><span class="dv">${esc(x.hora) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Realizador</span><span class="dv">${esc(x.real) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Papel do Ministro</span><span class="dv">${esc(x.papel) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Tom</span><span class="dv">${esc(x.tom) || '—'}</span></div>
+    <div class="detail-row"><span class="dl">Atenção</span><span class="dv">${esc(x.atencao) || '—'}</span></div>
     ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => {
       const name = typeof n === 'string' ? n : n.name;
       const url = typeof n === 'string' ? null : n.url;
@@ -2250,7 +2255,7 @@
       const win = window.open('', '_pe', 'width=900,height=700');
       win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda de Imprensa</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}.header h1{font-size:13pt;font-weight:700;text-transform:uppercase}.jcard{margin-bottom:1rem;border:1pt solid #ddd;border-radius:4pt;page-break-inside:avoid}.jcard-head{background:#f5f5f2;padding:.5rem .75rem;border-bottom:.5pt solid #ddd;display:flex;justify-content:space-between}.jcard-name{font-size:11pt;font-weight:700}.jcard-veiculo{font-size:9.5pt;color:#555}.pedido{display:flex;gap:.75rem;padding:.5rem .75rem;border-bottom:.5pt solid #eee;align-items:baseline}.pedido:last-child{border-bottom:none}.p-status{font-size:8.5pt;font-weight:700;min-width:80pt}.p-info{flex:1}.p-main{font-size:10pt}.p-sub{font-size:8.5pt;color:#666;margin-top:1pt}.p-datasol{font-size:8.5pt;color:#999;min-width:70pt;text-align:right}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
   <div class="header"><div><h1>Agenda de Imprensa</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Gerado em ${new Date().toLocaleString('pt-BR')}</div></div>
-  ${sorted.map(group => { const rep = group[0]; return `<div class="jcard"><div class="jcard-head"><div><span class="jcard-name">${rep.jornalista || '—'}</span><span class="jcard-veiculo"> · ${rep.veiculo || '—'}${rep.cargo ? ' · ' + rep.cargo : ''}</span></div><span style="font-size:9pt;color:#888">${group.length} pedido${group.length > 1 ? 's' : ''}</span></div>${group.map(x => `<div class="pedido"><div class="p-status" style="color:${scol[x.s] || '#444'}">${SLE2[x.s] || x.s}</div><div class="p-info"><div class="p-main">${x.tema || x.veiculo || '—'} · ${TLE2[x.formato] || x.formato}</div><div class="p-sub">${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div></div><div class="p-datasol">${x.datasol ? fd(x.datasol) : ''}</div></div>`).join('')}</div>`; }).join('')}
+  ${sorted.map(group => { const rep = group[0]; return `<div class="jcard"><div class="jcard-head"><div><span class="jcard-name">${esc(rep.jornalista) || '—'}</span><span class="jcard-veiculo"> · ${esc(rep.esc(veiculo)) || '—'}${esc(rep.cargo) ? ' · ' + esc(rep.cargo) : ''}</span></div><span style="font-size:9pt;color:#888">${group.length} pedido${group.length > 1 ? 's' : ''}</span></div>${group.map(x => `<div class="pedido"><div class="p-status" style="color:${scol[x.s] || '#444'}">${SLE2[x.s] || x.s}</div><div class="p-info"><div class="p-main">${esc(x.tema) || esc(x.veiculo) || '—'} · ${TLE2[x.formato] || x.formato}</div><div class="p-sub">${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div></div><div class="p-datasol">${x.datasol ? fd(x.datasol) : ''}</div></div>`).join('')}</div>`; }).join('')}
   <div class="footer"><span>Assessoria · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
       win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
     }
@@ -2266,7 +2271,7 @@
       win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Solicitações de Agenda</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}h1{font-size:13pt;font-weight:700;text-transform:uppercase}table{width:100%;border-collapse:collapse;margin-top:.5rem}th{font-size:8.5pt;font-weight:700;text-transform:uppercase;color:#666;padding:6pt 8pt;border-bottom:1.5pt solid #111;text-align:left}td{font-size:9.5pt;padding:6pt 8pt;border-bottom:.5pt solid #e0e0db;vertical-align:top}.sub{font-size:8.5pt;color:#777;margin-top:1pt}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
   <div class="header"><div><h1>Solicitações de Agenda</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">${new Date().toLocaleDateString('pt-BR')}</div></div>
   <table><thead><tr><th>Status</th><th>Evento / Tema</th><th>Instituição</th><th>Tipo</th><th>Data</th><th>Cidade</th></tr></thead><tbody>
-  ${L.map(x => `<tr><td style="font-weight:700;color:${scol[x.s] || '#444'}">${SLA2[x.s] || x.s}</td><td>${x.tema || '—'}</td><td>${x.inst || '—'}<div class="sub">${x.nome ? x.nome + (x.cargo ? ' · ' + x.cargo : '') : ''}</div></td><td style="font-size:8.5pt">${TLA2[x.tipo] || x.tipo}</td><td>${x.data ? fdt(x.data) : '—'}<div class="sub">${x.prazo ? 'Prazo: ' + fd(x.prazo) : ''}</div></td><td>${x.cidade || '—'}</td></tr>`).join('')}
+  ${L.map(x => `<tr><td style="font-weight:700;color:${scol[x.s] || '#444'}">${SLA2[x.s] || x.s}</td><td>${esc(x.tema) || '—'}</td><td>${esc(x.inst) || '—'}<div class="sub">${esc(x.nome) ? esc(x.nome) + (esc(x.cargo) ? ' · ' + esc(x.cargo) : '') : ''}</div></td><td style="font-size:8.5pt">${TLA2[x.tipo] || x.tipo}</td><td>${x.data ? fdt(x.data) : '—'}<div class="sub">${x.prazo ? 'Prazo: ' + fd(x.prazo) : ''}</div></td><td>${esc(x.cidade) || '—'}</td></tr>`).join('')}
   </tbody></table>
   <div class="footer"><span>Assessoria · ${L.length} registros</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
       win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
@@ -2340,11 +2345,11 @@
       el.innerHTML = sliced.map(x => `
     <div class="item" onclick="detailP('${x.id}')">
       <div class="item-header">
-        <div><div class="item-title">${x.titulo || '(sem título)'}</div></div>
+        <div><div class="item-title">${esc(x.titulo) || '(sem título)'}</div></div>
         <span class="badge p-${x.prior || 'media'}">${PL[x.prior || 'media']}</span>
       </div>
       <div class="item-meta">${fd(x.data)}${x.anexos && x.anexos.length ? ' · <i class="ph ph-paperclip"></i> ' + x.anexos.length + ' anexo' + (x.anexos.length > 1 ? 's' : '') : ''}</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${(x.conteudo || '').slice(0, 200)}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${(esc(x.conteudo) || '').slice(0, 200)}</div>
       <div class="item-actions" onclick="event.stopPropagation()">
         <button class="bsm" onclick="event.stopPropagation();setTimeout(()=><i class="ph ph-pencil-simple"></i> Editar</button>
         <button class="bsm bdel" onclick="event.stopPropagation();delP('${x.id}')"><i class="ph ph-trash"></i></button>
@@ -2389,7 +2394,7 @@
     <div class="detail-row"><span class="dl">Data</span><span class="dv">${fd(x.data)}</span></div>
     <div class="detail-row"><span class="dl">Prioridade</span><span class="dv"><span class="badge p-${x.prior || 'media'}">${PL[x.prior || 'media']}</span></span></div>
     ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => fileIcon(n) + ' ' + n).join('<br>')}</span></div>` : ''}
-    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:13px;line-height:1.7;white-space:pre-wrap">${x.conteudo || '—'}</div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:13px;line-height:1.7;white-space:pre-wrap">${esc(x.conteudo) || '—'}</div>
   `;
       document.getElementById('detail-foot').innerHTML = `
     <button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button>
