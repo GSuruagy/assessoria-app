@@ -365,7 +365,64 @@
     }
 
     .toolbar-left {
-      flex: 1;
+      flex: 1 1 auto;
+    }
+
+    .toolbar-right {
+      flex: 0 0 auto;
+    }
+
+    .toolbar-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      flex: 1 1 auto;
+    }
+
+    .toolbar-cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-cal-nav .cal-title {
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 160px;
+      text-align: center;
+    }
+
+    .view-toggles {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: 3px;
+      height: 38px;
+      box-sizing: border-box;
+      gap: 2px;
+    }
+
+    .view-toggles .atog {
+      height: 100%;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .view-toggles .atog.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      font-weight: 600;
     }
 
     .fi {
@@ -414,6 +471,17 @@
 
     .btn-new:hover {
       background: #333;
+    }
+
+    .btn-print,
+    .toolbar-cal-nav .bsm {
+      height: 38px;
+      padding: 0 14px;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     /* ── LIST ── */
@@ -1140,6 +1208,90 @@
         grid-column: 1
       }
     }
+
+    /* ── MOBILE FIRST / APP NATIVO ── */
+    @media (max-width: 768px) {
+      /* 1. Navegação Superior rolável e sem scrollbar */
+      .nav {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-brand, .ntab, .nav-logout, .nav-sync {
+        flex-shrink: 0;
+      }
+
+      /* 2. Toolbars e Filtros empilhados */
+      .toolbar, 
+      .toolbar-left, 
+      .toolbar-right, 
+      .toolbar-filters {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+      .toolbar .fi, 
+      .toolbar .btn-new,
+      .toolbar-cal-nav .bsm,
+      .toolbar-right .btn-print,
+      .view-toggles {
+        width: 100%;
+        flex: 1 1 100%;
+      }
+      .view-toggles {
+        justify-content: space-between;
+      }
+      .view-toggles .atog {
+        flex: 1;
+        justify-content: center;
+      }
+      .toolbar-cal-nav {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      /* 3. Modais otimizados para toque */
+      .modal {
+        width: 95vw;
+        max-height: 95vh;
+        margin: 0;
+        border-radius: 12px;
+      }
+
+      /* 4. Calendário com rolagem horizontal */
+      #agenda-cal,
+      .cal-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+      }
+      .cal-grid, 
+      .week-grid {
+        min-width: 600px; /* Impede que o calendário quebre */
+      }
+
+      /* 5. Listas, Cards e Detalhes */
+      .item {
+        padding: 1rem;
+      }
+      .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .detail-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin-bottom: 8px;
+      }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -1252,7 +1404,7 @@
       <section id="sec-agendas" class="section" style="display:none">
         <div class="toolbar" style="margin-bottom: 1.25rem;">
           <div class="toolbar-left">
-            <div id="lista-filters" style="display:flex;gap:10px;flex-wrap:wrap;flex:1">
+            <div id="lista-filters" class="toolbar-filters">
               <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..." oninput="pageA=1;renderA()" />
               <select class="fi" id="a-ft" onchange="pageA=1;renderA()">
                 <option value="">Todos os tipos</option>
@@ -1275,22 +1427,22 @@
                 <option value="cancelada">Cancelada</option>
               </select>
             </div>
-            <div id="cal-nav" style="display:none;align-items:center;gap:8px">
-              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calNav(-1)">‹</button>
-              <span id="cal-title" style="font-size:13px;font-weight:600;min-width:160px;text-align:center"></span>
-              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calNav(1)">›</button>
-              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calToday()">Hoje</button>
+            <div id="cal-nav" class="toolbar-cal-nav" style="display:none;">
+              <button class="bsm" onclick="calNav(-1)">‹</button>
+              <span id="cal-title" class="cal-title"></span>
+              <button class="bsm" onclick="calNav(1)">›</button>
+              <button class="bsm" onclick="calToday()">Hoje</button>
             </div>
           </div>
           <div class="toolbar-right">
-            <div style="display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:3px;height:38px;box-sizing:border-box;gap:2px;">
+            <div class="view-toggles">
               <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i> Lista</button>
               <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i> Mês</button>
               <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i class="ph ph-calendar-blank"></i> Semana</button>
             </div>
             <button class="btn-new" onclick="openA()"><i class="ph ph-plus"></i> Nova agenda</button>
-            <button class="bsm" style="height:38px;padding:0 14px;" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
-            <button class="bsm" style="height:38px;padding:0 14px;display:none" id="btn-print-cal" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
+            <button class="bsm btn-print" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
+            <button class="bsm btn-print" id="btn-print-cal" style="display:none" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
           </div>
         </div>
         <div id="agenda-lista">
