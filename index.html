@@ -348,17 +348,32 @@
     /* ── FILTERS ── */
     .toolbar {
       display: flex;
+      flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      width: 100%;
+    }
+
+    .toolbar-left, 
+    .toolbar-right {
+      display: flex;
       flex-wrap: wrap;
       align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar-left {
+      flex: 1;
     }
 
     .fi {
-      height: 36px;
+      height: 38px;
+      box-sizing: border-box;
       padding: 0 12px;
       border: 1px solid var(--border2);
-      border-radius: var(--r1);
+      border-radius: var(--r2);
       font-size: 13px;
       background: var(--surface);
       color: var(--text);
@@ -369,38 +384,36 @@
     }
 
     .fi:focus {
-      border-color: var(--text);
-    }
-
-    .fi:focus {
       outline: none;
-      border-color: #999
+      border-color: #999;
     }
 
     .fi-busca {
       flex: 1;
-      min-width: 180px
+      min-width: 180px;
     }
 
     .btn-new {
+      height: 38px;
+      box-sizing: border-box;
       background: var(--text);
       color: #fff;
       border: none;
       border-radius: var(--r2);
-      padding: 7px 14px;
-      font-size: 12px;
+      padding: 0 16px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
       white-space: nowrap;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 5px;
-      margin-left: auto
+      justify-content: center;
+      gap: 6px;
     }
 
     .btn-new:hover {
-      background: #333
+      background: #333;
     }
 
     /* ── LIST ── */
@@ -481,10 +494,25 @@
     }
 
     .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       text-align: center;
-      padding: 3rem;
+      padding: 3rem 1rem;
+      background: var(--surface);
+      border: 1.5px dashed var(--border2);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      margin: 1rem 0;
+    }
+
+    .empty i {
+      font-size: 32px;
       color: var(--muted2);
-      font-size: 13px
+      margin-bottom: 4px;
     }
 
     /* ── BADGES ── */
@@ -851,21 +879,27 @@
 
     /* ── CALENDAR ── */
     .atog {
-      background: none;
+      height: 38px;
+      box-sizing: border-box;
+      background: transparent;
       border: none;
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: 12px;
+      border-radius: 4px;
+      padding: 0 12px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       color: var(--muted);
-      font-family: inherit
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .atog.active {
       background: var(--surface);
       color: var(--text);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, .1)
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .cal-grid {
@@ -1216,45 +1250,48 @@
       </section>
 
       <section id="sec-agendas" class="section" style="display:none">
-        <div class="toolbar" style="margin-bottom:.75rem">
-          <div
-            style="display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:3px">
-            <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i> Lista</button>
-            <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i> Mês</button>
-            <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i class="ph ph-calendar-blank"></i> Semana</button>
+        <div class="toolbar" style="margin-bottom: 1.25rem;">
+          <div class="toolbar-left">
+            <div id="lista-filters" style="display:flex;gap:10px;flex-wrap:wrap;flex:1">
+              <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..." oninput="pageA=1;renderA()" />
+              <select class="fi" id="a-ft" onchange="pageA=1;renderA()">
+                <option value="">Todos os tipos</option>
+                <option value="inst_reuniao">Reunião institucional</option>
+                <option value="palestra_aula">Palestra / aula magna</option>
+                <option value="evento_solenidade">Evento / solenidade</option>
+                <option value="reuniao">Reunião</option>
+                <option value="almoco">Almoço</option>
+                <option value="jantar">Jantar</option>
+                <option value="agenda_pessoal">Agenda pessoal</option>
+                <option value="agenda_pastoral">Agenda pastoral</option>
+              </select>
+              <select class="fi" id="a-fs" onchange="pageA=1;renderA()">
+                <option value="">Todos os status</option>
+                <option value="nova">Nova</option>
+                <option value="analise">Em análise</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="realizada">Realizada</option>
+                <option value="recusada">Recusada</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+            </div>
+            <div id="cal-nav" style="display:none;align-items:center;gap:8px">
+              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calNav(-1)">‹</button>
+              <span id="cal-title" style="font-size:13px;font-weight:600;min-width:160px;text-align:center"></span>
+              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calNav(1)">›</button>
+              <button class="bsm" style="height:38px;padding:0 12px;" onclick="calToday()">Hoje</button>
+            </div>
           </div>
-          <div id="cal-nav" style="display:none;align-items:center;gap:8px">
-            <button class="bsm" onclick="calNav(-1)">‹</button>
-            <span id="cal-title" style="font-size:13px;font-weight:600;min-width:160px;text-align:center"></span>
-            <button class="bsm" onclick="calNav(1)">›</button>
-            <button class="bsm" onclick="calToday()">Hoje</button>
+          <div class="toolbar-right">
+            <div style="display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:3px;height:38px;box-sizing:border-box;gap:2px;">
+              <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i> Lista</button>
+              <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i> Mês</button>
+              <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i class="ph ph-calendar-blank"></i> Semana</button>
+            </div>
+            <button class="btn-new" onclick="openA()"><i class="ph ph-plus"></i> Nova agenda</button>
+            <button class="bsm" style="height:38px;padding:0 14px;" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
+            <button class="bsm" style="height:38px;padding:0 14px;display:none" id="btn-print-cal" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
           </div>
-          <div id="lista-filters" style="display:flex;gap:8px;flex-wrap:wrap;flex:1">
-            <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..." oninput="pageA=1;renderA()" />
-            <select class="fi" id="a-ft" onchange="pageA=1;renderA()">
-              <option value="">Todos os tipos</option>
-              <option value="inst_reuniao">Reunião institucional</option>
-              <option value="palestra_aula">Palestra / aula magna</option>
-              <option value="evento_solenidade">Evento / solenidade</option>
-              <option value="reuniao">Reunião</option>
-              <option value="almoco">Almoço</option>
-              <option value="jantar">Jantar</option>
-              <option value="agenda_pessoal">Agenda pessoal</option>
-              <option value="agenda_pastoral">Agenda pastoral</option>
-            </select>
-            <select class="fi" id="a-fs" onchange="pageA=1;renderA()">
-              <option value="">Todos os status</option>
-              <option value="nova">Nova</option>
-              <option value="analise">Em análise</option>
-              <option value="confirmada">Confirmada</option>
-              <option value="realizada">Realizada</option>
-              <option value="recusada">Recusada</option>
-              <option value="cancelada">Cancelada</option>
-            </select>
-          </div>
-          <button class="btn-new" onclick="openA()"><i class="ph ph-plus"></i> Nova agenda</button>
-          <button class="bsm" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
-          <button class="bsm" id="btn-print-cal" style="display:none" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
         </div>
         <div id="agenda-lista">
           <div class="list" id="list-a"></div>
