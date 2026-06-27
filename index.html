@@ -2562,11 +2562,19 @@
       const TLE2 = { ao_vivo: 'Ao vivo', gravada: 'Gravada', escrita: 'Escrita' };
       const scol = { nova: '#2a6a2a', analise: '#7a4800', aprovada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a' };
       const win = window.open('', '_pe', 'width=900,height=700');
+      win.document.open();
       win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda de Imprensa</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}.header h1{font-size:13pt;font-weight:700;text-transform:uppercase}.jcard{margin-bottom:1rem;border:1pt solid #ddd;border-radius:4pt;page-break-inside:avoid}.jcard-head{background:#f5f5f2;padding:.5rem .75rem;border-bottom:.5pt solid #ddd;display:flex;justify-content:space-between}.jcard-name{font-size:11pt;font-weight:700}.jcard-veiculo{font-size:9.5pt;color:#555}.pedido{display:flex;gap:.75rem;padding:.5rem .75rem;border-bottom:.5pt solid #eee;align-items:baseline}.pedido:last-child{border-bottom:none}.p-status{font-size:8.5pt;font-weight:700;min-width:80pt}.p-info{flex:1}.p-main{font-size:10pt}.p-sub{font-size:8.5pt;color:#666;margin-top:1pt}.p-datasol{font-size:8.5pt;color:#999;min-width:70pt;text-align:right}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
   <div class="header"><div><h1>Agenda de Imprensa</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Gerado em ${new Date().toLocaleString('pt-BR')}</div></div>
   ${sorted.map(group => { const rep = group[0]; return `<div class="jcard"><div class="jcard-head"><div><span class="jcard-name">${esc(rep.jornalista) || '—'}</span><span class="jcard-veiculo"> · ${esc(rep.esc(veiculo)) || '—'}${esc(rep.cargo) ? ' · ' + esc(rep.cargo) : ''}</span></div><span style="font-size:9pt;color:#888">${group.length} pedido${group.length > 1 ? 's' : ''}</span></div>${group.map(x => `<div class="pedido"><div class="p-status" style="color:${scol[x.s] || '#444'}">${SLE2[x.s] || x.s}</div><div class="p-info"><div class="p-main">${esc(x.tema) || esc(x.veiculo) || '—'} · ${TLE2[x.formato] || x.formato}</div><div class="p-sub">${x.data ? fdt(x.data) : 'sem data'}${x.prazo ? ' · prazo: ' + fd(x.prazo) : ''}</div></div><div class="p-datasol">${x.datasol ? fd(x.datasol) : ''}</div></div>`).join('')}</div>`; }).join('')}
-  <div class="footer"><span>Assessoria · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
-      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+  <div class="footer"><span>Assessoria · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() { window.print(); }, 300);
+    });
+    window.addEventListener('afterprint', function() { window.close(); });
+  </script>
+  </body></html>`);
+      win.document.close();
     }
 
     function printAgendaLista() {
@@ -2577,13 +2585,21 @@
       const scol = { nova: '#2a6a2a', analise: '#7a4800', confirmada: '#0a4a80', realizada: '#0a5a3a', recusada: '#7a1a1a', cancelada: '#555' };
       let L = [...DB.A].filter(x => { if (ft && x.tipo !== ft) return false; if (fs && x.s !== fs) return false; if (b && !norm(x.inst).includes(b) && !norm(x.nome).includes(b) && !norm(x.tema).includes(b)) return false; return true; }).sort((a, b2) => (a.data || '').localeCompare(b2.data || ''));
       const win = window.open('', '_pa', 'width=900,height=700');
+      win.document.open();
       win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Solicitações de Agenda</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:2cm 2.5cm}.header{margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2pt solid #111;display:flex;justify-content:space-between}h1{font-size:13pt;font-weight:700;text-transform:uppercase}table{width:100%;border-collapse:collapse;margin-top:.5rem}th{font-size:8.5pt;font-weight:700;text-transform:uppercase;color:#666;padding:6pt 8pt;border-bottom:1.5pt solid #111;text-align:left}td{font-size:9.5pt;padding:6pt 8pt;border-bottom:.5pt solid #e0e0db;vertical-align:top}.sub{font-size:8.5pt;color:#777;margin-top:1pt}.footer{margin-top:1.5rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
   <div class="header"><div><h1>Solicitações de Agenda</h1><p style="font-size:9.5pt;color:#555">Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">${new Date().toLocaleDateString('pt-BR')}</div></div>
   <table><thead><tr><th>Status</th><th>Evento / Tema</th><th>Instituição</th><th>Tipo</th><th>Data</th><th>Cidade</th></tr></thead><tbody>
   ${L.map(x => `<tr><td style="font-weight:700;color:${scol[x.s] || '#444'}">${SLA2[x.s] || x.s}</td><td>${esc(x.tema) || '—'}</td><td>${esc(x.inst) || '—'}<div class="sub">${esc(x.nome) ? esc(x.nome) + (esc(x.cargo) ? ' · ' + esc(x.cargo) : '') : ''}</div></td><td style="font-size:8.5pt">${TLA2[x.tipo] || x.tipo}</td><td>${x.data ? fdt(x.data) : '—'}<div class="sub">${x.prazo ? 'Prazo: ' + fd(x.prazo) : ''}</div></td><td>${esc(x.cidade) || '—'}</td></tr>`).join('')}
   </tbody></table>
-  <div class="footer"><span>Assessoria · ${L.length} registros</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
-      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+  <div class="footer"><span>Assessoria · ${L.length} registros</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() { window.print(); }, 300);
+    });
+    window.addEventListener('afterprint', function() { window.close(); });
+  </script>
+  </body></html>`);
+      win.document.close();
     }
 
     function printAgenda() {
@@ -2603,11 +2619,19 @@
       const cellsHtml = cells.map(c => { const evs = printMap[c.k] || []; const isToday = c.k === today2; return `<td class="p-cell${!c.cur ? ' other' : ''}${isToday ? ' tod' : ''}"><div class="p-num">${c.d.getDate()}</div>${evs.map(a => { const hora = a.data && a.data.includes('T') ? new Date(a.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' : ''; return `<div class="p-ev">${hora}${a.tema || a.inst || '—'}</div>`; }).join('')}</td>`; });
       const weeks = []; for (let i = 0; i < cellsHtml.length; i += 7)weeks.push(cellsHtml.slice(i, i + 7));
       const win = window.open('', '_pc', 'width=1000,height=750');
+      win.document.open();
       win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda ${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:9pt;color:#111;padding:1.5cm 2cm}.p-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2pt solid #111}.p-header h1{font-size:14pt;font-weight:700;text-transform:uppercase}.p-header p{font-size:10pt;color:#444}table{width:100%;border-collapse:collapse;table-layout:fixed}.p-dow{text-align:center;font-size:8pt;font-weight:700;text-transform:uppercase;color:#666;padding:5pt 3pt;border:1pt solid #ddd;background:#f5f5f2}.p-cell{vertical-align:top;border:1pt solid #ddd;padding:4pt 5pt;height:90pt}.p-cell.other{background:#fafaf8}.p-cell.other .p-num{color:#bbb}.p-cell.tod{background:#fffbf0}.p-num{font-size:9pt;font-weight:700;margin-bottom:3pt;width:16pt;height:16pt;display:flex;align-items:center;justify-content:center}.p-ev{font-size:7.5pt;line-height:1.3;padding:1.5pt 3pt;margin-bottom:2pt;border-radius:2pt;background:#e8f0fb;color:#0a3a70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{margin-top:1rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
   <div class="p-header"><div><h1>Agenda · ${title}</h1><p>Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Proposta de agenda<br>Assessoria de Imprensa</div></div>
   <table><thead><tr>${DIAS_P.map(d => `<th class="p-dow">${d}</th>`).join('')}</tr></thead><tbody>${weeks.map(w => `<tr>${w.join('')}</tr>`).join('')}</tbody></table>
-  <div class="footer"><span>Assessoria de Imprensa · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div></body></html>`);
-      win.document.close(); win.focus(); setTimeout(() => win.print(), 400);
+  <div class="footer"><span>Assessoria de Imprensa · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() { window.print(); }, 300);
+    });
+    window.addEventListener('afterprint', function() { window.close(); });
+  </script>
+  </body></html>`);
+      win.document.close();
     }
 
     /* ════════════════════════════════════════
