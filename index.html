@@ -356,7 +356,7 @@
       width: 100%;
     }
 
-    .toolbar-left, 
+    .toolbar-left,
     .toolbar-right {
       display: flex;
       flex-wrap: wrap;
@@ -421,7 +421,7 @@
     .view-toggles .atog.active {
       background: var(--surface);
       color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       font-weight: 600;
     }
 
@@ -1237,46 +1237,60 @@
 
     /* ── MOBILE FIRST / APP NATIVO ── */
     @media (max-width: 768px) {
+
       /* 1. Navegação Superior: Brand no topo, abas roláveis embaixo */
       .nav {
-        display: block; /* Sai do flex para permitir o wrap estruturado */
+        display: block;
+        /* Sai do flex para permitir o wrap estruturado */
         overflow-x: auto;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-        padding: 0; /* Remove padding lateral container para o brand ocupar 100% */
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+        padding: 0;
+        /* Remove padding lateral container para o brand ocupar 100% */
       }
+
       .nav::-webkit-scrollbar {
         display: none;
       }
+
       .nav-brand {
-        display: block; /* Mantém a estrutura interna do brand para não espremer o small */
+        display: block;
+        /* Mantém a estrutura interna do brand para não espremer o small */
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
         padding: 12px 1.5rem;
         margin: 0;
       }
+
       .ntab {
-        display: inline-flex; /* Abas inline para rolagem horizontal */
+        display: inline-flex;
+        /* Abas inline para rolagem horizontal */
       }
-      .nav-logout, .nav-sync {
+
+      .nav-logout,
+      .nav-sync {
         display: inline-flex;
         margin-right: 1.5rem;
       }
 
       /* 2. Toolbars e Filtros empilhados com gap reduzido */
-      .toolbar, 
-      .toolbar-left, 
-      .toolbar-right, 
+      .toolbar,
+      .toolbar-left,
+      .toolbar-right,
       .toolbar-filters {
         flex-direction: column;
         align-items: stretch;
         width: 100%;
-        gap: 8px; /* Reduzido de 10px/12px para compactar */
+        gap: 8px;
+        /* Reduzido de 10px/12px para compactar */
       }
-      .toolbar .fi, 
+
+      .toolbar .fi,
       .toolbar .btn-new,
       .toolbar-cal-nav .bsm,
       .toolbar-right .btn-print,
@@ -1284,21 +1298,25 @@
         width: 100%;
         flex: 1 1 100%;
       }
+
       .view-toggles {
         justify-content: space-between;
       }
+
       .view-toggles .atog {
         flex: 1;
         justify-content: center;
       }
+
       .toolbar-cal-nav {
         width: 100%;
         justify-content: space-between;
-        flex-direction: row; /* Mantém as setas lado a lado */
+        flex-direction: row;
+        /* Mantém as setas lado a lado */
       }
 
       /* 3. Dashboard Metrics (Garante que cards ímpares não fiquem quebrados sozinhos pequenos) */
-      .metrics-row > .met:last-child:nth-child(odd) {
+      .metrics-row>.met:last-child:nth-child(odd) {
         grid-column: span 2;
       }
 
@@ -1317,20 +1335,24 @@
         -webkit-overflow-scrolling: touch;
         width: 100%;
       }
-      .cal-grid, 
+
+      .cal-grid,
       .week-grid {
-        min-width: 600px; /* Impede que o calendário quebre */
+        min-width: 600px;
+        /* Impede que o calendário quebre */
       }
 
       /* 6. Listas, Cards e Detalhes */
       .item {
         padding: 1rem;
       }
+
       .item-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 6px;
       }
+
       .detail-row {
         display: flex;
         flex-direction: column;
@@ -1343,6 +1365,7 @@
       .pedido-row {
         grid-template-columns: 8px 1fr;
       }
+
       .pedido-actions {
         grid-column: 1 / -1;
         align-items: flex-start;
@@ -1350,6 +1373,7 @@
         flex-wrap: wrap;
         margin-top: 4px;
       }
+
       .pedido-actions-btns {
         flex: 1;
         justify-content: flex-end;
@@ -1386,10 +1410,14 @@
     <nav class="nav">
       <div class="nav-brand">Min. André Mendonça<small>Assessoria</small></div>
       <button class="ntab active" onclick="window.location.hash='#dash'">Painel</button>
-      <button class="ntab" onclick="window.location.hash='#entrevistas'">Entrevistas <span class="badge-count" id="cnt-e">0</span></button>
-      <button class="ntab" onclick="window.location.hash='#agendas'">Agendas <span class="badge-count" id="cnt-a">0</span></button>
-      <button class="ntab" onclick="window.location.hash='#briefings'">Briefings <span class="badge-count" id="cnt-b">0</span></button>
-      <button class="ntab" onclick="window.location.hash='#pauta'">Pauta <span class="badge-count" id="cnt-p">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#entrevistas'">Entrevistas <span class="badge-count"
+          id="cnt-e">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#agendas'">Agendas <span class="badge-count"
+          id="cnt-a">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#briefings'">Briefings <span class="badge-count"
+          id="cnt-b">0</span></button>
+      <button class="ntab" onclick="window.location.hash='#pauta'">Pauta <span class="badge-count"
+          id="cnt-p">0</span></button>
       <span class="nav-sync" id="nav-sync"></span>
 
     </nav>
@@ -1443,7 +1471,8 @@
 
       <section id="sec-entrevistas" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="e-busca" placeholder="Buscar veículo, jornalista, tema..." oninput="pageE=1;renderE()" />
+          <input class="fi fi-busca" id="e-busca" placeholder="Buscar veículo, jornalista, tema..."
+            oninput="pageE=1;renderE()" />
           <select class="fi" id="e-fs" onchange="pageE=1;renderE()">
             <option value="">Todos os status</option>
             <option value="nova">Nova</option>
@@ -1468,7 +1497,8 @@
         <div class="toolbar" style="margin-bottom: 1.25rem;">
           <div class="toolbar-left">
             <div id="lista-filters" class="toolbar-filters">
-              <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..." oninput="pageA=1;renderA()" />
+              <input class="fi fi-busca" id="a-busca" placeholder="Buscar instituição, interlocutor, tema..."
+                oninput="pageA=1;renderA()" />
               <select class="fi" id="a-ft" onchange="pageA=1;renderA()">
                 <option value="">Todos os tipos</option>
                 <option value="inst_reuniao">Reunião institucional</option>
@@ -1499,13 +1529,18 @@
           </div>
           <div class="toolbar-right">
             <div class="view-toggles">
-              <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i> Lista</button>
-              <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i> Mês</button>
-              <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i class="ph ph-calendar-blank"></i> Semana</button>
+              <button id="atog-lista" class="atog active" onclick="setAgendaView('lista')"><i class="ph ph-list"></i>
+                Lista</button>
+              <button id="atog-mes" class="atog" onclick="setAgendaView('mes')"><i class="ph ph-calendar"></i>
+                Mês</button>
+              <button id="atog-semana" class="atog" onclick="setAgendaView('semana')"><i
+                  class="ph ph-calendar-blank"></i> Semana</button>
             </div>
             <button class="btn-new" onclick="openA()"><i class="ph ph-plus"></i> Nova agenda</button>
-            <button class="bsm btn-print" id="btn-print-lista" onclick="printAgendaLista()"><i class="ph ph-printer"></i> Imprimir</button>
-            <button class="bsm btn-print" id="btn-print-cal" style="display:none" onclick="printAgenda()"><i class="ph ph-printer"></i> Imprimir</button>
+            <button class="bsm btn-print" id="btn-print-lista" onclick="printAgendaLista()"><i
+                class="ph ph-printer"></i> Imprimir</button>
+            <button class="bsm btn-print" id="btn-print-cal" style="display:none" onclick="printAgenda()"><i
+                class="ph ph-printer"></i> Imprimir</button>
           </div>
         </div>
         <div id="agenda-lista">
@@ -1516,7 +1551,8 @@
 
       <section id="sec-briefings" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="b-busca" placeholder="Buscar título, evento, tema..." oninput="pageB=1;renderB()" />
+          <input class="fi fi-busca" id="b-busca" placeholder="Buscar título, evento, tema..."
+            oninput="pageB=1;renderB()" />
           <select class="fi" id="b-ft" onchange="pageB=1;renderB()">
             <option value="">Todos os tipos</option>
             <option value="entrevista">Entrevista</option>
@@ -1532,7 +1568,8 @@
 
       <section id="sec-pauta" class="section" style="display:none">
         <div class="toolbar">
-          <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="pageP=1;renderP()" />
+          <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..."
+            oninput="pageP=1;renderP()" />
           <input class="fi" id="p-datafrom" type="date" onchange="pageP=1;renderP()" title="Data inicial" />
           <input class="fi" id="p-datato" type="date" onchange="pageP=1;renderP()" title="Data final" />
           <button class="btn-new" onclick="openP()"><i class="ph ph-plus"></i> Nova pauta</button>
@@ -1544,128 +1581,243 @@
   </div><!-- /app-screen -->
 
   <!-- ══ MODAL ENTREVISTA ══ -->
-<div class="overlay" id="ov-e">
-<div class="modal">
-  <div class="modal-head"><h2 id="e-modal-title">Nova solicitação de entrevista</h2><button class="btn-close" onclick="closeModal('ov-e')">✕</button></div>
-  <div class="modal-body">
-    <div class="mtabs"><button class="mtab active" onclick="mTab('e','form')">Dados</button><button class="mtab" onclick="mTab('e','perfil')">Perfil do jornalista</button></div>
-    <div id="e-mpanel-form" class="mpanel active">
-      <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Solicitação</div>
-      <div class="fg">
-        <div class="fl"><label>Data da solicitação</label><input id="e-datasol" type="date"/></div>
-        <div class="fl"><label>Prioridade</label><select id="e-prior"><option value="media">Média</option><option value="alta">Alta</option><option value="baixa">Baixa</option></select></div>
-        <div class="fl"><label>Veículo</label><input id="e-veiculo" type="text" placeholder="Jornal, portal, emissora..."/></div>
-        <div class="fl"><label>Jornalista</label><input id="e-jornalista" type="text" placeholder="Nome completo"/></div>
-        <div class="fl"><label>Cargo</label><input id="e-cargo" type="text" placeholder="Repórter, editor..."/></div>
-        <div class="fl"><label>Formato</label><select id="e-formato"><option value="ao_vivo">Ao vivo</option><option value="gravada">Gravada</option><option value="escrita">Escrita / texto</option></select></div>
-        <div class="fl"><label>Data / hora sugerida</label><input id="e-data" type="datetime-local"/></div>
-        <div class="fl"><label>Prazo de resposta</label><input id="e-prazo" type="date"/></div>
-        <div class="fl"><label>Origem do contato</label><input id="e-origem" type="text" placeholder="WhatsApp, e-mail..."/></div>
-        <div class="fl ff"><label>Tema</label><input id="e-tema" type="text" placeholder="Assunto principal da entrevista"/></div>
-        <div class="fl ff"><label>Pauta / perguntas enviadas</label><textarea id="e-pauta" rows="4" placeholder="Cole aqui as perguntas ou pauta enviada pelo veículo..."></textarea></div>
-        <div class="fl ff"><label>Observações</label><textarea id="e-p-obs" rows="2" placeholder="Contexto adicional, link WhatsApp, etc."></textarea></div>
+  <div class="overlay" id="ov-e">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="e-modal-title">Nova solicitação de entrevista</h2><button class="btn-close"
+          onclick="closeModal('ov-e')">✕</button>
       </div>
-    </div>
-    <div id="e-mpanel-perfil" class="mpanel">
-      <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Perfil do jornalista</div>
-      <div class="fg">
-        <div class="fl ff" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
-          <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
-          <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt,.jpg,.png" style="display:none" onchange="handlePerfilFile(this)"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar perfil</span></label>
+      <div class="modal-body">
+        <div class="mtabs"><button class="mtab active" onclick="mTab('e','form')">Dados</button><button class="mtab"
+            onclick="mTab('e','perfil')">Perfil do jornalista</button></div>
+        <div id="e-mpanel-form" class="mpanel active">
+          <div class="form-section-title"
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+            Solicitação</div>
+          <div class="fg">
+            <div class="fl"><label>Data da solicitação</label><input id="e-datasol" type="date" /></div>
+            <div class="fl"><label>Prioridade</label><select id="e-prior">
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+                <option value="baixa">Baixa</option>
+              </select></div>
+            <div class="fl"><label>Veículo</label><input id="e-veiculo" type="text"
+                placeholder="Jornal, portal, emissora..." /></div>
+            <div class="fl"><label>Jornalista</label><input id="e-jornalista" type="text" placeholder="Nome completo" />
+            </div>
+            <div class="fl"><label>Cargo</label><input id="e-cargo" type="text" placeholder="Repórter, editor..." />
+            </div>
+            <div class="fl"><label>Formato</label><select id="e-formato">
+                <option value="ao_vivo">Ao vivo</option>
+                <option value="gravada">Gravada</option>
+                <option value="escrita">Escrita / texto</option>
+              </select></div>
+            <div class="fl"><label>Data / hora sugerida</label><input id="e-data" type="datetime-local" /></div>
+            <div class="fl"><label>Prazo de resposta</label><input id="e-prazo" type="date" /></div>
+            <div class="fl"><label>Origem do contato</label><input id="e-origem" type="text"
+                placeholder="WhatsApp, e-mail..." /></div>
+            <div class="fl ff"><label>Tema</label><input id="e-tema" type="text"
+                placeholder="Assunto principal da entrevista" /></div>
+            <div class="fl ff"><label>Pauta / perguntas enviadas</label><textarea id="e-pauta" rows="4"
+                placeholder="Cole aqui as perguntas ou pauta enviada pelo veículo..."></textarea></div>
+            <div class="fl ff"><label>Observações</label><textarea id="e-p-obs" rows="2"
+                placeholder="Contexto adicional, link WhatsApp, etc."></textarea></div>
+          </div>
         </div>
-        <div class="fl ff" id="e-p-file-info" style="display:none"><div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between"><span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px" onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button></div></div>
-        <input type="hidden" id="e-p-file-url"/>
-        <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text" placeholder="Link do Google Drive, etc."/></div>
-        <div class="fl ff"><label>Linha editorial / cobertura habitual</label><textarea id="e-p-linha" rows="3" placeholder="Como cobre o STF, o ministro..."></textarea></div>
-        <div class="fl ff"><label>Histórico de cobertura sobre o ministro</label><textarea id="e-p-hist" rows="3" placeholder="Matérias anteriores relevantes..."></textarea></div>
-        <div class="fl ff"><label>Pontos de atenção</label><textarea id="e-p-atencao" rows="3" placeholder="Pautas sensíveis, perguntas prováveis..."></textarea></div>
-        <div class="fl"><label>Rede social</label><input id="e-p-social" type="text" placeholder="@usuario no X/Instagram..."/></div>
-        <div class="fl"><label>Contato direto</label><input id="e-p-contato" type="text" placeholder="WhatsApp, e-mail..."/></div>
+        <div id="e-mpanel-perfil" class="mpanel">
+          <div class="form-section-title"
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+            Perfil do jornalista</div>
+          <div class="fg">
+            <div class="fl ff" style="flex-direction:row;align-items:center;justify-content:space-between;gap:12px">
+              <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
+              <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt,.jpg,.png"
+                  style="display:none" onchange="handlePerfilFile(this)" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar perfil</span></label>
+            </div>
+            <div class="fl ff" id="e-p-file-info" style="display:none">
+              <div
+                style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between">
+                <span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px"
+                  onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button></div>
+            </div>
+            <input type="hidden" id="e-p-file-url" />
+            <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text"
+                placeholder="Link do Google Drive, etc." /></div>
+            <div class="fl ff"><label>Linha editorial / cobertura habitual</label><textarea id="e-p-linha" rows="3"
+                placeholder="Como cobre o STF, o ministro..."></textarea></div>
+            <div class="fl ff"><label>Histórico de cobertura sobre o ministro</label><textarea id="e-p-hist" rows="3"
+                placeholder="Matérias anteriores relevantes..."></textarea></div>
+            <div class="fl ff"><label>Pontos de atenção</label><textarea id="e-p-atencao" rows="3"
+                placeholder="Pautas sensíveis, perguntas prováveis..."></textarea></div>
+            <div class="fl"><label>Rede social</label><input id="e-p-social" type="text"
+                placeholder="@usuario no X/Instagram..." /></div>
+            <div class="fl"><label>Contato direto</label><input id="e-p-contato" type="text"
+                placeholder="WhatsApp, e-mail..." /></div>
+          </div>
+        </div>
       </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-e')">Cancelar</button><button
+          class="btn-save" onclick="saveE()">Salvar</button></div>
     </div>
   </div>
-  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-e')">Cancelar</button><button class="btn-save" onclick="saveE()">Salvar</button></div>
-</div></div>
 
-<!-- ══ MODAL AGENDA ══ -->
-<div class="overlay" id="ov-a">
-<div class="modal">
-  <div class="modal-head"><h2 id="a-modal-title">Nova solicitação de agenda</h2><button class="btn-close" onclick="closeModal('ov-a')">✕</button></div>
-  <div class="modal-body">
-    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Solicitação</div>
-    <div class="fg">
-      <div class="fl"><label>Data do pedido</label><input id="a-datped" type="date"/></div>
-      <div class="fl"><label>Tipo de agenda</label><select id="a-tipo"><option value="inst_reuniao">Reunião institucional</option><option value="palestra_aula">Palestra / aula magna</option><option value="evento_solenidade">Evento / solenidade</option><option value="reuniao">Reunião</option><option value="almoco">Almoço</option><option value="jantar">Jantar</option><option value="agenda_pessoal">Agenda pessoal</option><option value="agenda_pastoral">Agenda pastoral</option></select></div>
-      <div class="fl"><label>Instituição</label><input id="a-inst" type="text" placeholder="Nome da instituição"/></div>
-      <div class="fl"><label>Interlocutor</label><input id="a-nome" type="text" placeholder="Quem fez o pedido"/></div>
-      <div class="fl"><label>Cargo</label><input id="a-cargo" type="text" placeholder="Cargo / função"/></div>
-      <div class="fl"><label>Tipo de instituição</label><input id="a-tipoinst" type="text" placeholder="Pública, privada, religiosa..."/></div>
-      <div class="fl"><label>Cidade</label><input id="a-cidade" type="text" placeholder="Brasília, Rio de Janeiro..."/></div>
-      <div class="fl"><label>Formato</label><select id="a-formato"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option></select></div>
-      <div class="fl"><label>Data / hora sugerida</label><input id="a-data" type="datetime-local"/></div>
-      <div class="fl"><label>Prazo de resposta</label><input id="a-prazo" type="date"/></div>
-      <div class="fl"><label>Origem do contato</label><input id="a-origem" type="text" placeholder="WhatsApp, ofício, e-mail..."/></div>
-      <div class="fl"><label>Prioridade</label><select id="a-prior"><option value="media">Média</option><option value="alta">Alta</option><option value="baixa">Baixa</option></select></div>
-      <div class="fl ff"><label>Tema / assunto</label><input id="a-tema" type="text" placeholder="Pauta ou objetivo do encontro"/></div>
-    </div>
-    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Detalhes operacionais</div>
-    <div class="fg">
-      <div class="fl"><label>Local</label><input id="a-local" type="text" placeholder="Endereço completo"/></div>
-      <div class="fl"><label>Staff que acompanha</label><input id="a-staff" type="text" placeholder="Nomes da equipe"/></div>
-      <div class="fl"><label>Tempo de deslocamento</label><input id="a-desloc" type="text" placeholder="Ex: 45 min de carro"/></div>
-      <div class="fl"><label>Protocolo / dress code</label><input id="a-prot" type="text" placeholder="Traje, formal, meia-gala..."/></div>
-      <div class="fl ff"><label>Observações</label><textarea id="a-obs" rows="2" placeholder="Notas adicionais..."></textarea></div>
-      <div class="fl ff"><label>Link para convite</label><input id="a-link" type="text" placeholder="https://..."/></div>
-      <div class="fl ff">
-        <label>Anexos</label>
-        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('a')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
-        <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+  <!-- ══ MODAL AGENDA ══ -->
+  <div class="overlay" id="ov-a">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="a-modal-title">Nova solicitação de agenda</h2><button class="btn-close"
+          onclick="closeModal('ov-a')">✕</button>
       </div>
+      <div class="modal-body">
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Solicitação</div>
+        <div class="fg">
+          <div class="fl"><label>Data do pedido</label><input id="a-datped" type="date" /></div>
+          <div class="fl"><label>Tipo de agenda</label><select id="a-tipo">
+              <option value="inst_reuniao">Reunião institucional</option>
+              <option value="palestra_aula">Palestra / aula magna</option>
+              <option value="evento_solenidade">Evento / solenidade</option>
+              <option value="reuniao">Reunião</option>
+              <option value="almoco">Almoço</option>
+              <option value="jantar">Jantar</option>
+              <option value="agenda_pessoal">Agenda pessoal</option>
+              <option value="agenda_pastoral">Agenda pastoral</option>
+            </select></div>
+          <div class="fl"><label>Instituição</label><input id="a-inst" type="text" placeholder="Nome da instituição" />
+          </div>
+          <div class="fl"><label>Interlocutor</label><input id="a-nome" type="text" placeholder="Quem fez o pedido" />
+          </div>
+          <div class="fl"><label>Cargo</label><input id="a-cargo" type="text" placeholder="Cargo / função" /></div>
+          <div class="fl"><label>Tipo de instituição</label><input id="a-tipoinst" type="text"
+              placeholder="Pública, privada, religiosa..." /></div>
+          <div class="fl"><label>Cidade</label><input id="a-cidade" type="text"
+              placeholder="Brasília, Rio de Janeiro..." /></div>
+          <div class="fl"><label>Formato</label><select id="a-formato">
+              <option value="presencial">Presencial</option>
+              <option value="online">Online</option>
+              <option value="hibrido">Híbrido</option>
+            </select></div>
+          <div class="fl"><label>Data / hora sugerida</label><input id="a-data" type="datetime-local" /></div>
+          <div class="fl"><label>Prazo de resposta</label><input id="a-prazo" type="date" /></div>
+          <div class="fl"><label>Origem do contato</label><input id="a-origem" type="text"
+              placeholder="WhatsApp, ofício, e-mail..." /></div>
+          <div class="fl"><label>Prioridade</label><select id="a-prior">
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+              <option value="baixa">Baixa</option>
+            </select></div>
+          <div class="fl ff"><label>Tema / assunto</label><input id="a-tema" type="text"
+              placeholder="Pauta ou objetivo do encontro" /></div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Detalhes operacionais</div>
+        <div class="fg">
+          <div class="fl"><label>Local</label><input id="a-local" type="text" placeholder="Endereço completo" /></div>
+          <div class="fl"><label>Staff que acompanha</label><input id="a-staff" type="text"
+              placeholder="Nomes da equipe" /></div>
+          <div class="fl"><label>Tempo de deslocamento</label><input id="a-desloc" type="text"
+              placeholder="Ex: 45 min de carro" /></div>
+          <div class="fl"><label>Protocolo / dress code</label><input id="a-prot" type="text"
+              placeholder="Traje, formal, meia-gala..." /></div>
+          <div class="fl ff"><label>Observações</label><textarea id="a-obs" rows="2"
+              placeholder="Notas adicionais..."></textarea></div>
+          <div class="fl ff"><label>Link para convite</label><input id="a-link" type="text" placeholder="https://..." />
+          </div>
+          <div class="fl ff">
+            <label>Anexos</label>
+            <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
+                  id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
+                  onchange="handleAnexos('a')" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar arquivos</span></label><span
+                style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+            <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-a')">Cancelar</button><button
+          class="btn-save" onclick="saveA()">Salvar</button></div>
     </div>
   </div>
-  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-a')">Cancelar</button><button class="btn-save" onclick="saveA()">Salvar</button></div>
-</div></div>
 
-<!-- ══ MODAL BRIEFING ══ -->
-<div class="overlay" id="ov-b">
-<div class="modal">
-  <div class="modal-head"><h2 id="b-modal-title">Novo briefing</h2><button class="btn-close" onclick="closeModal('ov-b')">✕</button></div>
-  <div class="modal-body">
-    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Identificação</div>
-    <div class="fg">
-      <div class="fl ff"><label>Título do briefing</label><input id="b-titulo" type="text" placeholder="Ex: Briefing — Entrevista CNN Brasil · 22/06/2026"/></div>
-      <div class="fl"><label>Tipo de compromisso</label><select id="b-tipo" onchange="renderBriefTemplate()"><option value="entrevista">Entrevista</option><option value="solenidade">Solenidade / conferência</option><option value="reuniao">Reunião institucional</option><option value="visita">Visita / deslocamento</option><option value="pastoral">Pastoral / pessoal</option></select></div>
-      <div class="fl"><label>Data do compromisso</label><input id="b-data" type="date"/></div>
-      <div class="fl ff"><label>Vinculado a</label><input id="b-vinculo" type="text" placeholder="Nome da agenda ou entrevista (opcional)"/></div>
-    </div>
-    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados gerais</div>
-    <div class="fg">
-      <div class="fl ff"><label>Evento / encontro</label><input id="b-evento" type="text" placeholder="Nome completo do evento ou reunião"/></div>
-      <div class="fl"><label>Local</label><input id="b-local" type="text" placeholder="Endereço, sala, auditório..."/></div>
-      <div class="fl"><label>Horário</label><input id="b-hora" type="text" placeholder="Ex: 10h00 às 11h00"/></div>
-      <div class="fl"><label>Realizador / anfitrião</label><input id="b-real" type="text" placeholder="Instituição ou pessoa"/></div>
-      <div class="fl"><label>Papel do Ministro</label><input id="b-papel" type="text" placeholder="Conferencista, entrevistado, homenageado..."/></div>
-      <div class="fl"><label>Tom / abordagem</label><input id="b-tom" type="text" placeholder="Reflexivo, técnico, institucional..."/></div>
-      <div class="fl ff"><label>Ponto de atenção</label><textarea id="b-atencao" rows="2" placeholder="Riscos, alertas, sensibilidades..."></textarea></div>
-      <div class="fl ff">
-        <label>Anexos</label>
-        <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file" id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none" onchange="handleAnexos('b')"/><span class="bsm" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
-        <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+  <!-- ══ MODAL BRIEFING ══ -->
+  <div class="overlay" id="ov-b">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="b-modal-title">Novo briefing</h2><button class="btn-close" onclick="closeModal('ov-b')">✕</button>
       </div>
+      <div class="modal-body">
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Identificação</div>
+        <div class="fg">
+          <div class="fl ff"><label>Título do briefing</label><input id="b-titulo" type="text"
+              placeholder="Ex: Briefing — Entrevista CNN Brasil · 22/06/2026" /></div>
+          <div class="fl"><label>Tipo de compromisso</label><select id="b-tipo" onchange="renderBriefTemplate()">
+              <option value="entrevista">Entrevista</option>
+              <option value="solenidade">Solenidade / conferência</option>
+              <option value="reuniao">Reunião institucional</option>
+              <option value="visita">Visita / deslocamento</option>
+              <option value="pastoral">Pastoral / pessoal</option>
+            </select></div>
+          <div class="fl"><label>Data do compromisso</label><input id="b-data" type="date" /></div>
+          <div class="fl ff"><label>Vinculado a</label><input id="b-vinculo" type="text"
+              placeholder="Nome da agenda ou entrevista (opcional)" /></div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Dados gerais</div>
+        <div class="fg">
+          <div class="fl ff"><label>Evento / encontro</label><input id="b-evento" type="text"
+              placeholder="Nome completo do evento ou reunião" /></div>
+          <div class="fl"><label>Local</label><input id="b-local" type="text"
+              placeholder="Endereço, sala, auditório..." /></div>
+          <div class="fl"><label>Horário</label><input id="b-hora" type="text" placeholder="Ex: 10h00 às 11h00" /></div>
+          <div class="fl"><label>Realizador / anfitrião</label><input id="b-real" type="text"
+              placeholder="Instituição ou pessoa" /></div>
+          <div class="fl"><label>Papel do Ministro</label><input id="b-papel" type="text"
+              placeholder="Conferencista, entrevistado, homenageado..." /></div>
+          <div class="fl"><label>Tom / abordagem</label><input id="b-tom" type="text"
+              placeholder="Reflexivo, técnico, institucional..." /></div>
+          <div class="fl ff"><label>Ponto de atenção</label><textarea id="b-atencao" rows="2"
+              placeholder="Riscos, alertas, sensibilidades..."></textarea></div>
+          <div class="fl ff">
+            <label>Anexos</label>
+            <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
+                  id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
+                  onchange="handleAnexos('b')" /><span class="bsm"
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar arquivos</span></label><span
+                style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span></div>
+            <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+        <div class="form-section-title"
+          style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+          Roteiro / conteúdo</div>
+        <div id="brief-template-blocks"></div>
+      </div>
+      <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-b')">Cancelar</button><button
+          class="btn-export" onclick="exportBriefing()" id="btn-export-brief" style="display:none">↓ Exportar
+          .rtf</button><button class="btn-save" onclick="saveB()">Salvar</button></div>
     </div>
-    <div class="form-section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:1rem 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Roteiro / conteúdo</div>
-    <div id="brief-template-blocks"></div>
   </div>
-  <div class="modal-foot"><button class="btn-close" onclick="closeModal('ov-b')">Cancelar</button><button class="btn-export" onclick="exportBriefing()" id="btn-export-brief" style="display:none">↓ Exportar .rtf</button><button class="btn-save" onclick="saveB()">Salvar</button></div>
-</div></div>
 
-<!-- ══ MODAL DETALHE ══ -->
-<div class="overlay" id="ov-detail">
-<div class="modal">
-  <div class="modal-head"><h2 id="detail-title">Detalhe</h2><button class="btn-close" onclick="closeModal('ov-detail')">✕</button></div>
-  <div class="modal-body" id="detail-body"></div>
-  <div class="modal-foot" id="detail-foot"><button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button></div>
-</div></div>
+  <!-- ══ MODAL DETALHE ══ -->
+  <div class="overlay" id="ov-detail">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="detail-title">Detalhe</h2><button class="btn-close" onclick="closeModal('ov-detail')">✕</button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-foot" id="detail-foot"><button class="btn-close"
+          onclick="closeModal('ov-detail')">Fechar</button></div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 
@@ -1831,7 +1983,7 @@
     ════════════════════════════════════════ */
     async function uploadToSupabase(file) {
       const ext = file.name.split('.').pop();
-      const filename = `${Date.now()}_${Math.random().toString(36).substring(2,8)}.${ext}`;
+      const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
       const { data, error } = await supa.storage.from('anexos').upload(filename, file);
       if (error) { console.error('Upload error:', error); throw error; }
       const pub = supa.storage.from('anexos').getPublicUrl(filename);
@@ -1865,14 +2017,14 @@
     function handleHash() {
       let id = window.location.hash.replace('#', '') || 'dash';
       if (!SECS.includes(id)) id = 'dash';
-      
+
       SECS.forEach(s => {
         document.getElementById('sec-' + s).style.display = s === id ? '' : 'none';
       });
       document.querySelectorAll('.ntab').forEach((t, i) => {
         if (i < SECS.length) t.classList.toggle('active', SECS[i] === id);
       });
-      
+
       if (id === 'dash') renderDash();
       if (id === 'entrevistas') renderE();
       if (id === 'agendas') renderA();
@@ -1913,13 +2065,13 @@
     ════════════════════════════════════════ */
     let pageE = 1, pageA = 1, pageB = 1, pageP = 1;
     const ITEMS_PER_PAGE = 10;
-    
+
     function buildPagination(total, cur, prefix) {
       const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
       if (totalPages <= 1) return '';
       let html = '<div class="pagination">';
       html += `<button class="pbtn" ${cur === 1 ? 'disabled' : ''} onclick="changePage('${prefix}', ${cur - 1})">Anterior</button>`;
-      for(let i=1; i<=totalPages; i++) {
+      for (let i = 1; i <= totalPages; i++) {
         html += `<button class="pbtn ${cur === i ? 'active' : ''}" onclick="changePage('${prefix}', ${i})">${i}</button>`;
       }
       html += `<button class="pbtn" ${cur === totalPages ? 'disabled' : ''} onclick="changePage('${prefix}', ${cur + 1})">Próxima</button>`;
@@ -1958,7 +2110,7 @@
       const groups = {};
       L.forEach(x => { const k = norm(x.jornalista) || x.id; if (!groups[k]) groups[k] = []; groups[k].push(x); });
       const sorted = Object.values(groups).map(g => { g.sort((a, b2) => new Date(b2.criado) - new Date(a.criado)); return g; }).sort((a, b2) => new Date(b2[0].criado) - new Date(a[0].criado));
-      
+
       const start = (pageE - 1) * ITEMS_PER_PAGE;
       const sliced = sorted.slice(start, start + ITEMS_PER_PAGE);
 
@@ -2003,7 +2155,7 @@
         if (rep.p_filename) {
           let pData = rep.p_filename;
           if (typeof pData === 'string') {
-            try { pData = JSON.parse(pData); } catch(e) {}
+            try { pData = JSON.parse(pData); } catch (e) { }
           }
           if (pData && pData.url) {
             const ext = (pData.name || '').split('.').pop().toLowerCase();
@@ -2047,11 +2199,11 @@
       if (x.p_filename) {
         let pData = x.p_filename;
         if (typeof pData === 'string') {
-          try { pData = JSON.parse(pData); } catch (e) {}
+          try { pData = JSON.parse(pData); } catch (e) { }
         }
         const name = typeof pData === 'object' && pData !== null ? pData.name : pData;
         const url = typeof pData === 'object' && pData !== null ? pData.url : '';
-        
+
         const nameEl = document.getElementById('e-p-file-name');
         if (url) {
           nameEl.innerHTML = `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${esc(name)}</a>`;
@@ -2060,8 +2212,8 @@
         }
         const urlEl = document.getElementById('e-p-file-url');
         if (urlEl) urlEl.value = url;
-        
-        document.getElementById('e-p-file-info').style.display = ''; 
+
+        document.getElementById('e-p-file-info').style.display = '';
       }
       mTab('e', 'form');
       document.getElementById('ov-e').classList.add('open');
@@ -2151,8 +2303,8 @@
       document.getElementById('ov-detail').classList.add('open');
     }
 
-    async function handlePerfilFile(input) { 
-      if (!input.files || !input.files[0]) return; 
+    async function handlePerfilFile(input) {
+      if (!input.files || !input.files[0]) return;
       toast('Enviando perfil...');
       try {
         const res = await uploadToSupabase(input.files[0]);
@@ -2161,13 +2313,13 @@
         if (hUrl) hUrl.value = res.url;
         document.getElementById('e-p-file-info').style.display = '';
         toast('Perfil enviado!');
-      } catch(e) { toast('Erro no envio do perfil'); }
+      } catch (e) { toast('Erro no envio do perfil'); }
     }
-    function clearPerfilFile() { 
-      const fi = document.getElementById('e-p-file'); if (fi) fi.value = ''; 
-      document.getElementById('e-p-file-name').textContent = ''; 
+    function clearPerfilFile() {
+      const fi = document.getElementById('e-p-file'); if (fi) fi.value = '';
+      document.getElementById('e-p-file-name').textContent = '';
       const hUrl = document.getElementById('e-p-file-url'); if (hUrl) hUrl.value = '';
-      document.getElementById('e-p-file-info').style.display = 'none'; 
+      document.getElementById('e-p-file-info').style.display = 'none';
     }
 
     /* ════════════════════════════════════════
@@ -2189,16 +2341,16 @@
       document.getElementById('cnt-a').textContent = DB.A.length;
       const el = document.getElementById('list-a');
       if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-calendar-check"></i> Nenhuma agenda encontrada</div>'; return; }
-      
+
       const start = (pageA - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
-      
+
       el.innerHTML = sliced.map(x => {
         let anexosHtml = '';
         if (x.anexos && x.anexos.length) {
           const thumbs = x.anexos.map(n => {
             let pData = n;
-            if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch(e) {} }
+            if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch (e) { } }
             const name = typeof pData === 'string' ? pData : (pData.name || '');
             const url = typeof pData === 'string' ? null : pData.url;
             const ext = name.split('.').pop().toLowerCase();
@@ -2229,6 +2381,7 @@
           <option value="">Alterar status...</option>
           <option value="nova">Nova</option><option value="analise">Em análise</option><option value="confirmada">Confirmada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option><option value="cancelada">Cancelada</option>
         </select>
+        <button class="bsm" onclick="cloneA('${x.id}')"><i class="ph ph-copy"></i> Duplicar</button>
         <button class="bsm" onclick="editA('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
         <button class="bsm bdel" onclick="delA('${x.id}')"><i class="ph ph-trash"></i> Excluir</button>
       </div>
@@ -2252,6 +2405,11 @@
       document.getElementById('ov-a').classList.add('open');
     }
     function editA(id) { openA(id); }
+    function cloneA(id) {
+      openA(id);
+      editingA = null;
+      document.getElementById('a-modal-title').textContent = 'Nova agenda (Cópia)';
+    }
 
     async function saveA() {
       const g = i => { const el = document.getElementById(i); return el ? el.value.trim() : ''; };
@@ -2297,19 +2455,19 @@
         ['Link convite', x.link ? `<a href="${esc(x.link)}" target="_blank">${esc(x.link)}</a>` : null],
         ['Anexos', x.anexos && x.anexos.length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">` + x.anexos.map(n => {
           let pData = n;
-          if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch(e) {} }
+          if (typeof pData === 'string') { try { pData = JSON.parse(pData); } catch (e) { } }
           const name = typeof pData === 'string' ? pData : (pData.name || '');
           const url = typeof pData === 'string' ? null : pData.url;
           const ext = name.split('.').pop().toLowerCase();
           const isImg = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
-          
+
           if (isImg && url) {
             return `<a href="${url}" target="_blank" style="display:inline-block;border-radius:8px;overflow:hidden;border:1px solid var(--border);width:80px;height:80px;flex-shrink:0;" title="${esc(name)}"><img src="${url}" style="width:100%;height:100%;object-fit:cover;display:block;"></a>`;
           }
           return `<div style="width:100%;display:flex;align-items:center;"><span style="margin-right:6px;font-size:16px">${fileIcon(name)}</span>${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${esc(name)}</a>` : esc(name)}</div>`;
         }).join('') + `</div>` : null]
       ].filter(r => r[1]).map(r => `<div class="detail-row"><span class="dl">${r[0]}</span><span class="dv">${r[1] || '—'}</span></div>`).join('');
-      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button><button class="bsm bdel" onclick="closeModal('ov-detail');delA('${id}')"><i class="ph ph-trash"></i> Excluir</button>`;
+      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-close" onclick="cloneA('${id}');closeModal('ov-detail')"><i class="ph ph-copy"></i> Duplicar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button><button class="bsm bdel" onclick="closeModal('ov-detail');delA('${id}')"><i class="ph ph-trash"></i> Excluir</button>`;
       document.getElementById('ov-detail').classList.add('open');
     }
 
@@ -2379,7 +2537,7 @@
       if (document.getElementById('dm-pau')) document.getElementById('dm-pau').textContent = DB.P.length;
       const el = document.getElementById('list-b');
       if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-file-doc"></i> Nenhum briefing encontrado</div>'; return; }
-      
+
       const start = (pageB - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
       el.innerHTML = sliced.map(x => `
@@ -2412,10 +2570,10 @@
     <div class="detail-row"><span class="dl">Tom</span><span class="dv">${esc(x.tom) || '—'}</span></div>
     <div class="detail-row"><span class="dl">Atenção</span><span class="dv">${esc(x.atencao) || '—'}</span></div>
     ${x.anexos && x.anexos.length ? `<div class="detail-row"><span class="dl">Anexos</span><span class="dv">${x.anexos.map(n => {
-      const name = typeof n === 'string' ? n : n.name;
-      const url = typeof n === 'string' ? null : n.url;
-      return `${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text)">${name}</a>` : name}`;
-    }).join('<br>')}</span></div>` : ''}
+        const name = typeof n === 'string' ? n : n.name;
+        const url = typeof n === 'string' ? null : n.url;
+        return `${fileIcon(name)} ${url ? `<a href="${url}" target="_blank" style="color:var(--text)">${name}</a>` : name}`;
+      }).join('<br>')}</span></div>` : ''}
     ${blockHtml}`;
       document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editB('${id}');closeModal('ov-detail')">Editar</button><button class="btn-export" onclick="exportBriefingById('${id}')">↓ Exportar .rtf</button>`;
       document.getElementById('ov-detail').classList.add('open');
@@ -2428,7 +2586,7 @@
       const input = document.getElementById(prefix + '-files');
       if (!input || !input.files || !input.files.length) return;
       toast('Fazendo upload...');
-      
+
       const files = Array.from(input.files);
       const tempItems = files.map(f => ({
         name: f.name,
@@ -2436,7 +2594,7 @@
         file: f,
         uploading: true
       }));
-      
+
       _anexos[prefix].push(...tempItems);
       renderAnexosList(prefix);
 
@@ -2447,17 +2605,17 @@
           if (idx !== -1) {
             _anexos[prefix][idx] = { name: res.name, url: res.url };
           }
-        } catch(e) {
+        } catch (e) {
           toast('Erro no upload: ' + item.name);
           const idx = _anexos[prefix].indexOf(item);
           if (idx !== -1) _anexos[prefix].splice(idx, 1);
         }
         renderAnexosList(prefix);
       }
-      input.value = ''; 
+      input.value = '';
       toast('Upload concluído!');
     }
-    
+
     function renderAnexosList(prefix) {
       const el = document.getElementById(prefix + '-files-list'); if (!el) return;
       if (!_anexos[prefix].length) { el.innerHTML = ''; return; }
@@ -2465,22 +2623,22 @@
         const name = typeof item === 'string' ? item : item.name;
         const url = typeof item === 'string' ? null : (item.localUrl || item.url);
         const isUploading = item.uploading ? ' <span style="color:var(--muted);font-size:10px">(Enviando...)</span>' : '';
-        
+
         const ext = name.split('.').pop().toLowerCase();
         const isImg = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
-        
+
         let mediaHtml = `<span style="margin-right:8px;font-size:16px">${fileIcon(name)}</span>`;
         if (isImg && url) {
           mediaHtml = `<img src="${url}" style="width: 32px; height: 32px; object-fit: cover; border-radius: 4px; margin-right: 8px; flex-shrink: 0;" />`;
         }
-        
+
         const contentHtml = `
           ${mediaHtml}
           <span style="word-break:break-all;font-weight:500;">${esc(name)}${isUploading}</span>
         `;
-        
-        const leftContent = url 
-          ? `<a href="${url}" target="_blank" style="display:flex;align-items:center;color:var(--text);text-decoration:none;flex:1;min-width:0;">${contentHtml}</a>` 
+
+        const leftContent = url
+          ? `<a href="${url}" target="_blank" style="display:flex;align-items:center;color:var(--text);text-decoration:none;flex:1;min-width:0;">${contentHtml}</a>`
           : `<div style="display:flex;align-items:center;color:var(--text);flex:1;min-width:0;">${contentHtml}</div>`;
 
         return `
@@ -2691,7 +2849,7 @@
       document.getElementById('cnt-p').textContent = DB.P.length;
       const el = document.getElementById('list-p');
       if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-folder-open"></i> Nenhuma pauta encontrada</div>'; return; }
-      
+
       const start = (pageP - 1) * ITEMS_PER_PAGE;
       const sliced = L.slice(start, start + ITEMS_PER_PAGE);
       el.innerHTML = sliced.map(x => `
@@ -2811,14 +2969,16 @@
               <span style="font-size:11px;color:var(--muted)">Anexe o perfil gerado ou cole o link</span>
               <label style="cursor:pointer"><input type="file" id="e-p-file" accept=".docx,.pdf,.txt"
                   style="display:none" onchange="handlePerfilFile(this)" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar
                   perfil</span></label>
             </div>
             <div class="fl ff" id="e-p-file-info" style="display:none">
               <div
                 style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r2);padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between">
                 <span id="e-p-file-name"></span><button class="bsm bdel" style="font-size:11px;padding:2px 8px"
-                  onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button></div>
+                  onclick="clearPerfilFile()"><i class="ph ph-trash"></i></button>
+              </div>
             </div>
             <div class="fl ff"><label>Link do perfil</label><input id="e-p-link" type="text"
                 placeholder="Link do Google Drive, etc." /></div>
@@ -2909,7 +3069,8 @@
             <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
                   id="a-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('a')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
                 imagens...</span></div>
             <div id="a-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
@@ -2967,7 +3128,8 @@
             <div style="display:flex;gap:8px;align-items:center"><label style="cursor:pointer"><input type="file"
                   id="b-files" multiple accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('b')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label><span style="font-size:11px;color:var(--muted)">PDF, Word, PPT,
                 imagens...</span></div>
             <div id="b-files-list" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
@@ -3010,7 +3172,8 @@
               <label style="cursor:pointer"><input type="file" id="p-files" multiple
                   accept=".pdf,.docx,.doc,.pptx,.xlsx,.jpg,.png,.txt" style="display:none"
                   onchange="handleAnexos('p')" /><span class="bsm"
-                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i class="ph ph-paperclip"></i> Anexar
+                  style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;cursor:pointer"><i
+                    class="ph ph-paperclip"></i> Anexar
                   arquivos</span></label>
               <span style="font-size:11px;color:var(--muted)">PDF, Word, PPT, imagens...</span>
             </div>
