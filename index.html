@@ -1529,8 +1529,8 @@
       <section id="sec-pauta" class="section" style="display:none">
         <div class="toolbar">
           <input class="fi fi-busca" id="p-busca" placeholder="Buscar por título ou conteúdo..." oninput="pageP=1;renderP()" />
-          <input class="fi" id="p-datafrom-p" type="date" onchange="pageP=1;renderP()" title="Data inicial" />
-          <input class="fi" id="p-datato-p" type="date" onchange="pageP=1;renderP()" title="Data final" />
+          <input class="fi" id="p-datafrom" type="date" onchange="pageP=1;renderP()" title="Data inicial" />
+          <input class="fi" id="p-datato" type="date" onchange="pageP=1;renderP()" title="Data final" />
           <button class="btn-new" onclick="openP()"><i class="ph ph-plus"></i> Nova pauta</button>
         </div>
         <div class="list" id="list-p"></div>
@@ -1729,6 +1729,24 @@
       await loadAll();
       if (!window.location.hash) window.location.hash = '#dash';
       else handleHash();
+      startSessionTimer();
+    }
+
+    /* ── Auto-logout por inatividade (30 min) ── */
+    let _sessionTimer = null;
+    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutos em ms
+    function startSessionTimer() {
+      resetSessionTimer();
+      ['click', 'keydown', 'mousemove', 'touchstart', 'scroll'].forEach(evt =>
+        document.addEventListener(evt, resetSessionTimer, { passive: true })
+      );
+    }
+    function resetSessionTimer() {
+      if (_sessionTimer) clearTimeout(_sessionTimer);
+      _sessionTimer = setTimeout(async () => {
+        toast('Sessão expirada por inatividade. Faça login novamente.');
+        await doLogout();
+      }, SESSION_TIMEOUT);
     }
 
     /* ════════════════════════════════════════
@@ -2163,11 +2181,7 @@
         if (b && !norm(x.inst).includes(b) && !norm(x.nome).includes(b) && !norm(x.tema).includes(b)) return false;
         return true;
       });
-      L.sort((a, b) => {
-        if (!a.data && !b.data) return new Date(b.criado) - new Date(a.criado);
-        if (!a.data) return 1; if (!b.data) return -1;
-        return new Date(b.data) - new Date(a.data);
-      });
+      L.sort((a, b) => new Date(b.criado) - new Date(a.criado));
       document.getElementById('cnt-a').textContent = DB.A.length;
       const el = document.getElementById('list-a');
       if (!L.length) { el.innerHTML = '<div class="empty"><i class="ph ph-calendar-check"></i> Nenhuma agenda encontrada</div>'; return; }
@@ -2212,7 +2226,7 @@
           <option value="nova">Nova</option><option value="analise">Em análise</option><option value="confirmada">Confirmada</option><option value="realizada">Realizada</option><option value="recusada">Recusada</option><option value="cancelada">Cancelada</option>
         </select>
         <button class="bsm" onclick="editA('${x.id}')"><i class="ph ph-pencil-simple"></i> Editar</button>
-        <button class="bsm bdel" onclick="delA('${x.id}')"><i class="ph ph-trash"></i></button>
+        <button class="bsm bdel" onclick="delA('${x.id}')"><i class="ph ph-trash"></i> Excluir</button>
       </div>
     </div>`;
       }).join('') + buildPagination(L.length, pageA, 'A');
@@ -2291,7 +2305,7 @@
           return `<div style="width:100%;display:flex;align-items:center;"><span style="margin-right:6px;font-size:16px">${fileIcon(name)}</span>${url ? `<a href="${url}" target="_blank" style="color:var(--text);text-decoration:none">${esc(name)}</a>` : esc(name)}</div>`;
         }).join('') + `</div>` : null]
       ].filter(r => r[1]).map(r => `<div class="detail-row"><span class="dl">${r[0]}</span><span class="dv">${r[1] || '—'}</span></div>`).join('');
-      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button>`;
+      document.getElementById('detail-foot').innerHTML = `<button class="btn-close" onclick="closeModal('ov-detail')">Fechar</button><button class="btn-save" onclick="editA('${id}');closeModal('ov-detail')">Editar</button><button class="bsm bdel" onclick="closeModal('ov-detail');delA('${id}')"><i class="ph ph-trash"></i> Excluir</button>`;
       document.getElementById('ov-detail').classList.add('open');
     }
 
