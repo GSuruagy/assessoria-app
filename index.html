@@ -994,7 +994,7 @@
 
     .cal-grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -1016,6 +1016,7 @@
     .cal-cell {
       background: var(--surface);
       min-height: 100px;
+      min-width: 0;
       padding: 6px 5px;
       cursor: pointer
     }
@@ -1063,6 +1064,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      width: 100%;
+      box-sizing: border-box;
+      display: block;
       cursor: pointer
     }
 
@@ -2519,6 +2523,7 @@
     let calView = 'lista', calDate = new Date();
     function setAgendaView(v) {
       calView = v;
+      if (v === 'mes' || v === 'semana') calDate = new Date();
       document.querySelectorAll('.atog').forEach(b => b.classList.remove('active'));
       document.getElementById('atog-' + v).classList.add('active');
       document.getElementById('lista-filters').style.display = v === 'lista' ? 'flex' : 'none';
