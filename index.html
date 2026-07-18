@@ -1126,14 +1126,26 @@
     .week-slot {
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      height: 60px; /* Aumentei um pouco a altura para acomodar múltiplos eventos ou barra de rolagem */
+      height: 80px; /* Altura fixa garantida para a linha de horário */
+      max-height: 80px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       gap: 2px;
       padding: 2px;
       overflow-y: auto;
-      box-sizing: border-box
+      overflow-x: hidden; /* Oculta barra horizontal indesejada */
+      box-sizing: border-box;
+    }
+
+    /* Scrollbar minimalista para as células da semana */
+    .week-slot::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .week-slot::-webkit-scrollbar-thumb {
+      background-color: var(--muted2, #ccc);
+      border-radius: 4px;
     }
 
     .week-slot:hover {
@@ -1211,8 +1223,38 @@
 
     @media print {
       @page {
-        size: landscape;
-        margin: 10mm;
+        size: A4 landscape;
+        margin: 8mm;
+      }
+
+      html, body {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
+      .cal-grid {
+        flex: 1 1 auto !important;
+        height: auto !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .cal-cell {
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+
+      /* Cabeçalhos e rodapés para não encolherem */
+      .app-header, header, footer, .footer, .cal-head {
+        flex: 0 0 auto !important;
       }
 
       .nav,
@@ -1223,19 +1265,7 @@
       .ntab,
       .btn-new,
       .bsm {
-        display: none !important
-      }
-
-      body, #agenda-cal {
-        height: 100vh !important;
-        overflow: hidden !important;
-        margin: 0;
-        padding: 0;
-      }
-
-      .cal-grid {
-        height: calc(100vh - 150px);
-        page-break-inside: avoid;
+        display: none !important;
       }
 
       .cal-event {
@@ -2831,26 +2861,71 @@
     }
 
     function printAgenda() {
+      if (calView === 'mes') {
+        printAgendaMes();
+      } else {
+        printAgendaSemana();
+      }
+    }
+
+    function printAgendaMes() {
+      const y = calDate.getFullYear(), m = calDate.getMonth();
       const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-      let title, agendas;
-      if (calView === 'mes') { const y = calDate.getFullYear(), m = calDate.getMonth(); title = MESES[m] + ' ' + y; agendas = DB.A.filter(a => { const k = agendaDateKey(a); return k && k.startsWith(`${y}-${String(m + 1).padStart(2, '0')}`); }); }
-      else { const dow = calDate.getDay(); const ws = new Date(calDate.getTime() - dow * 86400000); const we = new Date(ws.getTime() + 6 * 86400000); title = `Semana ${ws.getDate()}/${ws.getMonth() + 1} – ${we.getDate()}/${we.getMonth() + 1}/${we.getFullYear()}`; agendas = DB.A.filter(a => { const k = agendaDateKey(a); if (!k) return false; const d = new Date(k + 'T00:00:00'); return d >= ws && d <= we; }); }
+      const title = MESES[m] + ' ' + y;
+      const agendas = DB.A.filter(a => { const k = agendaDateKey(a); return k && k.startsWith(`${y}-${String(m + 1).padStart(2, '0')}`); });
       agendas.sort((a, b) => (a.data || '').localeCompare(b.data || ''));
-      const printY = calDate.getFullYear(), printM = calDate.getMonth();
-      const printFirst = new Date(printY, printM, 1), printLast = new Date(printY, printM + 1, 0), startDow2 = printFirst.getDay();
+      const printFirst = new Date(y, m, 1), printLast = new Date(y, m + 1, 0), startDow2 = printFirst.getDay();
       const printMap = {}; DB.A.forEach(a => { const k = agendaDateKey(a); if (k) printMap[k] = (printMap[k] || []).concat(a); });
       const DIAS_P = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']; let cells = [];
-      for (let i = 0; i < startDow2; i++) { const d = new Date(printY, printM, 1 - startDow2 + i); cells.push({ d, cur: false, k: dateKey(d) }); }
-      for (let d = 1; d <= printLast.getDate(); d++) { const dt = new Date(printY, printM, d); cells.push({ d: dt, cur: true, k: dateKey(dt) }); }
-      const trail2 = (7 - (cells.length % 7)) % 7; for (let i = 1; i <= trail2; i++) { const d = new Date(printY, printM + 1, i); cells.push({ d, cur: false, k: dateKey(d) }); }
+      for (let i = 0; i < startDow2; i++) { const d = new Date(y, m, 1 - startDow2 + i); cells.push({ d, cur: false, k: dateKey(d) }); }
+      for (let d = 1; d <= printLast.getDate(); d++) { const dt = new Date(y, m, d); cells.push({ d: dt, cur: true, k: dateKey(dt) }); }
+      const trail2 = (7 - (cells.length % 7)) % 7; for (let i = 1; i <= trail2; i++) { const d = new Date(y, m + 1, i); cells.push({ d, cur: false, k: dateKey(d) }); }
       const today2 = dateKey(new Date());
       const cellsHtml = cells.map(c => { const evs = printMap[c.k] || []; const isToday = c.k === today2; return `<td class="p-cell${!c.cur ? ' other' : ''}${isToday ? ' tod' : ''}"><div class="p-num">${c.d.getDate()}</div>${evs.map(a => { const hora = a.data && a.data.includes('T') ? new Date(a.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' : ''; return `<div class="p-ev">${hora}${a.tema || a.inst || '—'}</div>`; }).join('')}</td>`; });
       const weeks = []; for (let i = 0; i < cellsHtml.length; i += 7)weeks.push(cellsHtml.slice(i, i + 7));
       const win = window.open('', '_pc', 'width=1000,height=750');
       win.document.open();
-      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda ${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:9pt;color:#111;padding:1.5cm 2cm}.p-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2pt solid #111}.p-header h1{font-size:14pt;font-weight:700;text-transform:uppercase}.p-header p{font-size:10pt;color:#444}table{width:100%;border-collapse:collapse;table-layout:fixed}.p-dow{text-align:center;font-size:8pt;font-weight:700;text-transform:uppercase;color:#666;padding:5pt 3pt;border:1pt solid #ddd;background:#f5f5f2}.p-cell{vertical-align:top;border:1pt solid #ddd;padding:4pt 5pt;height:90pt}.p-cell.other{background:#fafaf8}.p-cell.other .p-num{color:#bbb}.p-cell.tod{background:#fffbf0}.p-num{font-size:9pt;font-weight:700;margin-bottom:3pt;width:16pt;height:16pt;display:flex;align-items:center;justify-content:center}.p-ev{font-size:7.5pt;line-height:1.3;padding:1.5pt 3pt;margin-bottom:2pt;border-radius:2pt;background:#e8f0fb;color:#0a3a70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{margin-top:1rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{body{padding:1cm}}</style></head><body>
+      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda ${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:9pt;color:#111;padding:1.5cm 2cm;height:100vh !important;max-height:100vh !important;overflow:hidden !important;display:flex !important;flex-direction:column !important}.p-header{flex:0 0 auto !important;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2pt solid #111}.p-header h1{font-size:14pt;font-weight:700;text-transform:uppercase}.p-header p{font-size:10pt;color:#444}table{width:100%;border-collapse:collapse;table-layout:fixed;flex:1 1 auto !important;height:auto !important;page-break-inside:avoid !important}.p-dow{text-align:center;font-size:8pt;font-weight:700;text-transform:uppercase;color:#666;padding:5pt 3pt;border:1pt solid #ddd;background:#f5f5f2}.p-cell{vertical-align:top;border:1pt solid #ddd;padding:2pt 3pt;min-height:0 !important;overflow:hidden !important}.p-cell.other{background:#fafaf8}.p-cell.other .p-num{color:#bbb}.p-cell.tod{background:#fffbf0}.p-num{font-size:9pt;font-weight:700;margin-bottom:2pt;width:14pt;height:14pt;display:flex;align-items:center;justify-content:center}.p-ev{font-size:7.5pt;line-height:1.2;padding:1.5pt 3pt;margin-bottom:1pt;border-radius:2pt;background:#e8f0fb;color:#0a3a70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{flex:0 0 auto !important;margin-top:1rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{@page{size:A4 landscape;margin:8mm;}body{padding:0 !important;}}</style></head><body>
   <div class="p-header"><div><h1>Agenda · ${title}</h1><p>Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Proposta de agenda<br>Assessoria de Imprensa</div></div>
-  <table><thead><tr>${DIAS_P.map(d => `<th class="p-dow">${d}</th>`).join('')}</tr></thead><tbody>${weeks.map(w => `<tr>${w.join('')}</tr>`).join('')}</tbody></table>
+  <table><thead><tr>${DIAS_P.map(d => `<th class="p-dow">${d}</th>`).join('')}</tr></thead><tbody>${weeks.map(w => `<tr style="height: 1px">${w.join('')}</tr>`).join('')}</tbody></table>
+  <div class="footer"><span>Assessoria de Imprensa · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() { window.print(); }, 300);
+    });
+    window.addEventListener('afterprint', function() { window.close(); });
+  <\/script>
+  </body></html>`);
+      win.document.close();
+    }
+
+    function printAgendaSemana() {
+      const dow = calDate.getDay(); const ws = new Date(calDate.getTime() - dow * 86400000); const we = new Date(ws.getTime() + 6 * 86400000);
+      const title = `Semana ${ws.getDate()}/${ws.getMonth() + 1} – ${we.getDate()}/${we.getMonth() + 1}/${we.getFullYear()}`;
+      const DIAS_P = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(ws.getTime() + i * 86400000); return { d, k: dateKey(d), label: DIAS_P[i] + ' ' + d.getDate() + '/' + (d.getMonth() + 1) }; });
+      const map = {}; DB.A.forEach(a => { const k = agendaDateKey(a); if (!k) return; const h = agendaHour(a) != null ? agendaHour(a) : 8; map[k + '_' + h] = (map[k + '_' + h] || []).concat(a); });
+      const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
+      
+      let html = `<div class="w-head"><div class="w-head-cell"></div>${days.map(d => `<div class="w-head-cell">${d.label}</div>`).join('')}</div><div class="w-body">`;
+      HOURS.forEach(h => {
+        html += `<div class="w-row"><div class="w-hour">${String(h).padStart(2, '0')}h</div>`;
+        days.forEach(d => {
+          const evs = (map[d.k + '_' + h] || []).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+          html += `<div class="w-slot">${evs.map(a => {
+            const hora = a.data && a.data.includes('T') ? new Date(a.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' : '';
+            return `<div class="w-ev">${hora}${a.tema || a.inst || '—'}</div>`;
+          }).join('')}</div>`;
+        });
+        html += `</div>`;
+      });
+      html += `</div>`;
+
+      const win = window.open('', '_pc', 'width=1000,height=750');
+      win.document.open();
+      win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><title>Agenda ${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:9pt;color:#111;padding:1.5cm 2cm;height:100vh !important;max-height:100vh !important;overflow:hidden !important;display:flex !important;flex-direction:column !important}.p-header{flex:0 0 auto !important;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2pt solid #111}.p-header h1{font-size:14pt;font-weight:700;text-transform:uppercase}.p-header p{font-size:10pt;color:#444}.w-head{display:flex;background:#f5f5f2;border:1pt solid #ddd;border-bottom:none;flex:0 0 auto !important}.w-head-cell{flex:1;text-align:center;font-size:8pt;font-weight:700;text-transform:uppercase;color:#666;padding:5pt 3pt;border-right:1pt solid #ddd}.w-head-cell:first-child{flex:0 0 40px;border-right:1pt solid #ddd}.w-head-cell:last-child{border-right:none}.w-body{flex:1 1 auto !important;display:flex;flex-direction:column;border:1pt solid #ddd;height:auto !important;page-break-inside:avoid !important;overflow:hidden !important}.w-row{flex:1 1 auto;display:flex;border-bottom:1pt solid #ddd;min-height:0}.w-row:last-child{border-bottom:none}.w-hour{flex:0 0 40px;text-align:center;font-size:8pt;color:#999;padding:2pt;border-right:1pt solid #ddd;display:flex;align-items:center;justify-content:center;background:#fafaf8}.w-slot{flex:1;border-right:1pt solid #ddd;padding:1pt 2pt;overflow:hidden !important;display:flex;flex-direction:column;gap:1px}.w-slot:last-child{border-right:none}.w-ev{font-size:7pt;line-height:1.1;padding:1pt 2pt;background:#e8f0fb;color:#0a3a70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:2pt}.footer{flex:0 0 auto !important;margin-top:1rem;padding-top:.5rem;border-top:.5pt solid #ccc;font-size:8pt;color:#999;display:flex;justify-content:space-between}@media print{@page{size:A4 landscape;margin:8mm;}body{padding:0 !important;}}</style></head><body>
+  <div class="p-header"><div><h1>Agenda · ${title}</h1><p>Ministro André Mendonça</p></div><div style="text-align:right;font-size:9pt;color:#888">Proposta de agenda<br>Assessoria de Imprensa</div></div>
+  ${html}
   <div class="footer"><span>Assessoria de Imprensa · Min. André Mendonça</span><span>Gerado em ${new Date().toLocaleString('pt-BR')}</span></div>
   <script>
     window.addEventListener('DOMContentLoaded', function() {
