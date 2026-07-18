@@ -1120,22 +1120,24 @@
       border-bottom: 1px solid var(--border);
       background: var(--bg);
       text-align: right;
-      height: 48px
+      height: 80px !important;
+      max-height: 80px !important;
+      box-sizing: border-box !important;
     }
 
     .week-slot {
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      height: 80px; /* Altura fixa garantida para a linha de horário */
-      max-height: 80px;
+      height: 80px !important;
+      max-height: 80px !important;
+      box-sizing: border-box !important;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       gap: 2px;
       padding: 2px;
       overflow-y: auto;
-      overflow-x: hidden; /* Oculta barra horizontal indesejada */
-      box-sizing: border-box;
+      overflow-x: hidden;
     }
 
     /* Scrollbar minimalista para as células da semana */
