@@ -2706,10 +2706,24 @@
       DB.A.forEach(a => { const k = agendaDateKey(a); if (k) map[k] = (map[k] || []).concat(a); });
       const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
       let html = `<div class="cal-grid">${DIAS.map(d => `<div class="cal-head">${d}</div>`).join('')}`;
-      for (let i = 0; i < startDow; i++) { const d = new Date(y, m, 1 - startDow + i); const k = dateKey(d); html += `<div class="cal-cell other-month"><div class="cal-day-num">${d.getDate()}</div>${(map[k] || []).slice(0, 2).map(a => calPill(a)).join('')}</div>`; }
-      for (let d = 1; d <= last.getDate(); d++) { const k = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; const evs = map[k] || []; html += `<div class="cal-cell${k === today ? ' today' : ''}" onclick="calDayClick('${k}')"><div class="cal-day-num">${d}</div>${evs.slice(0, 3).map(a => calPill(a)).join('')}${evs.length > 3 ? `<div class="cal-more">+${evs.length - 3}</div>` : ''}</div>`; }
+      for (let i = 0; i < startDow; i++) { 
+        const d = new Date(y, m, 1 - startDow + i); 
+        const k = dateKey(d); 
+        const evs = (map[k] || []).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+        html += `<div class="cal-cell other-month"><div class="cal-day-num">${d.getDate()}</div>${evs.slice(0, 2).map(a => calPill(a)).join('')}</div>`; 
+      }
+      for (let d = 1; d <= last.getDate(); d++) { 
+        const k = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; 
+        const evs = (map[k] || []).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+        html += `<div class="cal-cell${k === today ? ' today' : ''}" onclick="calDayClick('${k}')"><div class="cal-day-num">${d}</div>${evs.slice(0, 3).map(a => calPill(a)).join('')}${evs.length > 3 ? `<div class="cal-more">+${evs.length - 3}</div>` : ''}</div>`; 
+      }
       const trail = (7 - ((startDow + last.getDate()) % 7)) % 7;
-      for (let i = 1; i <= trail; i++) { const d = new Date(y, m + 1, i); const k = dateKey(d); html += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div>${(map[k] || []).slice(0, 2).map(a => calPill(a)).join('')}</div>`; }
+      for (let i = 1; i <= trail; i++) { 
+        const d = new Date(y, m + 1, i); 
+        const k = dateKey(d); 
+        const evs = (map[k] || []).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+        html += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div>${evs.slice(0, 2).map(a => calPill(a)).join('')}</div>`; 
+      }
       document.getElementById('agenda-cal').innerHTML = html + '</div>';
     }
     function calPill(a) { const c = TIPO_COLORS[a.tipo] || { bg: '#eeecea', color: '#444' }; const hora = a.data && a.data.includes('T') ? a.data.split('T')[1].slice(0, 5) + ' ' : ''; return `<div class="cal-event" style="background:${c.bg};color:${c.color}" onclick="event.stopPropagation();detailA('${a.id}')">${hora}${a.tema || a.inst || '—'}</div>`; }
@@ -2722,7 +2736,16 @@
       const map = {}; DB.A.forEach(a => { const k = agendaDateKey(a); if (!k) return; const h = agendaHour(a) != null ? agendaHour(a) : 8; map[k + '_' + h] = (map[k + '_' + h] || []).concat(a); });
       const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
       let html = `<div class="week-grid"><div class="week-head"><div class="week-head-cell"></div>${days.map(d => `<div class="week-head-cell${d.k === today ? ' today-col' : ''}">${d.label}</div>`).join('')}</div><div class="week-body">`;
-      HOURS.forEach(h => { html += `<div class="week-hour-label">${String(h).padStart(2, '0')}h</div>`; days.forEach(d => { const evs = map[d.k + '_' + h] || []; html += `<div class="week-slot" onclick="calDayClick('${d.k}')">${evs.map(a => { const c = TIPO_COLORS[a.tipo] || { bg: '#eeecea', color: '#444' }; return `<div class="week-event" style="background:${c.bg};color:${c.color}" onclick="event.stopPropagation();detailA('${a.id}')">${a.tema || a.inst || '—'}</div>`; }).join('')}</div>`; }); });
+      HOURS.forEach(h => { 
+        html += `<div class="week-hour-label">${String(h).padStart(2, '0')}h</div>`; 
+        days.forEach(d => { 
+          const evs = (map[d.k + '_' + h] || []).sort((a, b) => (a.data || '').localeCompare(b.data || '')); 
+          html += `<div class="week-slot" onclick="calDayClick('${d.k}')">${evs.map(a => { 
+            const c = TIPO_COLORS[a.tipo] || { bg: '#eeecea', color: '#444' }; 
+            return `<div class="week-event" style="background:${c.bg};color:${c.color}" onclick="event.stopPropagation();detailA('${a.id}')">${a.tema || a.inst || '—'}</div>`; 
+          }).join('')}</div>`; 
+        }); 
+      });
       document.getElementById('agenda-cal').innerHTML = html + '</div></div>';
     }
 
