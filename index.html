@@ -1059,13 +1059,13 @@
     .cal-event {
       font-size: 10px;
       font-weight: 500;
-      padding: 2px 5px;
+      padding: 1px 3px; /* Padding reduzido para caber melhor */
       border-radius: 3px;
       margin-bottom: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 100%;
+      max-width: 100%;
       box-sizing: border-box;
       display: block;
       cursor: pointer
@@ -1123,9 +1123,14 @@
     .week-slot {
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      height: 48px;
-      position: relative;
-      cursor: pointer
+      height: 60px; /* Aumentei um pouco a altura para acomodar múltiplos eventos ou barra de rolagem */
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 2px;
+      overflow-y: auto;
+      box-sizing: border-box
     }
 
     .week-slot:hover {
@@ -1133,16 +1138,18 @@
     }
 
     .week-event {
-      position: absolute;
-      left: 2px;
-      right: 2px;
       font-size: 10px;
       font-weight: 500;
-      padding: 2px 4px;
+      padding: 1px 3px;
       border-radius: 3px;
       overflow: hidden;
       cursor: pointer;
-      z-index: 2
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: block;
+      max-width: 100%;
+      box-sizing: border-box;
+      flex-shrink: 0
     }
 
     /* ── TOAST ── */
